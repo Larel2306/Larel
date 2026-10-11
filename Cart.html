@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LAREL - Luxury Store</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+body {
+  background: #0b0b0e;
+  color: #f3f3f6;
+  padding-top: 80px;
+  padding-bottom: 50px;
+  overflow-x: hidden;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 16px 5%;
+  background: rgba(10,10,14,.9);
+  backdrop-filter: blur(14px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 2000;
+  border-bottom: 1px solid #ffffff14;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+  text-decoration: none;
+  letter-spacing: 2.5px;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 28px;
+}
+
+.nav-links a {
+  color: #ddd;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: #fff;
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-icon-btn {
+  color: #fff;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffffff12;
+  padding: 9px 14px;
+  border-radius: 30px;
+  border: 1px solid #ffffff1c;
+  font-size: 14px;
+}
+
+.menu-btn {
+  display: none;
+  color: #fff;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #ffffff12;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 1px solid #ffffff1a;
+}
+
+.menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000b;
+  backdrop-filter: blur(5px);
+  z-index: 1998;
+  opacity: 0;
+  visibility: hidden;
+  transition: .25s;
+}
+
+.menu-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.category-container {
+  display: flex;
+  justify-content: center;
+  padding: 20px 18px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.category-container::-webkit-scrollbar {
+  display: none;
+}
+
+.category-menu {
+  display: flex;
+  gap: 7px;
+  background: #16161de0;
+  padding: 6px;
+  border-radius: 40px;
+  border: 1px solid #ffffff1a;
+}
+
+.category-item {
+  color: #a0a0ab;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 10px 19px;
+  border-radius: 30px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.category-item.active {
+  color: #000;
+  background: #fff;
+}
+
+.tab-content {
+  display: none;
+  width: 100%;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* Snitch Style Full-Width Mobile Grid Responsiveness */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 22px;
+  padding: 0 40px;
+}
+
+.product-card {
+  background: #ffffff08;
+  border-radius: 18px;
+  overflow: hidden;
+  color: inherit;
+  border: 1px solid #ffffff12;
+  transition: .25s;
+  cursor: pointer;
+  display: block;
+  min-width: 0;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  border-color: #ffffff40;
+}
+
+.product-image {
+  width: 100%;
+  aspect-ratio: 1 / 1.08;
+  overflow: hidden;
+  position: relative;
+  background: #15151a;
+}
+
+.product-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: .4s;
+}
+
+.product-card:hover .product-image img {
+  transform: scale(1.035);
+}
+
+.badge-tag {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: #000b;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 5px 9px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  z-index: 2;
+}
+
+.wishlist-btn {
+  position: absolute;
+  top: 12px;
+  right: 54px; /* Shifted left to make space for the quick-add plus button */
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #0009;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  cursor: pointer;
+}
+
+/* White Quick Add Plus Button on Top Right */
+.quick-add-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  transition: transform 0.2s, background 0.2s;
+}
+
+.quick-add-btn:hover {
+  transform: scale(1.1);
+  background: #f0f0f0;
+}
+
+.product-info {
+  padding: 15px;
+}
+
+/* Rating Stars */
+.product-rating {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  color: #fbbf24;
+}
+
+.product-rating span {
+  color: #9ca3af;
+  font-weight: 600;
+  font-size: 11px;
+}
+
+.product-title {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.45;
+  margin-bottom: 10px;
+}
+
+.price-row {
+  display: flex;
+  gap: 9px;
+  align-items: baseline;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.product-price {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.original-price {
+  font-size: 13px;
+  color: #777782;
+  text-decoration: line-through;
+}
+
+.buy-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #0ea5e9;
+  color: #fff;
+  padding: 11px;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 12px;
+}
+
+.empty-category {
+  grid-column: 1 / -1;
+  padding: 45px 20px;
+  text-align: center;
+  color: #888;
+  font-size: 14px;
+}
+
+@media(max-width:1023px) {
+  .product-grid {
+    grid-template-columns: repeat(2,minmax(0,1fr));
+    padding: 0 20px;
+  }
+}
+
+/* Snitch Style Mobile Layout Adjustments - 2 Columns edge-to-edge / full width responsiveness */
+@media(max-width:768px) {
+  .menu-btn {
+    display: flex;
+  }
+
+  .navbar {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 260px;
+    height: 100vh;
+    background: #111116;
+    padding: 80px 24px;
+    transition: .25s;
+    z-index: 1999;
+  }
+
+  .navbar.active {
+    right: 0;
+  }
+
+  .nav-links {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* Snitch Style Mobile Full/Edge Grid */
+  .product-grid {
+    padding: 0 8px;
+    gap: 8px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .category-container {
+    justify-content: flex-start;
+    padding: 12px 8px;
+  }
+
+  .nav-icon-btn {
+    padding: 9px 12px;
+  }
+
+  .nav-icon-btn span {
+    display: none;
+  }
+}
+
+@media(max-width:480px) {
+  .product-info {
+    padding: 8px;
+  }
+
+  .product-title {
+    font-size: 12px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .product-price {
+    font-size: 14px;
+  }
+
+  .original-price {
+    font-size: 11px;
+  }
+
+  .buy-btn {
+    font-size: 11px;
+    padding: 8px;
+  }
+
+  .badge-tag {
+    font-size: 9px;
+    top: 8px;
+    left: 8px;
+    padding: 4px 7px;
+  }
+
+  .wishlist-btn {
+    width: 28px;
+    height: 28px;
+    top: 8px;
+    right: 42px;
+    font-size: 12px;
+  }
+
+  .quick-add-btn {
+    width: 28px;
+    height: 28px;
+    top: 8px;
+    right: 8px;
+    font-size: 12px;
+  }
+
+  .category-item {
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="menu-overlay" id="menu-overlay"></div>
+
+<header class="header">
+  <a href="https://sites.google.com/view/lakhanshop/home" class="logo">LAREL</a>
+
+  <nav class="navbar" id="navbar">
+    <ul class="nav-links">
+      <li><a href="https://sites.google.com/view/lakhanshop/home">Home</a></li>
+      <li><a href="https://sites.google.com/view/lakhanshop/shop-all" class="active">Shop</a></li>
+      <li><a href="https://sites.google.com/view/lakhanshop/about-us">About Us</a></li>
+      <li><a href="https://sites.google.com/view/lakhanshop/contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <div class="nav-actions">
+    <a href="#search" class="nav-icon-btn" aria-label="Search">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </a>
+
+    <a href="https://script.google.com/macros/s/AKfycbypCi-7gV-kdc4LhexpN_ZiZ57fCTn1TPlMiA3wC0TDfV4NKFTBiw38fcwv7CNsxi8/exec?page=cart"
+       target="_blank" class="nav-icon-btn">
+      <i class="fa-solid fa-bag-shopping"></i>
+      <span>Cart</span>
+    </a>
+
+    <div class="menu-btn" id="menu-btn">
+      <i class="fa-solid fa-bars"></i>
+    </div>
+  </div>
+</header>
+
+<div class="category-container" id="categoryContainer">
+  <div class="category-menu" id="categoryMenu"></div>
+</div>
+
+<div id="shopContent"></div>
+
+<script>
+const PRODUCTS = [
+  {
+    cat:"tshirts",
+    id:"tshirt1",
+    name:"Consistency Beats Perfection Oversized Graphic T-Shirt",
+    price:569,
+    mrp:1199,
+    img:"https://i.ibb.co/DDfmmDS7/Untitled-design.png",
+    badge:"Bestseller",
+    rating: 4.8,
+    reviews: 124
+  },
+  {
+    cat:"jackets",
+    id:"hoodie1",
+    name:"Heavyweight Cotton Oversized Hoodie",
+    price:1299,
+    mrp:2499,
+    img:"https://i.ibb.co/HTv05d2p/Screenshot-2026-07-28-201328.png",
+    badge:"Hot",
+    rating: 4.9,
+    reviews: 89
+  },
+];
+
+const CATEGORIES = [
+  {id:"tshirts",label:"T-Shirts"},
+  {id:"hoodies",label:"Hoodies"},
+  {id:"jackets",label:"Jackets"},
+  {id:"bottomwear",label:"Bottomwear"},
+  {id:"kidswear",label:"Kids Wear"}
+];
+
+const PRODUCT_BASE =
+"https://script.google.com/macros/s/AKfycbyewfTcnYiU7JjIsL0GLL-7uFtX6gd66WHOnlMJ4pElLXvQLFNgcfC-q0dkNKQ8vgwG/exec";
+
+function safeText(value) {
+  return String(value ?? "").replace(/[&<>"']/g, function(c) {
+    return {
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
+    }[c];
+  });
+}
+
+function renderShop() {
+  document.getElementById("categoryMenu").innerHTML =
+    CATEGORIES.map(function(c) {
+      return `
+        <span class="category-item"
+              data-cat="${c.id}"
+              onclick="openTab('${c.id}')">
+          ${c.label}
+        </span>`;
+    }).join("");
+
+  document.getElementById("shopContent").innerHTML =
+    CATEGORIES.map(function(c) {
+
+      const items = PRODUCTS.filter(function(p) {
+        return p.cat === c.id;
+      });
+
+      const cards = items.map(function(p) {
+        const productUrl =
+          PRODUCT_BASE +
+          "?id=" + encodeURIComponent(p.id) +
+          "&category=" + encodeURIComponent(p.cat);
+
+        // Fake Rating fallback agar data mein na ho
+        const rating = p.rating || (4.5 + (Math.random() * 0.4)).toFixed(1);
+        const reviews = p.reviews || Math.floor(Math.random() * 150) + 20;
+
+        return `
+          <div class="product-card"
+               data-url="${safeText(productUrl)}"
+               onclick="openProductCard(this,event)">
+
+            <div class="product-image">
+
+              ${p.badge ? `
+                <span class="badge-tag">
+                  ${safeText(p.badge)}
+                </span>` : ""}
+
+              <div class="wishlist-btn"
+                   onclick="toggleWishlist(event,this)" title="Wishlist">
+                <i class="fa-regular fa-heart"></i>
+              </div>
+
+              <div class="quick-add-btn"
+                   onclick="quickAddToCart(event,'${safeText(p.id)}')" title="Quick Add to Cart">
+                <i class="fa-solid fa-plus"></i>
+              </div>
+
+              <img src="${safeText(p.img)}"
+                   alt="${safeText(p.name)}"
+                   loading="lazy">
+            </div>
+
+            <div class="product-info">
+              <div class="product-rating">
+                <i class="fa-solid fa-star"></i>
+                <span>${rating} (${reviews})</span>
+              </div>
+
+              <div class="product-title">
+                ${safeText(p.name)}
+              </div>
+
+              <div class="price-row">
+                <span class="product-price">
+                  ₹${Number(p.price).toLocaleString("en-IN")}
+                </span>
+
+                ${p.mrp ? `
+                  <span class="original-price">
+                    ₹${Number(p.mrp).toLocaleString("en-IN")}
+                  </span>` : ""}
+              </div>
+
+              <div class="buy-btn">
+                <i class="fa-solid fa-bag-shopping"></i>
+                View Product
+              </div>
+            </div>
+          </div>`;
+      }).join("");
+
+      return `
+        <section id="${c.id}" class="tab-content">
+          <div class="product-grid">
+            ${cards || `
+              <p class="empty-category">
+                No products found in ${c.label}.
+              </p>`}
+          </div>
+        </section>`;
+    }).join("");
+}
+
+function cleanCategory(category) {
+  category = String(category || "tshirts")
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "");
+
+  const aliases = {
+    "tshirt":"tshirts",
+    "t-shirt":"tshirts",
+    "t-shirts":"tshirts",
+    "tee":"tshirts",
+    "tees":"tshirts",
+    "hoodie":"hoodies",
+    "jacket":"jackets",
+    "bottom":"bottomwear",
+    "pants":"bottomwear",
+    "trousers":"bottomwear",
+    "kids":"kidswear",
+    "kid":"kidswear"
+  };
+
+  category = aliases[category] || category;
+
+  return CATEGORIES.some(function(c) {
+    return c.id === category;
+  }) ? category : "tshirts";
+}
+
+function getInitialCategory() {
+  const params = new URLSearchParams(window.location.search);
+
+  return cleanCategory(
+    params.get("category") ||
+    params.get("cat") ||
+    "tshirts"
+  );
+}
+
+function openTab(name) {
+  name = cleanCategory(name);
+
+  document.querySelectorAll(".tab-content").forEach(function(el) {
+    el.classList.toggle("active", el.id === name);
+  });
+
+  document.querySelectorAll(".category-item").forEach(function(el) {
+    el.classList.toggle("active", el.dataset.cat === name);
+  });
+
+  const target = document.querySelector(
+    '.category-item[data-cat="' + name + '"]'
+  );
+
+  const container = document.getElementById("categoryContainer");
+
+  if (target && container) {
+    container.scrollTo({
+      left: target.offsetLeft -
+            container.clientWidth / 2 +
+            target.clientWidth / 2,
+      behavior: "smooth"
+    });
+  }
+}
+
+function openProductCard(element, event) {
+  const url = element.getAttribute("data-url");
+
+  if (url) {
+    window.open(url, "_blank");
+  }
+}
+
+function toggleWishlist(event, element) {
+  event.stopPropagation();
+
+  const icon = element.querySelector("i");
+
+  if (icon.classList.contains("fa-regular")) {
+    icon.classList.replace("fa-regular", "fa-solid");
+    icon.style.color = "#ff4757";
+  } else {
+    icon.classList.replace("fa-solid", "fa-regular");
+    icon.style.color = "#fff";
+  }
+}
+
+/* Quick Add to Cart function using the white plus button */
+function quickAddToCart(event, productId) {
+  event.stopPropagation();
+  
+  // Aap yahan cart API ya redirect link trigger kar sakte hain
+  alert("Product (" + productId + ") successfully added to cart!");
+  
+  // Optional: Agar aapko cart URL pe bhejna ho ya background mein add karna ho toh yahan likhein.
+}
+
+const menuBtn = document.getElementById("menu-btn");
+const navbar = document.getElementById("navbar");
+const overlay = document.getElementById("menu-overlay");
+
+function toggleMenu() {
+  navbar.classList.toggle("active");
+  overlay.classList.toggle("active");
+}
+
+menuBtn.addEventListener("click", toggleMenu);
+overlay.addEventListener("click", toggleMenu);
+
+renderShop();
+openTab(getInitialCategory());
+</script>
+
+</body>
+</html>
