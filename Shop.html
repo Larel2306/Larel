@@ -84,6 +84,23 @@ body {
   border-radius: 30px;
   border: 1px solid #ffffff1c;
   font-size: 14px;
+  position: relative;
+}
+
+.cart-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #0ea5e9;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .menu-btn {
@@ -161,7 +178,7 @@ body {
   display: block;
 }
 
-/* Snitch Style Full-Width Mobile Grid Responsiveness */
+/* Snitch Style Mobile Grid Responsiveness */
 .product-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0,1fr));
@@ -223,7 +240,7 @@ body {
 .wishlist-btn {
   position: absolute;
   top: 12px;
-  right: 54px; /* Shifted left to make space for the quick-add plus button */
+  right: 12px;
   width: 34px;
   height: 34px;
   border-radius: 50%;
@@ -236,32 +253,9 @@ body {
   cursor: pointer;
 }
 
-/* White Quick Add Plus Button on Top Right */
-.quick-add-btn {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: #ffffff;
-  color: #000000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  transition: transform 0.2s, background 0.2s;
-}
-
-.quick-add-btn:hover {
-  transform: scale(1.1);
-  background: #f0f0f0;
-}
-
 .product-info {
   padding: 15px;
+  position: relative; /* Positioning context for the quick add button */
 }
 
 /* Rating Stars */
@@ -285,6 +279,7 @@ body {
   font-weight: 700;
   line-height: 1.45;
   margin-bottom: 10px;
+  padding-right: 35px; /* Space for the quick add button on top right */
 }
 
 .price-row {
@@ -306,6 +301,38 @@ body {
   text-decoration: line-through;
 }
 
+/* Container above View Product where White Plus Button is placed on right side */
+.top-action-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+/* White Quick Add Plus Button right above View Product on the right side */
+.quick-add-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  transition: transform 0.2s, background 0.2s;
+  font-size: 14px;
+  font-weight: 800;
+  margin-left: auto;
+  margin-bottom: 8px;
+}
+
+.quick-add-btn:hover {
+  transform: scale(1.1);
+  background: #f0f0f0;
+}
+
 .buy-btn {
   display: flex;
   align-items: center;
@@ -317,6 +344,33 @@ body {
   border-radius: 10px;
   font-weight: 800;
   font-size: 12px;
+  width: 100%;
+}
+
+/* Toast Notification Styling (Blue Theme) */
+.toast-notification {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #0ea5e9;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 10px 25px rgba(14, 165, 233, 0.4);
+  z-index: 9999;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: 0.3s ease;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.toast-notification.show {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .empty-category {
@@ -334,7 +388,6 @@ body {
   }
 }
 
-/* Snitch Style Mobile Layout Adjustments - 2 Columns edge-to-edge / full width responsiveness */
 @media(max-width:768px) {
   .menu-btn {
     display: flex;
@@ -361,7 +414,6 @@ body {
     gap: 20px;
   }
 
-  /* Snitch Style Mobile Full/Edge Grid */
   .product-grid {
     padding: 0 8px;
     gap: 8px;
@@ -384,7 +436,7 @@ body {
 
 @media(max-width:480px) {
   .product-info {
-    padding: 8px;
+    padding: 10px;
   }
 
   .product-title {
@@ -405,7 +457,13 @@ body {
 
   .buy-btn {
     font-size: 11px;
-    padding: 8px;
+    padding: 9px;
+  }
+
+  .quick-add-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 12px;
   }
 
   .badge-tag {
@@ -416,14 +474,6 @@ body {
   }
 
   .wishlist-btn {
-    width: 28px;
-    height: 28px;
-    top: 8px;
-    right: 42px;
-    font-size: 12px;
-  }
-
-  .quick-add-btn {
     width: 28px;
     height: 28px;
     top: 8px;
@@ -444,14 +494,14 @@ body {
 <div class="menu-overlay" id="menu-overlay"></div>
 
 <header class="header">
-  <a href="https://sites.google.com/view/lakhanshop/home" class="logo">LAREL</a>
+  <a href="#" class="logo">LAREL</a>
 
   <nav class="navbar" id="navbar">
     <ul class="nav-links">
-      <li><a href="https://sites.google.com/view/lakhanshop/home">Home</a></li>
-      <li><a href="https://sites.google.com/view/lakhanshop/shop-all" class="active">Shop</a></li>
-      <li><a href="https://sites.google.com/view/lakhanshop/about-us">About Us</a></li>
-      <li><a href="https://sites.google.com/view/lakhanshop/contact">Contact</a></li>
+      <li><a href="#">Home</a></li>
+      <li><a href="#" class="active">Shop</a></li>
+      <li><a href="#">About Us</a></li>
+      <li><a href="#">Contact</a></li>
     </ul>
   </nav>
 
@@ -460,10 +510,10 @@ body {
       <i class="fa-solid fa-magnifying-glass"></i>
     </a>
 
-    <a href="https://script.google.com/macros/s/AKfycbypCi-7gV-kdc4LhexpN_ZiZ57fCTn1TPlMiA3wC0TDfV4NKFTBiw38fcwv7CNsxi8/exec?page=cart"
-       target="_blank" class="nav-icon-btn">
+    <a href="#" class="nav-icon-btn" id="cart-btn">
       <i class="fa-solid fa-bag-shopping"></i>
       <span>Cart</span>
+      <div class="cart-count" id="cartCount">0</div>
     </a>
 
     <div class="menu-btn" id="menu-btn">
@@ -481,39 +531,42 @@ body {
 <script>
 const PRODUCTS = [
   {
-    cat:"tshirts",
-    id:"tshirt1",
-    name:"Consistency Beats Perfection Oversized Graphic T-Shirt",
-    price:569,
-    mrp:1199,
-    img:"https://i.ibb.co/DDfmmDS7/Untitled-design.png",
-    badge:"Bestseller",
+    cat: "tshirts",
+    id: "tshirt1",
+    name: "Consistency Beats Perfection Oversized Graphic T-Shirt",
+    price: 569,
+    mrp: 1199,
+    img: "https://i.ibb.co/DDfmmDS7/Untitled-design.png",
+    badge: "Bestseller",
     rating: 4.8,
     reviews: 124
   },
   {
-    cat:"jackets",
-    id:"hoodie1",
-    name:"Heavyweight Cotton Oversized Hoodie",
-    price:1299,
-    mrp:2499,
-    img:"https://i.ibb.co/HTv05d2p/Screenshot-2026-07-28-201328.png",
-    badge:"Hot",
+    cat: "jackets",
+    id: "hoodie1",
+    name: "Heavyweight Cotton Oversized Hoodie",
+    price: 1299,
+    mrp: 2499,
+    img: "https://i.ibb.co/HTv05d2p/Screenshot-2026-07-28-201328.png",
+    badge: "Hot",
     rating: 4.9,
     reviews: 89
-  },
+  }
 ];
 
 const CATEGORIES = [
-  {id:"tshirts",label:"T-Shirts"},
-  {id:"hoodies",label:"Hoodies"},
-  {id:"jackets",label:"Jackets"},
-  {id:"bottomwear",label:"Bottomwear"},
-  {id:"kidswear",label:"Kids Wear"}
+  { id: "tshirts", label: "T-Shirts" },
+  { id: "hoodies", label: "Hoodies" },
+  { id: "jackets", label: "Jackets" },
+  { id: "bottomwear", label: "Bottomwear" },
+  { id: "kidswear", label: "Kids Wear" }
 ];
 
-const PRODUCT_BASE =
-"https://script.google.com/macros/s/AKfycbyewfTcnYiU7JjIsL0GLL-7uFtX6gd66WHOnlMJ4pElLXvQLFNgcfC-q0dkNKQ8vgwG/exec";
+let cart = JSON.parse(localStorage.getItem('larel_cart')) || [];
+
+function updateCartCount() {
+  document.getElementById('cartCount').textContent = cart.length;
+}
 
 function safeText(value) {
   return String(value ?? "").replace(/[&<>"']/g, function(c) {
@@ -540,46 +593,22 @@ function renderShop() {
 
   document.getElementById("shopContent").innerHTML =
     CATEGORIES.map(function(c) {
-
       const items = PRODUCTS.filter(function(p) {
         return p.cat === c.id;
       });
 
       const cards = items.map(function(p) {
-        const productUrl =
-          PRODUCT_BASE +
-          "?id=" + encodeURIComponent(p.id) +
-          "&category=" + encodeURIComponent(p.cat);
-
-        // Fake Rating fallback agar data mein na ho
-        const rating = p.rating || (4.5 + (Math.random() * 0.4)).toFixed(1);
-        const reviews = p.reviews || Math.floor(Math.random() * 150) + 20;
+        const rating = p.rating || 4.8;
+        const reviews = p.reviews || 95;
 
         return `
-          <div class="product-card"
-               data-url="${safeText(productUrl)}"
-               onclick="openProductCard(this,event)">
-
+          <div class="product-card" onclick="openProductDetail('${safeText(p.id)}')">
             <div class="product-image">
-
-              ${p.badge ? `
-                <span class="badge-tag">
-                  ${safeText(p.badge)}
-                </span>` : ""}
-
-              <div class="wishlist-btn"
-                   onclick="toggleWishlist(event,this)" title="Wishlist">
+              ${p.badge ? `<span class="badge-tag">${safeText(p.badge)}</span>` : ""}
+              <div class="wishlist-btn" onclick="toggleWishlist(event, this)">
                 <i class="fa-regular fa-heart"></i>
               </div>
-
-              <div class="quick-add-btn"
-                   onclick="quickAddToCart(event,'${safeText(p.id)}')" title="Quick Add to Cart">
-                <i class="fa-solid fa-plus"></i>
-              </div>
-
-              <img src="${safeText(p.img)}"
-                   alt="${safeText(p.name)}"
-                   loading="lazy">
+              <img src="${safeText(p.img)}" alt="${safeText(p.name)}" loading="lazy">
             </div>
 
             <div class="product-info">
@@ -596,11 +625,15 @@ function renderShop() {
                 <span class="product-price">
                   ₹${Number(p.price).toLocaleString("en-IN")}
                 </span>
-
                 ${p.mrp ? `
                   <span class="original-price">
                     ₹${Number(p.mrp).toLocaleString("en-IN")}
                   </span>` : ""}
+              </div>
+
+              <!-- White Plus Button right above View Product on the right side -->
+              <div class="quick-add-btn" onclick="quickAddToCart(event, '${safeText(p.id)}')" title="Add to Cart">
+                <i class="fa-solid fa-plus"></i>
               </div>
 
               <div class="buy-btn">
@@ -614,93 +647,41 @@ function renderShop() {
       return `
         <section id="${c.id}" class="tab-content">
           <div class="product-grid">
-            ${cards || `
-              <p class="empty-category">
-                No products found in ${c.label}.
-              </p>`}
+            ${cards || `<p class="empty-category">No products found in ${c.label}.</p>`}
           </div>
         </section>`;
     }).join("");
+
+  updateCartCount();
 }
 
 function cleanCategory(category) {
-  category = String(category || "tshirts")
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, "");
-
-  const aliases = {
-    "tshirt":"tshirts",
-    "t-shirt":"tshirts",
-    "t-shirts":"tshirts",
-    "tee":"tshirts",
-    "tees":"tshirts",
-    "hoodie":"hoodies",
-    "jacket":"jackets",
-    "bottom":"bottomwear",
-    "pants":"bottomwear",
-    "trousers":"bottomwear",
-    "kids":"kidswear",
-    "kid":"kidswear"
-  };
-
-  category = aliases[category] || category;
-
-  return CATEGORIES.some(function(c) {
-    return c.id === category;
-  }) ? category : "tshirts";
-}
-
-function getInitialCategory() {
-  const params = new URLSearchParams(window.location.search);
-
-  return cleanCategory(
-    params.get("category") ||
-    params.get("cat") ||
-    "tshirts"
-  );
+  category = String(category || "tshirts").toLowerCase().trim().replace(/\s+/g, "");
+  return CATEGORIES.some(c => c.id === category) ? category : "tshirts";
 }
 
 function openTab(name) {
   name = cleanCategory(name);
 
-  document.querySelectorAll(".tab-content").forEach(function(el) {
+  document.querySelectorAll(".tab-content").forEach(el => {
     el.classList.toggle("active", el.id === name);
   });
 
-  document.querySelectorAll(".category-item").forEach(function(el) {
+  document.querySelectorAll(".category-item").forEach(el => {
     el.classList.toggle("active", el.dataset.cat === name);
   });
-
-  const target = document.querySelector(
-    '.category-item[data-cat="' + name + '"]'
-  );
-
-  const container = document.getElementById("categoryContainer");
-
-  if (target && container) {
-    container.scrollTo({
-      left: target.offsetLeft -
-            container.clientWidth / 2 +
-            target.clientWidth / 2,
-      behavior: "smooth"
-    });
-  }
 }
 
-function openProductCard(element, event) {
-  const url = element.getAttribute("data-url");
-
-  if (url) {
-    window.open(url, "_blank");
+function openProductDetail(productId) {
+  const product = PRODUCTS.find(p => p.id === productId);
+  if (product) {
+    alert("Opening product details for: " + product.name);
   }
 }
 
 function toggleWishlist(event, element) {
   event.stopPropagation();
-
   const icon = element.querySelector("i");
-
   if (icon.classList.contains("fa-regular")) {
     icon.classList.replace("fa-regular", "fa-solid");
     icon.style.color = "#ff4757";
@@ -710,14 +691,31 @@ function toggleWishlist(event, element) {
   }
 }
 
-/* Quick Add to Cart function using the white plus button */
 function quickAddToCart(event, productId) {
   event.stopPropagation();
-  
-  // Aap yahan cart API ya redirect link trigger kar sakte hain
-  alert("Product (" + productId + ") successfully added to cart!");
-  
-  // Optional: Agar aapko cart URL pe bhejna ho ya background mein add karna ho toh yahan likhein.
+  const product = PRODUCTS.find(p => p.id === productId);
+  if (product) {
+    cart.push(product);
+    localStorage.setItem('larel_cart', JSON.stringify(cart));
+    updateCartCount();
+    showToast(product.name + " cart mein add ho gaya hai!");
+  }
+}
+
+function showToast(message) {
+  const existing = document.querySelector('.toast-notification');
+  if (existing) existing.remove();
+
+  const toast = document.createElement('div');
+  toast.className = 'toast-notification';
+  toast.innerHTML = `<i class="fa-solid fa-check-circle" style="font-size: 16px;"></i> <span>${message}</span>`;
+  document.body.appendChild(toast);
+
+  setTimeout(() => toast.classList.add('show'), 100);
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 300);
+  }, 2500);
 }
 
 const menuBtn = document.getElementById("menu-btn");
@@ -733,7 +731,7 @@ menuBtn.addEventListener("click", toggleMenu);
 overlay.addEventListener("click", toggleMenu);
 
 renderShop();
-openTab(getInitialCategory());
+openTab("tshirts");
 </script>
 
 </body>
