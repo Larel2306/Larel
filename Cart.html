@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MFCL327Z');</script>
+<!-- End Google Tag Manager -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Shopping Cart - LAREL</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: #0b0b0e; color: #f3f3f6; padding: 20px 10px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        .store-header { width: 100%; max-width: 800px; display: flex; justify-content: center; align-items: center; background: rgba(22, 22, 29, 0.85); border: 1px solid rgba(255,255,255,0.08); padding: 18px 20px; border-radius: 20px; margin-bottom: 20px; }
+        .logo { font-size: 22px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: #ffffff; }
+        .logo span { color: #2dd4bf; }
+        .cart-container { width: 100%; max-width: 800px; }
+
+        #emptyCartView { display: none; flex-direction: column; align-items: center; justify-content: center; padding: 32px 20px; margin: 30px auto; max-width: 280px; width: 85%; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 36px; text-align: center; }
+        .empty-cart-circle-icon { width: 58px; height: 58px; background: rgba(45, 212, 191, 0.1); border: 1px solid rgba(45, 212, 191, 0.25); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 14px; color: #2dd4bf; font-size: 20px; }
+        #emptyCartView h3 { font-size: 15px; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
+        #emptyCartView p { font-size: 12px; color: #a0a0ab; margin-bottom: 18px; }
+        .btn-continue-shopping { display: inline-flex; align-items: center; justify-content: center; gap: 8px; width: 100%; max-width: 170px; padding: 10px 14px; background: #2dd4bf; color: #000; font-size: 12px; font-weight: 700; border-radius: 25px; text-decoration: none; border: none; }
+
+        .cart-item { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 16px; margin-bottom: 14px; display: flex; align-items: center; gap: 14px; }
+        .cart-item img { width: 75px; height: 75px; border-radius: 12px; object-fit: cover; background: #1f1f24; }
+        .cart-item-details { flex: 1; }
+        .cart-item-title { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+        .cart-item-info { font-size: 12px; color: #a0a0ab; margin-bottom: 8px; }
+        .qty-controls { display: flex; align-items: center; gap: 6px; margin-top: 6px; }
+        .qty-btn { background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.15); color: #fff; width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 12px; }
+        .qty-btn:hover { background: #2dd4bf; color: #000; }
+        .qty-val { font-size: 13px; font-weight: 700; color: #fff; min-width: 20px; text-align: center; }
+        .cart-item-price { font-size: 15px; font-weight: 800; color: #2dd4bf; text-align: right; }
+        .remove-btn { background: rgba(255, 59, 48, 0.1); border: 1px solid rgba(255, 59, 48, 0.2); color: #ff3b30; width: 34px; height: 34px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; margin-left: 6px; }
+
+        #cartSummaryBox { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 18px; padding: 20px; margin-top: 20px; }
+        .summary-row { display: flex; justify-content: space-between; font-size: 14px; color: #a0a0ab; margin-bottom: 10px; }
+        .summary-row.total { font-size: 18px; font-weight: 800; color: #ffffff; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 12px; margin-top: 12px; margin-bottom: 20px; }
+        .summary-row.total span:last-child { color: #2dd4bf; }
+        .btn-proceed-pay { width: 100%; padding: 16px; background: #2dd4bf; color: #000; border: none; border-radius: 14px; font-size: 15px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
+
+        .fullscreen-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0b0b0e; z-index: 999999; display: flex; flex-direction: column; opacity: 0; visibility: hidden; transform: scale(0.95); transition: all 0.3s ease; overflow-y: auto; }
+        .fullscreen-overlay.active { opacity: 1; visibility: visible; transform: scale(1); }
+        .modal-top-bar { width: 100%; padding: 16px 24px; background: #16161a; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
+        .modal-top-bar h2 { font-size: 18px; color: #fff; font-weight: 700; }
+        .close-fullscreen-btn { background: rgba(255,255,255,0.08); border: none; color: #fff; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .checkout-content { max-width: 800px; width: 100%; margin: 0 auto; padding: 24px 16px 40px; }
+
+        .order-summary-card { background: #16161a; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 16px; margin-bottom: 24px; display: flex; align-items: center; gap: 16px; }
+        .order-summary-card img { width: 70px; height: 70px; border-radius: 10px; object-fit: cover; background: #1f1f24; }
+        .summary-details { flex: 1; }
+        .summary-details h4 { color: #fff; font-size: 15px; margin-bottom: 4px; }
+        .summary-details p { color: #a0a0ab; font-size: 13px; }
+        .summary-price { font-size: 18px; font-weight: 800; color: #2dd4bf; }
+
+        .form-section-title { font-size: 14px; font-weight: 700; color: #2dd4bf; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 12px; font-weight: 600; color: #a0a0ab; margin-bottom: 6px; text-transform: uppercase; }
+        .form-input { width: 100%; padding: 14px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; font-size: 14px; outline: none; }
+
+        .payment-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+        .pay-option-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; overflow: hidden; transition: all 0.3s ease; }
+        .pay-option-header { padding: 16px; display: flex; align-items: center; gap: 14px; cursor: pointer; user-select: none; }
+        .pay-option-header i.pay-icon { font-size: 20px; color: #a0a0ab; width: 24px; text-align: center; }
+        .pay-option-header span { font-size: 14px; font-weight: 600; color: #fff; flex: 1; }
+        .pay-option-header i.chevron { font-size: 14px; color: #a0a0ab; transition: transform 0.3s ease; }
+
+        .pay-option-card.active { border-color: #2dd4bf; background: rgba(45, 212, 191, 0.05); }
+        .pay-option-card.active .pay-option-header i.pay-icon,
+        .pay-option-card.active .pay-option-header span { color: #2dd4bf; }
+        .pay-option-card.active .pay-option-header i.chevron { transform: rotate(180deg); color: #2dd4bf; }
+
+        .pay-sub-content { display: none; padding: 16px; border-top: 1px solid rgba(255,255,255,0.08); background: rgba(0,0,0,0.2); }
+        .pay-option-card.active .pay-sub-content { display: block; }
+
+        .upi-apps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .upi-app-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer; color: #fff; font-size: 11px; font-weight: 600; }
+        .upi-app-btn i { font-size: 18px; color: #2dd4bf; }
+        .upi-app-btn.active { border-color: #2dd4bf; background: rgba(45,212,191,0.2); }
+
+        .btn-submit-order { width: 100%; padding: 18px; background: #2dd4bf; color: #000; border: none; border-radius: 14px; font-size: 16px; font-weight: 800; cursor: pointer; }
+
+        @media (max-width: 768px) {
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .upi-apps-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MFCL327Z"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+    <div class="store-header">
+        <div class="logo">LA<span>REL</span></div>
+    </div>
+
+    <div class="cart-container">
+        <div id="emptyCartView">
+            <div class="empty-cart-circle-icon"><i class="fa-solid fa-bag-shopping"></i></div>
+            <h3>Your Cart is Empty</h3>
+            <p>Add some tees to start shopping.</p>
+            <a href="https://script.google.com/macros/s/AKfycbyPpIsz1AUzUYLJZA68lq0BJiX3u5Ts2q7PZegZ5WduDZTuJiLIPJWh3807wy-uNu6l/exec?page=shop" class="btn-continue-shopping"><i class="fa-solid fa-shop"></i> Shop Now</a>
+        </div>
+
+        <div id="cartItemsList"></div>
+
+        <div id="cartSummaryBox">
+            <div class="summary-row"><span>Shipping Fee</span><span style="color:#2dd4bf;">FREE</span></div>
+            <div class="summary-row total"><span>Total Amount</span><span id="cartTotalDisplay">₹0</span></div>
+
+            <button type="button" class="btn-proceed-pay" onclick="openFullscreenCheckout()">
+                <i class="fa-solid fa-bolt"></i> Proceed to Pay
+            </button>
+        </div>
+    </div>
+
+    <div class="fullscreen-overlay" id="checkoutOverlay">
+        <div class="modal-top-bar">
+            <h2><i class="fa-solid fa-shield-halved" style="color:#2dd4bf;"></i> Secure Checkout</h2>
+            <button class="close-fullscreen-btn" onclick="closeFullscreenCheckout()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div class="checkout-content">
+            <div class="order-summary-card">
+                <img id="summaryImg" src="" alt="Product">
+                <div class="summary-details">
+                    <h4 id="summaryTitle">LAREL Order</h4>
+                    <p>Total Items: <span id="summaryQty">0</span></p>
+                </div>
+                <div class="summary-price" id="checkoutSummaryPrice">₹0</div>
+            </div>
+
+            <form id="fullCheckoutForm" onsubmit="handleOrderSubmission(event)">
+                <div class="form-section-title"><i class="fa-solid fa-user"></i> Contact Details</div>
+                <div class="grid-2">
+                    <div class="form-group"><label>Full Name *</label><input type="text" class="form-input" id="custName" required></div>
+                    <div class="form-group"><label>Mobile Number *</label><input type="tel" class="form-input" id="custPhone" pattern="[0-9]{10}" required></div>
+                </div>
+
+                <div class="form-section-title"><i class="fa-solid fa-location-dot"></i> Delivery Address</div>
+                <div class="form-group"><label>House / Flat No. *</label><input type="text" class="form-input" id="addrHouse" required></div>
+                <div class="form-group"><label>Street / Area *</label><input type="text" class="form-input" id="addrStreet" required></div>
+                <div class="grid-3">
+                    <div class="form-group"><label>Landmark</label><input type="text" class="form-input" id="addrLandmark"></div>
+                    <div class="form-group"><label>Pincode *</label><input type="text" class="form-input" id="addrPincode" pattern="[0-9]{6}" required></div>
+                    <div class="form-group"><label>City *</label><input type="text" class="form-input" id="addrCity" required></div>
+                </div>
+                <div class="form-group"><label>State *</label><input type="text" class="form-input" id="addrState" required></div>
+
+                <div class="form-section-title"><i class="fa-solid fa-credit-card"></i> Payment Method</div>
+
+                <div class="payment-list">
+                    <div class="pay-option-card" id="card-UPI">
+                        <div class="pay-option-header" onclick="selectPaymentCard('UPI')">
+                            <i class="fa-solid fa-mobile-screen-button pay-icon"></i>
+                            <span>UPI Apps (PhonePe, GPay, Paytm)</span>
+                            <i class="fa-solid fa-chevron-down chevron"></i>
+                        </div>
+                        <div class="pay-sub-content">
+                            <div class="upi-apps-grid">
+                                <div class="upi-app-btn active" id="app-phonepe" onclick="selectUpiApp('phonepe')">
+                                    <i class="fa-solid fa-wallet"></i><span>PhonePe</span>
+                                </div>
+                                <div class="upi-app-btn" id="app-gpay" onclick="selectUpiApp('gpay')">
+                                    <i class="fa-brands fa-google-pay"></i><span>Google Pay</span>
+                                </div>
+                                <div class="upi-app-btn" id="app-paytm" onclick="selectUpiApp('paytm')">
+                                    <i class="fa-solid fa-receipt"></i><span>Paytm</span>
+                                </div>
+                                <div class="upi-app-btn" id="app-bhim" onclick="selectUpiApp('bhim')">
+                                    <i class="fa-solid fa-building-columns"></i><span>BHIM / Other</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pay-option-card" id="card-CARD">
+                        <div class="pay-option-header" onclick="selectPaymentCard('CARD')">
+                            <i class="fa-solid fa-credit-card pay-icon"></i>
+                            <span>Credit / Debit Card</span>
+                            <i class="fa-solid fa-chevron-down chevron"></i>
+                        </div>
+                        <div class="pay-sub-content">
+                            <div class="form-group"><label>Card Number</label><input type="text" class="form-input" placeholder="16-digit card number" maxlength="16"></div>
+                            <div class="grid-2">
+                                <div class="form-group" style="margin-bottom:0;"><label>Expiry</label><input type="text" class="form-input" placeholder="MM/YY"></div>
+                                <div class="form-group" style="margin-bottom:0;"><label>CVV</label><input type="password" class="form-input" placeholder="3 Digits" maxlength="3"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pay-option-card" id="card-NETBANKING">
+                        <div class="pay-option-header" onclick="selectPaymentCard('NETBANKING')">
+                            <i class="fa-solid fa-building-columns pay-icon"></i>
+                            <span>Net Banking</span>
+                            <i class="fa-solid fa-chevron-down chevron"></i>
+                        </div>
+                        <div class="pay-sub-content">
+                            <select class="form-input" style="background:#16161a;">
+                                <option>SBI</option><option>HDFC Bank</option><option>ICICI Bank</option><option>Axis Bank</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="pay-option-card" id="card-COD">
+                        <div class="pay-option-header" onclick="selectPaymentCard('COD')">
+                            <i class="fa-solid fa-truck pay-icon"></i>
+                            <span>Cash on Delivery</span>
+                            <i class="fa-solid fa-chevron-down chevron"></i>
+                        </div>
+                        <div class="pay-sub-content">
+                            <p style="font-size:12px; color:#a0a0ab;" id="codMsgText">Pay cash when product is delivered.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit-order" id="finalPayBtn">Select a Payment Method</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const STORE_UPI_ID = "9252309446@ybl"; 
+
+        let activeCartKey = null;
+        let chosenPayment = null;
+        let chosenUpiApp = "phonepe";
+
+        function getCart() {
+            for (let i = 0; i < localStorage.length; i++) {
+                let key = localStorage.key(i);
+                try {
+                    let data = JSON.parse(localStorage.getItem(key));
+                    if (Array.isArray(data) && data.length > 0) {
+                        if (data[0].name || data[0].title || data[0].productName || data[0].price || data[0].cost) {
+                            activeCartKey = key;
+                            return data;
+                        }
+                    } else if (typeof data === 'object' && data !== null) {
+                        if (data.name || data.title || data.productName || data.price || data.cost) {
+                            activeCartKey = key;
+                            return [data];
+                        }
+                    }
+                } catch(e) {}
+            }
+            return [];
+        }
+
+        function calculateCartTotal() {
+            let cart = getCart();
+            return cart.reduce((total, item) => {
+                let price = parseFloat(item.price || item.cost || 0);
+                let qty = Number(item.qty || item.quantity || item.count || 1);
+                return total + (price * qty);
+            }, 0);
+        }
+
+        function renderCart() {
+            let cart = getCart();
+            const emptyView = document.getElementById("emptyCartView");
+            const itemsList = document.getElementById("cartItemsList");
+            const summaryBox = document.getElementById("cartSummaryBox");
+
+            if (!cart || cart.length === 0) {
+                emptyView.style.display = "flex";
+                itemsList.innerHTML = "";
+                summaryBox.style.display = "none";
+                return;
+            }
+
+            emptyView.style.display = "none";
+            summaryBox.style.display = "block";
+            let html = "";
+            let totalAmount = 0;
+
+            cart.forEach((item, index) => {
+                let name = item.name || item.title || item.productName || "LAREL Tee";
+                let qty = Number(item.qty || item.quantity || item.count || 1);
+                let price = parseFloat(item.price || item.cost || 0);
+                let itemTotal = price * qty;
+                totalAmount += itemTotal;
+
+                let img = item.img || item.image || item.productImg || item.src || "https://via.placeholder.com/150";
+                let color = item.color || item.selectedColor || "Standard";
+                let size = item.size || item.selectedSize || "M";
+
+                html += `
+                    <div class="cart-item">
+                        <img src="${img}" alt="${name}">
+                        <div class="cart-item-details">
+                            <div class="cart-item-title">${name}</div>
+                            <div class="cart-item-info">Color: ${color} | Size: ${size}</div>
+                            <div class="qty-controls">
+                                <button class="qty-btn" onclick="updateQty(${index}, -1)">-</button>
+                                <span class="qty-val">${qty}</span>
+                                <button class="qty-btn" onclick="updateQty(${index}, 1)">+</button>
+                            </div>
+                        </div>
+                        <div class="cart-item-price">₹${itemTotal.toLocaleString('en-IN')}</div>
+                        <button class="remove-btn" onclick="removeItem(${index})"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                `;
+            });
+
+            itemsList.innerHTML = html;
+            document.getElementById("cartTotalDisplay").innerText = `₹${totalAmount.toLocaleString('en-IN')}`;
+        }
+
+        function updateQty(index, change) {
+            let cart = getCart();
+            if (cart[index]) {
+                let currentQty = Number(cart[index].qty || cart[index].quantity || 1) + change;
+                if (cart[index].qty !== undefined) cart[index].qty = currentQty;
+                if (cart[index].quantity !== undefined) cart[index].quantity = currentQty;
+                if (currentQty <= 0) cart.splice(index, 1);
+                localStorage.setItem(activeCartKey, JSON.stringify(cart));
+                renderCart();
+            }
+        }
+
+        function removeItem(index) {
+            let cart = getCart();
+            cart.splice(index, 1);
+            localStorage.setItem(activeCartKey, JSON.stringify(cart));
+            renderCart();
+        }
+
+        function openFullscreenCheckout() {
+            let cart = getCart();
+            if(!cart || cart.length === 0) return;
+
+            chosenPayment = null;
+            document.querySelectorAll(".pay-option-card").forEach(c => c.classList.remove("active"));
+
+            let totalQty = cart.reduce((sum, i) => sum + Number(i.qty || i.quantity || 1), 0);
+            let totalAmount = calculateCartTotal();
+            let name = cart[0].name || cart[0].title || cart[0].productName || "LAREL Product";
+            let img = cart[0].img || cart[0].image || cart[0].productImg || "https://via.placeholder.com/150";
+
+            document.getElementById("summaryTitle").innerText = cart.length === 1 ? name : `LAREL Order (${cart.length} Items)`;
+            document.getElementById("summaryQty").innerText = totalQty;
+            document.getElementById("summaryImg").src = img;
+            document.getElementById("checkoutSummaryPrice").innerText = `₹${totalAmount.toLocaleString('en-IN')}`;
+            document.getElementById("codMsgText").innerText = `Pay ₹${totalAmount.toLocaleString('en-IN')} cash when product is delivered.`;
+
+            updatePayButton();
+            document.getElementById("checkoutOverlay").classList.add("active");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeFullscreenCheckout() {
+            document.getElementById("checkoutOverlay").classList.remove("active");
+            document.body.style.overflow = "auto";
+        }
+
+        function selectPaymentCard(method) {
+            document.querySelectorAll(".pay-option-card").forEach(card => card.classList.remove("active"));
+            const targetCard = document.getElementById("card-" + method);
+            if(targetCard) targetCard.classList.add("active");
+
+            chosenPayment = method;
+            updatePayButton();
+        }
+
+        function selectUpiApp(app) {
+            document.querySelectorAll(".upi-app-btn").forEach(btn => btn.classList.remove("active"));
+            const targetBtn = document.getElementById("app-" + app);
+            if(targetBtn) targetBtn.classList.add("active");
+            chosenUpiApp = app;
+        }
+
+        function updatePayButton() {
+            const btn = document.getElementById("finalPayBtn");
+            let totalAmount = calculateCartTotal();
+            if (!chosenPayment) btn.innerText = "Select a Payment Method";
+            else if (chosenPayment === "COD") btn.innerText = `Place COD Order - ₹${totalAmount.toLocaleString('en-IN')}`;
+            else btn.innerText = `Pay Now - ₹${totalAmount.toLocaleString('en-IN')}`;
+        }
+
+        function handleOrderSubmission(event) {
+            event.preventDefault();
+            if (!chosenPayment) { alert("Please select a payment option!"); return; }
+
+            let totalAmount = calculateCartTotal();
+
+            if (chosenPayment === "UPI") {
+                let storeName = encodeURIComponent("LAREL Store");
+                
+                let upiIntentUrl = `upi://pay?pa=${STORE_UPI_ID}&pn=${storeName}&am=${totalAmount}&cu=INR&tn=LAREL%20Order`;
+
+                if (chosenUpiApp === "phonepe") {
+                    upiIntentUrl = `phonepe://pay?pa=${STORE_UPI_ID}&pn=${storeName}&am=${totalAmount}&cu=INR`;
+                } else if (chosenUpiApp === "gpay") {
+                    upiIntentUrl = `tez://upi/pay?pa=${STORE_UPI_ID}&pn=${storeName}&am=${totalAmount}&cu=INR`;
+                } else if (chosenUpiApp === "paytm") {
+                    upiIntentUrl = `paytmmp://pay?pa=${STORE_UPI_ID}&pn=${storeName}&am=${totalAmount}&cu=INR`;
+                }
+
+                window.location.href = upiIntentUrl;
+
+                setTimeout(() => {
+                    window.location.href = `upi://pay?pa=${STORE_UPI_ID}&pn=${storeName}&am=${totalAmount}&cu=INR`;
+                }, 1000);
+
+            } else {
+                alert("Order Placed Successfully!");
+                localStorage.clear();
+                closeFullscreenCheckout();
+                renderCart();
+            }
+        }
+
+        window.onload = renderCart;
+    </script>
+</body>
+</html>
