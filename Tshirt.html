@@ -31,22 +31,21 @@ button{cursor:pointer}
 .product{display:grid;grid-template-columns:1fr 1fr;background:#111116;border:1px solid #292930;border-radius:25px;overflow:hidden}
 .gallery{padding:25px;background:#0d0d11;border-right:1px solid #292930;min-width:0}
 
-/* MAIN IMAGE GALLERY WITH BLURRED BACKGROUND TO FILL EMPTY SPACE WITHOUT CROPPING */
+/* MAIN IMAGE: FULL COVER USING OBJECT-FIT COVER */
 .gallery-main{height:480px;position:relative;overflow:hidden;background:#08080b;border-radius:18px}
 .slides{height:100%;width:100%;display:flex;transition:transform .35s ease}
-.slide{flex:0 0 100%;width:100%;min-width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#08080b;position:relative}
-.slide-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:blur(22px);opacity:0.45;transform:scale(1.15);z-index:1}
-.slide img{display:block;width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain;object-position:center center;position:relative;z-index:2}
+.slide{flex:0 0 100%;width:100%;min-width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#08080b}
+.slide img{display:block;width:100%;height:100%;object-fit:cover;object-position:center center}
 
-.gallery-btn{position:absolute;top:50%;transform:translateY(-50%);height:42px;width:42px;border:1px solid #555;border-radius:50%;background:#17171ddd;color:white;z-index:5}
+.gallery-btn{position:absolute;top:50%;transform:translateY(-50%);height:42px;width:42px;border:1px solid #555;border-radius:50%;background:#17171ddd;color:white;z-index:3}
 .gallery-btn:hover{background:#2dd4bf;color:#000}
 .gallery-btn:disabled{opacity:.3;cursor:default}
 .prev{left:12px}.next{right:12px}
-.counter{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:#000b;border:1px solid #444;color:#fff;border-radius:20px;padding:6px 12px;font-size:12px;z-index:5}
+.counter{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:#000b;border:1px solid #444;color:#fff;border-radius:20px;padding:6px 12px;font-size:12px;z-index:4}
 .thumbnails{display:flex;gap:9px;overflow-x:auto;margin-top:12px;padding-bottom:4px}
 .thumb{width:64px;height:64px;flex:0 0 64px;border:1px solid #383840;border-radius:10px;overflow:hidden;background:#08080b;padding:0}
 .thumb.active{border:2px solid #2dd4bf}
-.thumb img{display:block;width:auto;height:auto;max-width:100%;aspect-ratio:auto;max-height:100%;object-fit:cover;object-position:center center}
+.thumb img{display:block;width:100%;height:100%;object-fit:cover;object-position:center center}
 
 .details{padding:34px}
 .tag{display:inline-block;color:#2dd4bf;background:#12302d;border:1px solid #235b54;border-radius:20px;padding:6px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:13px}
@@ -82,7 +81,7 @@ h1{font-size:27px;line-height:1.3;margin-bottom:10px}
 .related-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
 .related-card{background:#111116;border:1px solid #292930;border-radius:15px;overflow:hidden}
 
-.related-card img{display:block;width:auto;height:auto;max-width:100%;max-height:220px;object-fit:cover;object-position:center center;background:#0b0b0f}
+.related-card img{display:block;width:100%;height:220px;object-fit:cover;object-position:center center;background:#0b0b0f}
 
 .related-info{padding:13px}
 .related-info h3{font-size:13px;margin-bottom:10px}
@@ -107,7 +106,7 @@ h1{font-size:27px;line-height:1.3;margin-bottom:10px}
 .pay-option.active{border-color:#2dd4bf;color:#2dd4bf;background:#15302d}
 .submit{width:100%;padding:15px;background:#2dd4bf;color:#000;border:0;border-radius:10px;font-weight:800}
 .summary{display:flex;align-items:center;gap:12px;background:#19191f;border-radius:12px;padding:12px;margin-bottom:20px}
-.summary img{display:block;width:65px;height:65px;max-width:65px;max-height:65px;object-fit:cover;object-position:center center;background:#08080b;border-radius:8px}
+.summary img{display:block;width:65px;height:65px;object-fit:cover;object-position:center center;background:#08080b;border-radius:8px}
 .summary-info{flex:1;font-size:13px}
 .summary-price{font-weight:800;color:#2dd4bf}
 
@@ -127,7 +126,7 @@ h1{font-size:27px;line-height:1.3;margin-bottom:10px}
  .price{font-size:25px}
  .actions button{font-size:12px;padding:14px 5px}
  .related-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
- .related-card img{height:165px;max-height:165px}
+ .related-card img{height:165px}
  .related-info{padding:10px}
  .related-info h3{font-size:12px}
  .form-grid{grid-template-columns:1fr}
@@ -414,12 +413,6 @@ function renderGallery(colorData) {
   images.forEach((url, index) => {
     const slide = document.createElement("div");
     slide.className = "slide";
-
-    // Ambient Blurred Background to fill empty space without cropping main image
-    const slideBg = document.createElement("div");
-    slideBg.className = "slide-bg";
-    slideBg.style.backgroundImage = `url('${url}')`;
-    slide.appendChild(slideBg);
 
     const image = document.createElement("img");
     image.src = url;
