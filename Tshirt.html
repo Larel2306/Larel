@@ -32,12 +32,11 @@ button{cursor:pointer}
 .product{display:grid;grid-template-columns:1fr 1fr;background:#111116;border:1px solid #292930;border-radius:25px;overflow:hidden}
 .gallery{padding:25px;background:#0d0d11;border-right:1px solid #292930;min-width:0}
 
-/* LONG PORTRAIT IMAGE BOX: SAME 3:4 RATIO FOR ALL PRODUCT IMAGES */
+/* PRODUCT IMAGE BOX */
 .gallery-main{aspect-ratio:3 / 4;width:100%;height:auto;position:relative;overflow:hidden;background:#08080b;border-radius:18px}
 .slides{height:100%;width:100%;display:flex;transition:transform .35s ease}
 .slide{flex:0 0 100%;width:100%;min-width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#08080b}
-.slide img{display:block;width:100%;height:100%;object-fit:fill;object-position:center center}
-
+.slide img{display:block;width:100%;height:100%;object-fit:contain;object-position:center center}
 .gallery-btn{position:absolute;top:50%;transform:translateY(-50%);height:42px;width:42px;border:1px solid #555;border-radius:50%;background:#17171ddd;color:white;z-index:3}
 .gallery-btn:hover{background:#2dd4bf;color:#000}
 .gallery-btn:disabled{opacity:.3;cursor:default}
@@ -46,7 +45,7 @@ button{cursor:pointer}
 .thumbnails{display:flex;gap:9px;overflow-x:auto;margin-top:12px;padding-bottom:4px}
 .thumb{width:64px;height:auto;aspect-ratio:3 / 4;flex:0 0 64px;border:1px solid #383840;border-radius:10px;overflow:hidden;background:#08080b;padding:0;align-self:flex-start}
 .thumb.active{border:2px solid #2dd4bf}
-.thumb img{display:block;width:100%;height:100%;object-fit:fill;object-position:center center}
+.thumb img{display:block;width:100%;height:100%;object-fit:contain;object-position:center center}
 .thumb{height:auto}
 
 .details{padding:34px}
@@ -78,16 +77,25 @@ h1{font-size:27px;line-height:1.3;margin-bottom:10px}
 .trust{border-top:1px solid #292930;margin-top:22px;padding-top:16px;display:grid;gap:10px}
 .trust div{background:#19191f;border:1px solid #292930;border-radius:10px;padding:12px;color:#ccc;font-size:12px}
 .trust i{color:#2dd4bf;margin-right:9px}
+
 .related{margin-top:38px}
 .related h2{font-size:20px;margin-bottom:18px}
-.related-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
-.related-card{background:#111116;border:1px solid #292930;border-radius:15px;overflow:hidden}
-.related-card img{display:block;width:100%;height:auto;object-fit:fill;object-position:center center;background:#0b0b0f}
-.related-info{padding:13px}
-.related-info h3{font-size:13px;margin-bottom:10px}
-.related-info p{color:#2dd4bf;font-weight:800;margin-bottom:10px}
-.related-info a{display:block;text-decoration:none}
-.related-info button{width:100%;background:#15302d;color:#2dd4bf;border:1px solid #235b54;padding:9px;border-radius:8px;font-size:12px}
+.related-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.related-card{background:transparent;border:0;border-radius:0;overflow:hidden;min-width:0;color:inherit}
+.related-image-link{display:block;text-decoration:none;background:#15151a;overflow:hidden;position:relative}
+.related-card img{display:block;width:100%;aspect-ratio:3 / 4;height:auto;object-fit:contain;object-position:center center;background:#15151a;transition:transform .35s}
+.related-card:hover img{transform:scale(1.035)}
+.related-info{padding:12px 4px 4px}
+.related-info h3{font-size:13px;font-weight:700;line-height:1.35;margin-bottom:8px;color:#eaeaf0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:35px}
+.related-price-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.related-info p{color:#fff;font-size:16px;font-weight:800;margin:0}
+.related-plus-btn{background:transparent;border:0;color:#fff;font-size:17px;cursor:pointer;padding:5px 7px;display:flex;align-items:center;justify-content:center;transition:transform .2s}
+.related-plus-btn:hover{transform:scale(1.2);color:#2dd4bf}
+.related-option-values{display:flex;flex-direction:column;gap:10px}
+.related-option-btn{background:#1e1e24;border:1px solid #ffffff22;color:#fff;padding:12px 16px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;text-align:left;width:100%}
+.related-option-btn:hover{border-color:#2dd4bf;background:#25252c}
+.related-modal-title{font-size:11px;font-weight:700;color:#888;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px}
+.related-modal-step{margin-bottom:15px}
 .toast{position:fixed;top:20px;left:50%;transform:translate(-50%,-100px);opacity:0;transition:.3s;background:#2dd4bf;color:#000;padding:12px 20px;border-radius:30px;z-index:3000;font-size:13px;font-weight:800;white-space:nowrap}
 .toast.show{transform:translate(-50%,0);opacity:1}
 .overlay{position:fixed;inset:0;background:#000d;z-index:2000;display:none;align-items:center;justify-content:center;padding:15px;overflow-y:auto}
@@ -106,7 +114,7 @@ h1{font-size:27px;line-height:1.3;margin-bottom:10px}
 .pay-option.active{border-color:#2dd4bf;color:#2dd4bf;background:#15302d}
 .submit{width:100%;padding:15px;background:#2dd4bf;color:#000;border:0;border-radius:10px;font-weight:800}
 .summary{display:flex;align-items:center;gap:12px;background:#19191f;border-radius:12px;padding:12px;margin-bottom:20px}
-.summary img{display:block;width:65px;height:86px;object-fit:fill;object-position:center center;background:#08080b;border-radius:8px}
+.summary img{display:block;width:65px;height:86px;object-fit:contain;object-position:center center;background:#08080b;border-radius:8px}
 .summary-info{flex:1;font-size:13px}
 .summary-price{font-weight:800;color:#2dd4bf}
 
@@ -125,10 +133,11 @@ h1{font-size:27px;line-height:1.3;margin-bottom:10px}
  h1{font-size:22px}
  .price{font-size:25px}
  .actions button{font-size:12px;padding:14px 5px}
- .related-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .related-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 8px}
  .related-card img{height:auto;aspect-ratio:3 / 4}
- .related-info{padding:10px}
- .related-info h3{font-size:12px}
+ .related-info{padding:8px 2px}
+ .related-info h3{font-size:11.5px;min-height:31px}
+ .related-info p{font-size:14px}
  .form-grid{grid-template-columns:1fr}
  .modal{padding:18px}
 }
@@ -153,6 +162,17 @@ h1{font-size:27px;line-height:1.3;margin-bottom:10px}
 </header>
 
 <div id="toast" class="toast">Added to cart successfully!</div>
+
+<!-- Quick-add popup -->
+<div class="overlay" id="relatedAddOverlay" aria-hidden="true">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-head">
+      <h2 id="relatedModalHeading">Add to Cart</h2>
+      <button class="close" type="button" onclick="closeRelatedAddModal()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div id="relatedModalContent"></div>
+  </div>
+</div>
 
 <main class="page">
 <a class="back" href="https://sites.google.com/view/lakhanshop/shop-all"><i class="fa-solid fa-arrow-left"></i> Back to Shop</a>
@@ -447,7 +467,7 @@ function renderGallery(colorData) {
 }
 
 function updateGalleryAspectRatio() {
-  // Main image box stays portrait with a fixed 3:4 ratio.
+  // Main image box stays at a consistent 3:4 aspect ratio.
 }
 
 function showSlide(index) {
@@ -626,6 +646,10 @@ function submitOrder(event) {
   }
 }
 
+/* YOU MIGHT ALSO LIKE SECTION */
+
+let relatedSelectedProduct = null;
+
 function renderRelatedProducts() {
   const grid = document.getElementById("relatedGrid");
   grid.innerHTML = "";
@@ -636,11 +660,13 @@ function renderRelatedProducts() {
       const firstColor = Object.keys(product.colors)[0];
       const image = getProductImages(product.colors[firstColor])[0] || "";
 
-      const card = document.createElement("div");
+      const card = document.createElement("article");
       card.className = "related-card";
 
       const link = document.createElement("a");
+      link.className = "related-image-link";
       link.href = "?id=" + encodeURIComponent(id);
+      link.setAttribute("aria-label", "View " + product.title);
 
       const img = document.createElement("img");
       img.src = image;
@@ -653,19 +679,145 @@ function renderRelatedProducts() {
 
       const title = document.createElement("h3");
       title.textContent = product.title;
+      title.title = product.title;
+
+      const priceRow = document.createElement("div");
+      priceRow.className = "related-price-row";
 
       const price = document.createElement("p");
-      price.textContent = "₹" + product.price;
+      price.textContent = "₹" + Number(product.price).toLocaleString("en-IN");
 
-      const button = document.createElement("button");
-      button.textContent = "View Product";
-      button.onclick = () => window.location.href = "?id=" + encodeURIComponent(id);
+      const plus = document.createElement("button");
+      plus.type = "button";
+      plus.className = "related-plus-btn";
+      plus.title = "Add to Cart";
+      plus.setAttribute("aria-label", "Add " + product.title + " to cart");
+      plus.innerHTML = '<i class="fa-solid fa-plus"></i>';
+      plus.addEventListener("click", function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        openRelatedAddModal(id);
+      });
 
-      info.append(title, price, button);
+      priceRow.append(price, plus);
+      info.append(title, priceRow);
       card.append(link, info);
       grid.appendChild(card);
     });
 }
+
+function openRelatedAddModal(productId) {
+  relatedSelectedProduct = productsDatabase[productId];
+  if (!relatedSelectedProduct) return;
+
+  document.getElementById("relatedAddOverlay").classList.add("active");
+  document.getElementById("relatedAddOverlay").setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+  renderRelatedColorStep();
+}
+
+function renderRelatedColorStep() {
+  const product = relatedSelectedProduct;
+  if (!product) return;
+
+  document.getElementById("relatedModalHeading").textContent = "Select Color";
+  const colors = Object.keys(product.colors || {});
+
+  document.getElementById("relatedModalContent").innerHTML = `
+    <div class="related-modal-step">
+      <div class="related-modal-title">Choose your color</div>
+      <div class="related-option-values">
+        ${colors.map(color => `
+          <button type="button" class="related-option-btn" data-color="${safeRelatedText(color)}">
+            <span style="display:inline-block;width:13px;height:13px;border-radius:50%;border:1px solid #888;background:${safeRelatedText(product.colors[color].code)};vertical-align:-2px;margin-right:9px"></span>
+            ${safeRelatedText(color)}
+          </button>
+        `).join("")}
+      </div>
+    </div>`;
+
+  document.querySelectorAll("#relatedModalContent [data-color]").forEach(button => {
+    button.addEventListener("click", () => renderRelatedSizeStep(button.dataset.color));
+  });
+}
+
+function renderRelatedSizeStep(color) {
+  const product = relatedSelectedProduct;
+  if (!product) return;
+
+  document.getElementById("relatedModalHeading").textContent = "Select Size";
+  document.getElementById("relatedModalContent").innerHTML = `
+    <div class="related-modal-step">
+      <div class="related-modal-title">Color: ${safeRelatedText(color)}</div>
+      <div class="related-modal-title">Choose your size</div>
+      <div class="related-option-values">
+        ${(product.sizes || []).map(size => `
+          <button type="button" class="related-option-btn" data-size="${safeRelatedText(size)}">${safeRelatedText(size)}</button>
+        `).join("")}
+      </div>
+      <button type="button" class="size-guide" style="margin-top:14px" onclick="renderRelatedColorStep()">← Change color</button>
+    </div>`;
+
+  document.querySelectorAll("#relatedModalContent [data-size]").forEach(button => {
+    button.addEventListener("click", () => finishRelatedAddToCart(color, button.dataset.size));
+  });
+}
+
+function safeRelatedText(value) {
+  return String(value ?? "").replace(/[&<>"']/g, function(character) {
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[character];
+  });
+}
+
+function finishRelatedAddToCart(color, size) {
+  if (!relatedSelectedProduct) return;
+
+  const product = relatedSelectedProduct;
+  const productId = Object.keys(productsDatabase).find(id => productsDatabase[id] === product) || "";
+
+  const cartItem = {
+    ...product,
+    name: product.title,
+    productName: product.title,
+    productId: productId,
+    price: Number(product.price),
+    selectedColor: color,
+    selectedSize: size,
+    color: color,
+    size: size,
+    qty: 1,
+    quantity: 1,
+    image: getProductImages(product.colors[color])[0] || ""
+  };
+
+  try {
+    const cart = JSON.parse(localStorage.getItem("larel_cart") || "[]");
+    cart.push(cartItem);
+    localStorage.setItem("larel_cart", JSON.stringify(cart));
+  } catch (error) {
+    alert("Cart mein add nahi ho paya. Browser storage check karo.");
+    return;
+  }
+
+  closeRelatedAddModal();
+
+  const toast = document.getElementById("toast");
+  toast.textContent = "Added to cart successfully!";
+  toast.classList.add("show");
+  window.setTimeout(() => toast.classList.remove("show"), 2200);
+}
+
+function closeRelatedAddModal() {
+  const overlay = document.getElementById("relatedAddOverlay");
+  overlay.classList.remove("active");
+  overlay.setAttribute("aria-hidden", "true");
+  document.body.style.overflow = "";
+  relatedSelectedProduct = null;
+}
+
+document.getElementById("relatedAddOverlay").addEventListener("click", function(event) {
+  if (event.target === this) closeRelatedAddModal();
+});
 
 function toggleMenu() {
   document.getElementById("navLinks").classList.toggle("mobile-open");
