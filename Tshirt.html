@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Plus Jakarta Sans',sans-serif;-webkit-tap-highlight-color:transparent}
 html{scroll-behavior:smooth;overflow-x:hidden}
@@ -24,25 +25,30 @@ button{cursor:pointer}
 .nav-actions{display:flex;align-items:center;gap:12px}
 .nav-actions a{color:#fff;text-decoration:none;padding:10px 15px;border:1px solid #303039;border-radius:30px;background:#17171d;font-size:13px}
 .menu-btn{display:none;color:white;font-size:20px;background:#19191f;border:1px solid #333;border-radius:50%;width:40px;height:40px;align-items:center;justify-content:center}
+.menu-overlay{display:none;position:fixed;inset:0;background:#000b;z-index:998}
+.menu-overlay.active{display:block}
 .page{max-width:1100px;margin:auto}
 .back{display:inline-flex;gap:8px;align-items:center;margin:0 0 18px;color:#aaa;text-decoration:none;font-size:13px}
 .product{display:grid;grid-template-columns:1fr 1fr;background:#111116;border:1px solid #292930;border-radius:25px;overflow:hidden}
 .gallery{padding:25px;background:#0d0d11;border-right:1px solid #292930;min-width:0}
 
-/* Main image box and thumbnails have fixed sizes */
-.gallery-main{aspect-ratio:1/1;width:100%;height:auto;position:relative;overflow:hidden;background:#08080b;border-radius:18px}
+/* LONG PORTRAIT IMAGE BOX: SAME 3:4 RATIO FOR ALL PRODUCT IMAGES */
+.gallery-main{aspect-ratio:3 / 4;width:100%;height:auto;position:relative;overflow:hidden;background:#08080b;border-radius:18px}
 .slides{height:100%;width:100%;display:flex;transition:transform .35s ease}
 .slide{flex:0 0 100%;width:100%;min-width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#08080b}
-.slide img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+.slide img{display:block;width:100%;height:100%;object-fit:contain;object-position:center center}
+
 .gallery-btn{position:absolute;top:50%;transform:translateY(-50%);height:42px;width:42px;border:1px solid #555;border-radius:50%;background:#17171ddd;color:white;z-index:3}
 .gallery-btn:hover{background:#2dd4bf;color:#000}
 .gallery-btn:disabled{opacity:.3;cursor:default}
 .prev{left:12px}.next{right:12px}
 .counter{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);background:#000b;border:1px solid #444;color:#fff;border-radius:20px;padding:6px 12px;font-size:12px;z-index:4}
 .thumbnails{display:flex;gap:9px;overflow-x:auto;margin-top:12px;padding-bottom:4px}
-.thumb{width:64px;height:64px;aspect-ratio:1/1;flex:0 0 64px;border:1px solid #383840;border-radius:10px;overflow:hidden;background:#08080b;padding:0;align-self:flex-start}
+.thumb{width:64px;height:auto;aspect-ratio:3 / 4;flex:0 0 64px;border:1px solid #383840;border-radius:10px;overflow:hidden;background:#08080b;padding:0;align-self:flex-start}
 .thumb.active{border:2px solid #2dd4bf}
-.thumb img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+.thumb img{display:block;width:100%;height:100%;object-fit:contain;object-position:center center}
+.thumb{height:auto}
+
 .details{padding:34px}
 .tag{display:inline-block;color:#2dd4bf;background:#12302d;border:1px solid #235b54;border-radius:20px;padding:6px 12px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:13px}
 h1{font-size:27px;line-height:1.3;margin-bottom:10px}
@@ -76,7 +82,7 @@ h1{font-size:27px;line-height:1.3;margin-bottom:10px}
 .related h2{font-size:20px;margin-bottom:18px}
 .related-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
 .related-card{background:#111116;border:1px solid #292930;border-radius:15px;overflow:hidden}
-.related-card img{display:block;width:100%;aspect-ratio:3/4;height:auto;object-fit:cover;object-position:center;background:#0b0b0f}
+.related-card img{display:block;width:100%;aspect-ratio:3 / 4;height:auto;object-fit:contain;object-position:center center;background:#0b0b0f}
 .related-info{padding:13px}
 .related-info h3{font-size:13px;margin-bottom:10px}
 .related-info p{color:#2dd4bf;font-weight:800;margin-bottom:10px}
@@ -100,33 +106,35 @@ h1{font-size:27px;line-height:1.3;margin-bottom:10px}
 .pay-option.active{border-color:#2dd4bf;color:#2dd4bf;background:#15302d}
 .submit{width:100%;padding:15px;background:#2dd4bf;color:#000;border:0;border-radius:10px;font-weight:800}
 .summary{display:flex;align-items:center;gap:12px;background:#19191f;border-radius:12px;padding:12px;margin-bottom:20px}
-.summary img{display:block;width:65px;height:65px;object-fit:cover;object-position:center;background:#08080b;border-radius:8px}
+.summary img{display:block;width:65px;height:86px;object-fit:contain;object-position:center center;background:#08080b;border-radius:8px}
 .summary-info{flex:1;font-size:13px}
 .summary-price{font-weight:800;color:#2dd4bf}
+
 @media(max-width:768px){
-body{padding:82px 10px 25px}
-.header{padding:12px 15px}
-.logo{font-size:21px}
-.menu-btn{display:flex}
-.nav-links{display:none;position:fixed;top:65px;right:12px;background:#15151b;border:1px solid #303039;border-radius:14px;padding:15px;width:190px;z-index:1001}
-.nav-links.mobile-open{display:flex;flex-direction:column;gap:0}
-.nav-links li{padding:12px 4px}
-.product{grid-template-columns:1fr;border-radius:18px}
-.gallery{padding:12px;border-right:0;border-bottom:1px solid #282830}
-.gallery-main{height:auto;aspect-ratio:1/1}
-.details{padding:22px 17px}
-h1{font-size:22px}
-.price{font-size:25px}
-.actions button{font-size:12px;padding:14px 5px}
-.related-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.related-card img{height:auto;aspect-ratio:1/1}
-.related-info{padding:10px}
-.related-info h3{font-size:12px}
-.form-grid{grid-template-columns:1fr}
-.modal{padding:18px}
+ body{padding:82px 10px 25px}
+ .header{padding:12px 15px}
+ .logo{font-size:21px}
+ .menu-btn{display:flex}
+ .nav-links{display:none;position:fixed;top:65px;right:12px;background:#15151b;border:1px solid #303039;border-radius:14px;padding:15px;width:190px;z-index:1001}
+ .nav-links.mobile-open{display:flex;flex-direction:column;gap:0}
+ .nav-links li{padding:12px 4px}
+ .product{grid-template-columns:1fr;border-radius:18px}
+ .gallery{padding:12px;border-right:0;border-bottom:1px solid #282830}
+ .gallery-main{height:auto;aspect-ratio:3 / 4}
+ .details{padding:22px 17px}
+ h1{font-size:22px}
+ .price{font-size:25px}
+ .actions button{font-size:12px;padding:14px 5px}
+ .related-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ .related-card img{height:auto;aspect-ratio:3 / 4}
+ .related-info{padding:10px}
+ .related-info h3{font-size:12px}
+ .form-grid{grid-template-columns:1fr}
+ .modal{padding:18px}
 }
 </style>
 </head>
+
 <body>
 <header class="header">
 <a class="logo" href="https://sites.google.com/view/lakhanshop/shop-all">LAREL<span>.</span></a>
@@ -143,9 +151,12 @@ h1{font-size:22px}
 <button class="menu-btn" onclick="toggleMenu()" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
 </div>
 </header>
+
 <div id="toast" class="toast">Added to cart successfully!</div>
+
 <main class="page">
 <a class="back" href="https://sites.google.com/view/lakhanshop/shop-all"><i class="fa-solid fa-arrow-left"></i> Back to Shop</a>
+
 <section class="product">
 <div class="gallery">
 <div class="gallery-main">
@@ -156,15 +167,41 @@ h1{font-size:22px}
 </div>
 <div class="thumbnails" id="thumbnails"></div>
 </div>
+
 <div class="details">
 <span class="tag" id="productTag">Exclusive Drop</span>
 <h1 id="productTitle">Loading product...</h1>
 <div class="rating"><i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i> <i class="fa-solid fa-star"></i><span>4.9 / 128 Reviews</span></div>
-<div class="pricebox"><span class="price" id="productPrice">₹0</span><span class="oldprice" id="productOldPrice"></span></div>
-<div class="product-section"><div class="label">Color</div><div class="options" id="dynamicColors"></div></div>
-<div class="product-section"><div class="label">Size <button class="size-guide" onclick="openSizeGuide()">Size Guide</button></div><div class="options" id="dynamicSizes"></div></div>
-<div class="product-section"><div class="label">Quantity</div><div class="qty"><button onclick="changeQty(-1)" aria-label="Decrease quantity">−</button><span id="qtyValue">1</span><button onclick="changeQty(1)" aria-label="Increase quantity">+</button></div></div>
-<div class="actions"><button class="add" onclick="addToCart()"><i class="fa-solid fa-cart-plus"></i> Add to Cart</button><button class="buy" onclick="openCheckout()"><i class="fa-solid fa-bolt"></i> Buy Now</button></div>
+
+<div class="pricebox">
+<span class="price" id="productPrice">₹0</span>
+<span class="oldprice" id="productOldPrice"></span>
+</div>
+
+<div class="product-section">
+<div class="label">Color</div>
+<div class="options" id="dynamicColors"></div>
+</div>
+
+<div class="product-section">
+<div class="label">Size <button class="size-guide" onclick="openSizeGuide()">Size Guide</button></div>
+<div class="options" id="dynamicSizes"></div>
+</div>
+
+<div class="product-section">
+<div class="label">Quantity</div>
+<div class="qty">
+<button onclick="changeQty(-1)" aria-label="Decrease quantity">−</button>
+<span id="qtyValue">1</span>
+<button onclick="changeQty(1)" aria-label="Increase quantity">+</button>
+</div>
+</div>
+
+<div class="actions">
+<button class="add" onclick="addToCart()"><i class="fa-solid fa-cart-plus"></i> Add to Cart</button>
+<button class="buy" onclick="openCheckout()"><i class="fa-solid fa-bolt"></i> Buy Now</button>
+</div>
+
 <div class="trust">
 <div><i class="fa-solid fa-truck-fast"></i> Shipping available across India</div>
 <div><i class="fa-solid fa-shield-halved"></i> Secure Checkout</div>
@@ -172,11 +209,19 @@ h1{font-size:22px}
 </div>
 </div>
 </section>
-<section class="related"><h2><i class="fa-solid fa-fire" style="color:#2dd4bf"></i> You Might Also Like</h2><div class="related-grid" id="relatedGrid"></div></section>
+
+<section class="related">
+<h2><i class="fa-solid fa-fire" style="color:#2dd4bf"></i> You Might Also Like</h2>
+<div class="related-grid" id="relatedGrid"></div>
+</section>
 </main>
+
 <div class="overlay" id="sizeOverlay">
 <div class="modal">
-<div class="modal-head"><h2><i class="fa-solid fa-ruler" style="color:#2dd4bf"></i> T-Shirt Size Guide</h2><button class="close" onclick="closeSizeGuide()"><i class="fa-solid fa-xmark"></i></button></div>
+<div class="modal-head">
+<h2><i class="fa-solid fa-ruler" style="color:#2dd4bf"></i> T-Shirt Size Guide</h2>
+<button class="close" onclick="closeSizeGuide()"><i class="fa-solid fa-xmark"></i></button>
+</div>
 <table style="width:100%;border-collapse:collapse;text-align:center;font-size:13px">
 <tr><th style="padding:12px;border:1px solid #333">Size</th><th style="padding:12px;border:1px solid #333">Chest</th><th style="padding:12px;border:1px solid #333">Length</th></tr>
 <tr><td style="padding:12px;border:1px solid #333">S</td><td style="padding:12px;border:1px solid #333">38"</td><td style="padding:12px;border:1px solid #333">27"</td></tr>
@@ -187,14 +232,23 @@ h1{font-size:22px}
 </table>
 </div>
 </div>
+
 <div class="overlay" id="checkoutOverlay">
 <div class="modal">
-<div class="modal-head"><h2><i class="fa-solid fa-shield-halved" style="color:#2dd4bf"></i> Secure Checkout</h2><button class="close" onclick="closeCheckout()"><i class="fa-solid fa-xmark"></i></button></div>
+<div class="modal-head">
+<h2><i class="fa-solid fa-shield-halved" style="color:#2dd4bf"></i> Secure Checkout</h2>
+<button class="close" onclick="closeCheckout()"><i class="fa-solid fa-xmark"></i></button>
+</div>
+
 <div class="summary">
 <img id="summaryImg" src="" alt="Product">
-<div class="summary-info"><strong id="summaryTitle">Product</strong><div style="color:#aaa;margin-top:5px">Color: <span id="summaryColor"></span> · Size: <span id="summarySize"></span> · Qty: <span id="summaryQty"></span></div></div>
+<div class="summary-info">
+<strong id="summaryTitle">Product</strong>
+<div style="color:#aaa;margin-top:5px">Color: <span id="summaryColor"></span> · Size: <span id="summarySize"></span> · Qty: <span id="summaryQty"></span></div>
+</div>
 <div class="summary-price" id="summaryTotal">₹0</div>
 </div>
+
 <form id="checkoutForm" onsubmit="submitOrder(event)">
 <div class="form-grid">
 <div class="field"><label>Full Name *</label><input id="custName" required placeholder="Your name"></div>
@@ -220,236 +274,412 @@ h1{font-size:22px}
 </form>
 </div>
 </div>
+
 <script>
 const productsDatabase = {
-"tshirt1": {
-title:'Vintage Gamer "Lost in 1926" Tee',tag:"Exclusive Drop",price:569,oldPrice:1199,
-sizes:["S","M","L","XL","XXL"],
-colors:{
-"Sky Blue":{code:"#87CEEB",images:["https://i.ibb.co/bM6Ftf06/Screenshot-2026-07-25-213506.png","https://i.ibb.co/wFYGs08L/Screenshot-2026-07-25-213512.png"]},
-"Black":{code:"#000000",images:["https://i.ibb.co/1tq46sFJ/Screenshot-2026-07-25-213439.png","https://i.ibb.co/Wv29zgbC/Screenshot-2026-07-25-213447.png"]},
-"White":{code:"#ffffff",images:["https://i.ibb.co/4nTtCs58/Screenshot-2026-07-25-214140.png","https://i.ibb.co/sD1Jdq5/Screenshot-2026-07-25-214149.png"]}
-}},
-"tshirt2":{
-title:"Oversized Streetwear Black Tee",tag:"Trending",price:699,oldPrice:1299,sizes:["M","L","XL"],
-colors:{"Black":{code:"#000000",images:["https://i.ibb.co/1tq46sFJ/Screenshot-2026-07-25-213439.png","https://i.ibb.co/Wv29zgbC/Screenshot-2026-07-25-213447.png"]}}
-},
-"tshirt3":{
-title:"Find Your North – Compass Signature T-Shirt",tag:"New Drop",price:499,oldPrice:999,sizes:["S","M","L","XL","XXL"],
-colors:{
-"White":{code:"#ffffff",images:["https://i.ibb.co/wNSndt3s/mockup-4.png","https://i.ibb.co/2041mShv/mockup-2.png","https://i.ibb.co/RprVDQJ5/mockup-3.png","https://i.ibb.co/Fb57hSPr/mockup-1.png","https://i.ibb.co/8nvRdzfT/mockup-5.png","https://i.ibb.co/cXtMF8zR/Screenshot-2026-10-22-213835.png"]},
-"Grey":{code:"#C0C4C8",images:["https://i.ibb.co/kgcbsZ7y/mockup-6.png","https://i.ibb.co/pB842f91/mockup-3.png","https://i.ibb.co/vvhGWBGX/mockup-4.png","https://i.ibb.co/svvzKNKs/mockup-5.png","https://i.ibb.co/k2KyNv0g/mockup-2.png","https://i.ibb.co/pGVHF6K/Screenshot-2026-10-22-214344.png"]},
-"Lavender":{code:"#E6E6FA",images:["https://i.ibb.co/TsjxPXn/mockup-4.png","https://i.ibb.co/LhkKjVZ5/mockup-1.png","https://i.ibb.co/k6wCGLt0/mockup-2.png","https://i.ibb.co/C5qf8S8w/mockup-3.png","https://i.ibb.co/sdyT6vZK/mockup-5.png","https://i.ibb.co/bMdRNVXs/Screenshot-2026-10-22-220425.png"]},
-"Mint":{code:"#3EB489",images:["https://i.ibb.co/VcTqhwMk/mockup-1.png","https://i.ibb.co/vvm8GcZG/mockup-2.png","https://i.ibb.co/WNSfVQ1R/mockup-3.png","https://i.ibb.co/zH2YkyM1/mockup-4.png","https://i.ibb.co/ZRgrG1zq/mockup-5.png","https://i.ibb.co/G3by0d9c/Screenshot-2026-10-22-220642.png"]}
-}}
-};
-const sizeMapping={"S":"Small","M":"Medium","L":"Large","XL":"X-Large","XXL":"XX-Large"};
-let currentProductId="tshirt1",currentProduct,selectedColorName="",selectedSizeName="M",productPageQuantity=1,activeIndex=0,chosenPayment="PREPAID";
+  "tshirt1": {
+    title: 'Vintage Gamer "Lost in 1926" Tee',
+    tag: "Exclusive Drop",
+    price: 569,
+    oldPrice: 1199,
+    sizes: ["S","M","L","XL","XXL"],
+    colors: {
+      "Sky Blue": {code:"#87CEEB", images:["https://i.ibb.co/bM6Ftf06/Screenshot-2026-07-25-213506.png", "https://i.ibb.co/wFYGs08L/Screenshot-2026-07-25-213512.png"]},
+      "Black": {code:"#000000", images:["https://i.ibb.co/1tq46sFJ/Screenshot-2026-07-25-213439.png", "https://i.ibb.co/Wv29zgbC/Screenshot-2026-07-25-213447.png"]},
+      "White": {code:"#ffffff", images:["https://i.ibb.co/4nTtCs58/Screenshot-2026-07-25-214140.png", "https://i.ibb.co/sD1Jdq5/Screenshot-2026-07-25-214149.png"]}
+    }
+  },
 
-function getProductImages(colorData){
- if(!colorData)return[];
- const images=Array.isArray(colorData.images)?colorData.images:[];
- return [...new Set(images.filter(url=>typeof url==="string"&&url.trim()!==""))];
-}
-function initProduct(){
- const params=new URLSearchParams(window.location.search);
- currentProductId=params.get("id")||"tshirt1";
- currentProduct=productsDatabase[currentProductId]||productsDatabase.tshirt1;
- document.title=currentProduct.title+" - LAREL";
- document.getElementById("productTitle").textContent=currentProduct.title;
- document.getElementById("productTag").textContent=currentProduct.tag;
- document.getElementById("productPrice").textContent="₹"+currentProduct.price;
- document.getElementById("productOldPrice").textContent=currentProduct.oldPrice?"₹"+currentProduct.oldPrice:"";
- const colorContainer=document.getElementById("dynamicColors");
- colorContainer.innerHTML="";
- Object.entries(currentProduct.colors).forEach(([name,data],index)=>{
-  const button=document.createElement("button");
-  button.type="button";button.className="color-option"+(index===0?" active":"");
-  button.innerHTML='<span class="swatch" style="background:'+data.code+'"></span>'+name;
-  button.addEventListener("click",()=>selectColor(name));colorContainer.appendChild(button);
- });
- const sizeContainer=document.getElementById("dynamicSizes");
- sizeContainer.innerHTML="";
- currentProduct.sizes.forEach((size,index)=>{
-  const button=document.createElement("button");
-  button.type="button";button.className="size-option"+(index===0?" active":"");
-  button.textContent=size;button.addEventListener("click",()=>selectSize(size));sizeContainer.appendChild(button);
- });
- selectedSizeName=currentProduct.sizes.includes("M")?"M":currentProduct.sizes[0];
- selectSize(selectedSizeName);selectColor(Object.keys(currentProduct.colors)[0]);renderRelatedProducts();
-}
-function selectColor(name){
- selectedColorName=name;
- document.querySelectorAll(".color-option").forEach(button=>button.classList.toggle("active",button.textContent.trim()===name));
- renderGallery(currentProduct.colors[name]);
-}
-function selectSize(size){
- selectedSizeName=size;
- document.querySelectorAll(".size-option").forEach(button=>button.classList.toggle("active",button.textContent===size));
-}
-function renderGallery(colorData){
- const track=document.getElementById("sliderTrack"),thumbnails=document.getElementById("thumbnails"),images=getProductImages(colorData);
- track.innerHTML="";thumbnails.innerHTML="";activeIndex=0;
- if(images.length===0){
-  track.innerHTML='<div class="slide"><p style="color:#aaa">Product image coming soon</p></div>';
-  updateGalleryControls();return;
- }
- images.forEach((url,index)=>{
-  const slide=document.createElement("div");slide.className="slide";
-  const image=document.createElement("img");
-  image.src=url;image.alt=currentProduct.title+" "+selectedColorName+" image "+(index+1);image.loading=index===0?"eager":"lazy";
-  image.onerror=function(){
-   slide.style.display="none";
-   const thumb=thumbnails.querySelector('[data-index="'+index+'"]');
-   if(thumb)thumb.style.display="none";
-   updateGalleryControls();
-  };
-  slide.appendChild(image);track.appendChild(slide);
-  const thumb=document.createElement("button");
-  thumb.type="button";thumb.className="thumb"+(index===0?" active":"");thumb.dataset.index=index;
-  thumb.setAttribute("aria-label","Show image "+(index+1));
-  const thumbImage=document.createElement("img");thumbImage.src=url;thumbImage.alt="";
-  thumb.appendChild(thumbImage);
-  thumb.addEventListener("click",()=>showSlide(index));thumbnails.appendChild(thumb);
- });
- updateGalleryControls();
-}
-function showSlide(index){
- const slides=[...document.querySelectorAll("#sliderTrack .slide")];
- if(!slides.length)return;
- activeIndex=(index+slides.length)%slides.length;
- document.getElementById("sliderTrack").style.transform="translateX(-"+activeIndex*100+"%)";
- document.querySelectorAll(".thumb").forEach((thumb,i)=>thumb.classList.toggle("active",i===activeIndex));
- updateGalleryControls();
-}
-function changeSlide(direction){showSlide(activeIndex+direction)}
-function updateGalleryControls(){
- const count=document.querySelectorAll("#sliderTrack .slide").length;
- document.getElementById("slideCounter").textContent=count?(activeIndex+1)+" / "+count:"0 / 0";
- document.getElementById("prevBtn").disabled=count<=1;
- document.getElementById("nextBtn").disabled=count<=1;
-}
-function changeQty(change){
- productPageQuantity=Math.max(1,productPageQuantity+change);
- document.getElementById("qtyValue").textContent=productPageQuantity;
-}
-function makeCartItem(){
- return{
-  name:currentProduct.title,productName:currentProduct.title,productId:currentProductId,
-  price:Number(currentProduct.price),color:selectedColorName,
-  size:sizeMapping[selectedSizeName]||selectedSizeName,
-  qty:productPageQuantity,quantity:productPageQuantity,
-  image:getProductImages(currentProduct.colors[selectedColorName])[0]||""
- };
-}
-function addToCart(){
- const item=makeCartItem();
- try{
-  const cart=JSON.parse(localStorage.getItem("my_larel_cart")||"[]");
-  cart.push(item);localStorage.setItem("my_larel_cart",JSON.stringify(cart));
- }catch(error){alert("Cart save nahi ho paya. Browser storage check karein.");return}
- if(typeof google!=="undefined"&&google.script&&google.script.run)google.script.run.addToCartBackend(item);
- const toast=document.getElementById("toast");toast.classList.add("show");
- setTimeout(()=>toast.classList.remove("show"),2200);
-}
-function openSizeGuide(){
- document.getElementById("sizeOverlay").classList.add("active");document.body.style.overflow="hidden";
-}
-function closeSizeGuide(){
- document.getElementById("sizeOverlay").classList.remove("active");document.body.style.overflow="";
-}
-function openCheckout(){
- const images=getProductImages(currentProduct.colors[selectedColorName]);
- document.getElementById("summaryImg").src=images[0]||"";
- document.getElementById("summaryTitle").textContent=currentProduct.title;
- document.getElementById("summaryColor").textContent=selectedColorName;
- document.getElementById("summarySize").textContent=sizeMapping[selectedSizeName]||selectedSizeName;
- document.getElementById("summaryQty").textContent=productPageQuantity;
- document.getElementById("summaryTotal").textContent="₹"+currentProduct.price*productPageQuantity;
- updateSubmitButton();
- document.getElementById("checkoutOverlay").classList.add("active");document.body.style.overflow="hidden";
-}
-function closeCheckout(){
- document.getElementById("checkoutOverlay").classList.remove("active");document.body.style.overflow="";
-}
-function setPayment(method){
- chosenPayment=method;
- document.getElementById("prepaidOption").classList.toggle("active",method==="PREPAID");
- document.getElementById("codOption").classList.toggle("active",method==="COD");
- updateSubmitButton();
-}
-function updateSubmitButton(){
- const total=currentProduct.price*productPageQuantity;
- document.getElementById("submitBtn").textContent=chosenPayment==="COD"?"Place COD Order - ₹"+total:"Place Prepaid Order - ₹"+total;
-}
-function submitOrder(event){
- event.preventDefault();
- const orderData={
-  orderId:"ORD-"+Date.now(),orderDate:new Date().toLocaleDateString("en-IN"),
-  productId:currentProductId,productName:currentProduct.title,color:selectedColorName,
-  size:sizeMapping[selectedSizeName]||selectedSizeName,qty:productPageQuantity,
-  price:currentProduct.price,totalAmount:currentProduct.price*productPageQuantity,
-  paymentMethod:chosenPayment,
-  customerDetails:{
-   name:document.getElementById("custName").value.trim(),
-   phone:document.getElementById("custPhone").value.trim(),
-   house:document.getElementById("addrHouse").value.trim(),
-   street:document.getElementById("addrStreet").value.trim(),
-   landmark:document.getElementById("addrLandmark").value.trim(),
-   pincode:document.getElementById("addrPincode").value.trim(),
-   city:document.getElementById("addrCity").value.trim(),
-   state:document.getElementById("addrState").value.trim()
+  "tshirt2": {
+    title: "Oversized Streetwear Black Tee",
+    tag: "Trending",
+    price: 699,
+    oldPrice: 1299,
+    sizes: ["M","L","XL"],
+    colors: {
+      "Black": {code:"#000000", images:["https://i.ibb.co/1tq46sFJ/Screenshot-2026-07-25-213439.png", "https://i.ibb.co/Wv29zgbC/Screenshot-2026-07-25-213447.png"]}
+    }
+  },
+
+  "tshirt3": {
+    title: "Find Your North – Compass Signature T-Shirt",
+    tag: "New Drop",
+    price: 499,
+    oldPrice: 999,
+    sizes: ["S","M","L","XL","XXL"],
+    colors: {
+      "White": {code:"#ffffff", images:["https://i.ibb.co/wNSndt3s/mockup-4.png", "https://i.ibb.co/2041mShv/mockup-2.png", "https://i.ibb.co/RprVDQJ5/mockup-3.png", "https://i.ibb.co/Fb57hSPr/mockup-1.png", "https://i.ibb.co/8nvRdzfT/mockup-5.png", "https://i.ibb.co/cXtMF8zR/Screenshot-2026-10-22-213835.png"]},
+      "Grey": {code:"#C0C4C8", images:["https://i.ibb.co/kgcbsZ7y/mockup-6.png", "https://i.ibb.co/pB842f91/mockup-3.png", "https://i.ibb.co/vvhGWBGX/mockup-4.png", "https://i.ibb.co/svvzKNKs/mockup-5.png", "https://i.ibb.co/k2KyNv0g/mockup-2.png", "https://i.ibb.co/pGVHF6K/Screenshot-2026-10-22-214344.png"]},
+      "Lavender": {code:"#E6E6FA", images:["https://i.ibb.co/TsjxPXn/mockup-4.png", "https://i.ibb.co/LhkKjVZ5/mockup-1.png", "https://i.ibb.co/k6wCGLt0/mockup-2.png", "https://i.ibb.co/C5qf8S8w/mockup-3.png", "https://i.ibb.co/sdyT6vZK/mockup-5.png", "https://i.ibb.co/bMdRNVXs/Screenshot-2026-10-22-220425.png"]},
+      "Mint": {code:"#3EB489", images:["https://i.ibb.co/VcTqhwMk/mockup-1.png", "https://i.ibb.co/vvm8GcZG/mockup-2.png", "https://i.ibb.co/WNSfVQ1R/mockup-3.png", "https://i.ibb.co/zH2YkyM1/mockup-4.png", "https://i.ibb.co/ZRgrG1zq/mockup-5.png", "https://i.ibb.co/G3by0d9c/Screenshot-2026-10-22-220642.png"]}
+    }
   }
- };
- if(typeof google!=="undefined"&&google.script&&google.script.run){
-  const button=document.getElementById("submitBtn");button.disabled=true;button.textContent="Submitting Order...";
-  google.script.run.withSuccessHandler(function(){
-   button.disabled=false;closeCheckout();alert("Order successfully submit ho gaya!");
-   document.getElementById("checkoutForm").reset();
-  }).withFailureHandler(function(error){
-   button.disabled=false;updateSubmitButton();alert("Order submit nahi hua: "+(error.message||error));
-  }).placeOrderBackend(orderData);
- }else{
-  const message="LAREL ORDER\n"+
-   "Order ID: "+orderData.orderId+"\n"+
-   "Product: "+orderData.productName+"\n"+
-   "Color: "+orderData.color+"\n"+
-   "Size: "+orderData.size+"\n"+
-   "Quantity: "+orderData.qty+"\n"+
-   "Total: ₹"+orderData.totalAmount+"\n"+
-   "Payment: "+orderData.paymentMethod+"\n"+
-   "Name: "+orderData.customerDetails.name+"\n"+
-   "Phone: "+orderData.customerDetails.phone+"\n"+
-   "Address: "+orderData.customerDetails.house+", "+
-   orderData.customerDetails.street+", "+orderData.customerDetails.city+", "+
-   orderData.customerDetails.state+" - "+orderData.customerDetails.pincode;
-  window.open("https://wa.me/?text="+encodeURIComponent(message),"_blank");
- }
+};
+
+const sizeMapping = {
+  "S":"Small",
+  "M":"Medium",
+  "L":"Large",
+  "XL":"X-Large",
+  "XXL":"XX-Large"
+};
+
+let currentProductId = "tshirt1";
+let currentProduct;
+let selectedColorName = "";
+let selectedSizeName = "M";
+let productPageQuantity = 1;
+let activeIndex = 0;
+let chosenPayment = "PREPAID";
+
+function getProductImages(colorData) {
+  if (!colorData) return [];
+  const images = Array.isArray(colorData.images) ? colorData.images : [];
+  return [...new Set(images.filter(url => typeof url === "string" && url.trim() !== ""))];
 }
-function renderRelatedProducts(){
- const grid=document.getElementById("relatedGrid");grid.innerHTML="";
- Object.entries(productsDatabase).filter(([id])=>id!==currentProductId).forEach(([id,product])=>{
-  const firstColor=Object.keys(product.colors)[0];
-  const image=getProductImages(product.colors[firstColor])[0]||"";
-  const card=document.createElement("div");card.className="related-card";
-  const link=document.createElement("a");link.href="?id="+encodeURIComponent(id);
-  const img=document.createElement("img");img.src=image;img.alt=product.title;img.loading="lazy";link.appendChild(img);
-  const info=document.createElement("div");info.className="related-info";
-  const title=document.createElement("h3");title.textContent=product.title;
-  const price=document.createElement("p");price.textContent="₹"+product.price;
-  const button=document.createElement("button");button.textContent="View Product";
-  button.onclick=()=>window.location.href="?id="+encodeURIComponent(id);
-  info.append(title,price,button);card.append(link,info);grid.appendChild(card);
- });
+
+function initProduct() {
+  const params = new URLSearchParams(window.location.search);
+  currentProductId = params.get("id") || "tshirt1";
+  currentProduct = productsDatabase[currentProductId] || productsDatabase.tshirt1;
+
+  document.title = currentProduct.title + " - LAREL";
+  document.getElementById("productTitle").textContent = currentProduct.title;
+  document.getElementById("productTag").textContent = currentProduct.tag;
+  document.getElementById("productPrice").textContent = "₹" + currentProduct.price;
+  document.getElementById("productOldPrice").textContent =
+    currentProduct.oldPrice ? "₹" + currentProduct.oldPrice : "";
+
+  const colorContainer = document.getElementById("dynamicColors");
+  colorContainer.innerHTML = "";
+
+  Object.entries(currentProduct.colors).forEach(([name, data], index) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "color-option" + (index === 0 ? " active" : "");
+    button.innerHTML = '<span class="swatch" style="background:' + data.code + '"></span>' + name;
+    button.addEventListener("click", () => selectColor(name));
+    colorContainer.appendChild(button);
+  });
+
+  const sizeContainer = document.getElementById("dynamicSizes");
+  sizeContainer.innerHTML = "";
+
+  currentProduct.sizes.forEach((size, index) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "size-option" + (index === 0 ? " active" : "");
+    button.textContent = size;
+    button.addEventListener("click", () => selectSize(size));
+    sizeContainer.appendChild(button);
+  });
+
+  selectedSizeName = currentProduct.sizes.includes("M") ? "M" : currentProduct.sizes[0];
+  selectSize(selectedSizeName);
+  selectColor(Object.keys(currentProduct.colors)[0]);
+  renderRelatedProducts();
 }
-function toggleMenu(){document.getElementById("navLinks").classList.toggle("mobile-open")}
-document.getElementById("checkoutOverlay").addEventListener("click",function(event){
- if(event.target===this)closeCheckout();
+
+function selectColor(name) {
+  selectedColorName = name;
+  document.querySelectorAll(".color-option").forEach(button => {
+    button.classList.toggle("active", button.textContent.trim() === name);
+  });
+  renderGallery(currentProduct.colors[name]);
+}
+
+function selectSize(size) {
+  selectedSizeName = size;
+  document.querySelectorAll(".size-option").forEach(button => {
+    button.classList.toggle("active", button.textContent === size);
+  });
+}
+
+function renderGallery(colorData) {
+  const track = document.getElementById("sliderTrack");
+  const thumbnails = document.getElementById("thumbnails");
+  const images = getProductImages(colorData);
+
+  track.innerHTML = "";
+  thumbnails.innerHTML = "";
+  activeIndex = 0;
+
+  if (images.length === 0) {
+    track.innerHTML = '<div class="slide"><p style="color:#aaa">Product image coming soon</p></div>';
+    updateGalleryControls();
+    return;
+  }
+
+  images.forEach((url, index) => {
+    const slide = document.createElement("div");
+    slide.className = "slide";
+
+    const image = document.createElement("img");
+    image.src = url;
+    image.alt = currentProduct.title + " " + selectedColorName + " image " + (index + 1);
+    image.loading = index === 0 ? "eager" : "lazy";
+    image.onerror = function() {
+      slide.style.display = "none";
+      const thumb = thumbnails.querySelector('[data-index="' + index + '"]');
+      if (thumb) thumb.style.display = "none";
+      updateGalleryControls();
+    };
+
+    slide.appendChild(image);
+    track.appendChild(slide);
+
+    const thumb = document.createElement("button");
+    thumb.type = "button";
+    thumb.className = "thumb" + (index === 0 ? " active" : "");
+    thumb.dataset.index = index;
+    thumb.setAttribute("aria-label", "Show image " + (index + 1));
+
+    const thumbImage = document.createElement("img");
+    thumbImage.src = url;
+    thumbImage.alt = "";
+    thumb.appendChild(thumbImage);
+
+    thumb.addEventListener("click", () => showSlide(index));
+    thumbnails.appendChild(thumb);
+  });
+
+  updateGalleryControls();
+}
+
+function updateGalleryAspectRatio() {
+  // Main image box stays portrait with a fixed 3:4 ratio.
+}
+
+function showSlide(index) {
+  const slides = [...document.querySelectorAll("#sliderTrack .slide")];
+  if (!slides.length) return;
+
+  activeIndex = (index + slides.length) % slides.length;
+  document.getElementById("sliderTrack").style.transform =
+    "translateX(-" + activeIndex * 100 + "%)";
+
+  document.querySelectorAll(".thumb").forEach((thumb, i) => {
+    thumb.classList.toggle("active", i === activeIndex);
+  });
+
+  updateGalleryControls();
+}
+
+function changeSlide(direction) {
+  showSlide(activeIndex + direction);
+}
+
+function updateGalleryControls() {
+  const count = document.querySelectorAll("#sliderTrack .slide").length;
+  document.getElementById("slideCounter").textContent =
+    count ? (activeIndex + 1) + " / " + count : "0 / 0";
+  document.getElementById("prevBtn").disabled = count <= 1;
+  document.getElementById("nextBtn").disabled = count <= 1;
+}
+
+function changeQty(change) {
+  productPageQuantity = Math.max(1, productPageQuantity + change);
+  document.getElementById("qtyValue").textContent = productPageQuantity;
+}
+
+function makeCartItem() {
+  return {
+    name: currentProduct.title,
+    productName: currentProduct.title,
+    productId: currentProductId,
+    price: Number(currentProduct.price),
+    color: selectedColorName,
+    size: sizeMapping[selectedSizeName] || selectedSizeName,
+    qty: productPageQuantity,
+    quantity: productPageQuantity,
+    image: getProductImages(currentProduct.colors[selectedColorName])[0] || ""
+  };
+}
+
+function addToCart() {
+  const item = makeCartItem();
+  try {
+    const cart = JSON.parse(localStorage.getItem("my_larel_cart") || "[]");
+    cart.push(item);
+    localStorage.setItem("my_larel_cart", JSON.stringify(cart));
+  } catch (error) {
+    alert("Cart save nahi ho paya. Browser storage check karein.");
+    return;
+  }
+
+  if (typeof google !== "undefined" && google.script && google.script.run) {
+    google.script.run.addToCartBackend(item);
+  }
+
+  const toast = document.getElementById("toast");
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 2200);
+}
+
+function openSizeGuide() {
+  document.getElementById("sizeOverlay").classList.add("active");
+  document.body.style.overflow = "hidden";
+}
+
+function closeSizeGuide() {
+  document.getElementById("sizeOverlay").classList.remove("active");
+  document.body.style.overflow = "";
+}
+
+function openCheckout() {
+  const images = getProductImages(currentProduct.colors[selectedColorName]);
+  document.getElementById("summaryImg").src = images[0] || "";
+  document.getElementById("summaryTitle").textContent = currentProduct.title;
+  document.getElementById("summaryColor").textContent = selectedColorName;
+  document.getElementById("summarySize").textContent =
+    sizeMapping[selectedSizeName] || selectedSizeName;
+  document.getElementById("summaryQty").textContent = productPageQuantity;
+  document.getElementById("summaryTotal").textContent =
+    "₹" + currentProduct.price * productPageQuantity;
+
+  updateSubmitButton();
+  document.getElementById("checkoutOverlay").classList.add("active");
+  document.body.style.overflow = "hidden";
+}
+
+function closeCheckout() {
+  document.getElementById("checkoutOverlay").classList.remove("active");
+  document.body.style.overflow = "";
+}
+
+function setPayment(method) {
+  chosenPayment = method;
+  document.getElementById("prepaidOption").classList.toggle("active", method === "PREPAID");
+  document.getElementById("codOption").classList.toggle("active", method === "COD");
+  updateSubmitButton();
+}
+
+function updateSubmitButton() {
+  const total = currentProduct.price * productPageQuantity;
+  document.getElementById("submitBtn").textContent =
+    chosenPayment === "COD" ? "Place COD Order - ₹" + total : "Place Prepaid Order - ₹" + total;
+}
+
+function submitOrder(event) {
+  event.preventDefault();
+
+  const orderData = {
+    orderId: "ORD-" + Date.now(),
+    orderDate: new Date().toLocaleDateString("en-IN"),
+    productId: currentProductId,
+    productName: currentProduct.title,
+    color: selectedColorName,
+    size: sizeMapping[selectedSizeName] || selectedSizeName,
+    qty: productPageQuantity,
+    price: currentProduct.price,
+    totalAmount: currentProduct.price * productPageQuantity,
+    paymentMethod: chosenPayment,
+    customerDetails: {
+      name: document.getElementById("custName").value.trim(),
+      phone: document.getElementById("custPhone").value.trim(),
+      house: document.getElementById("addrHouse").value.trim(),
+      street: document.getElementById("addrStreet").value.trim(),
+      landmark: document.getElementById("addrLandmark").value.trim(),
+      pincode: document.getElementById("addrPincode").value.trim(),
+      city: document.getElementById("addrCity").value.trim(),
+      state: document.getElementById("addrState").value.trim()
+    }
+  };
+
+  if (typeof google !== "undefined" && google.script && google.script.run) {
+    const button = document.getElementById("submitBtn");
+    button.disabled = true;
+    button.textContent = "Submitting Order...";
+
+    google.script.run
+      .withSuccessHandler(function() {
+        button.disabled = false;
+        closeCheckout();
+        alert("Order successfully submit ho gaya!");
+        document.getElementById("checkoutForm").reset();
+      })
+      .withFailureHandler(function(error) {
+        button.disabled = false;
+        updateSubmitButton();
+        alert("Order submit nahi hua: " + (error.message || error));
+      })
+      .placeOrderBackend(orderData);
+  } else {
+    const message =
+      "LAREL ORDER\n" +
+      "Order ID: " + orderData.orderId + "\n" +
+      "Product: " + orderData.productName + "\n" +
+      "Color: " + orderData.color + "\n" +
+      "Size: " + orderData.size + "\n" +
+      "Quantity: " + orderData.qty + "\n" +
+      "Total: ₹" + orderData.totalAmount + "\n" +
+      "Payment: " + orderData.paymentMethod + "\n" +
+      "Name: " + orderData.customerDetails.name + "\n" +
+      "Phone: " + orderData.customerDetails.phone + "\n" +
+      "Address: " + orderData.customerDetails.house + ", " +
+      orderData.customerDetails.street + ", " +
+      orderData.customerDetails.city + ", " +
+      orderData.customerDetails.state + " - " +
+      orderData.customerDetails.pincode;
+
+    window.open("https://wa.me/?text=" + encodeURIComponent(message), "_blank");
+  }
+}
+
+function renderRelatedProducts() {
+  const grid = document.getElementById("relatedGrid");
+  grid.innerHTML = "";
+
+  Object.entries(productsDatabase)
+    .filter(([id]) => id !== currentProductId)
+    .forEach(([id, product]) => {
+      const firstColor = Object.keys(product.colors)[0];
+      const image = getProductImages(product.colors[firstColor])[0] || "";
+
+      const card = document.createElement("div");
+      card.className = "related-card";
+
+      const link = document.createElement("a");
+      link.href = "?id=" + encodeURIComponent(id);
+
+      const img = document.createElement("img");
+      img.src = image;
+      img.alt = product.title;
+      img.loading = "lazy";
+      link.appendChild(img);
+
+      const info = document.createElement("div");
+      info.className = "related-info";
+
+      const title = document.createElement("h3");
+      title.textContent = product.title;
+
+      const price = document.createElement("p");
+      price.textContent = "₹" + product.price;
+
+      const button = document.createElement("button");
+      button.textContent = "View Product";
+      button.onclick = () => window.location.href = "?id=" + encodeURIComponent(id);
+
+      info.append(title, price, button);
+      card.append(link, info);
+      grid.appendChild(card);
+    });
+}
+
+function toggleMenu() {
+  document.getElementById("navLinks").classList.toggle("mobile-open");
+}
+
+document.getElementById("checkoutOverlay").addEventListener("click", function(event) {
+  if (event.target === this) closeCheckout();
 });
-document.getElementById("sizeOverlay").addEventListener("click",function(event){
- if(event.target===this)closeSizeGuide();
+
+document.getElementById("sizeOverlay").addEventListener("click", function(event) {
+  if (event.target === this) closeSizeGuide();
 });
-window.addEventListener("DOMContentLoaded",initProduct);
+
+window.addEventListener("DOMContentLoaded", initProduct);
 </script>
 </body>
 </html>
