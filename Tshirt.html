@@ -771,18 +771,27 @@ function renderRelatedColorStep() {
     return;
   }
 
-  document.getElementById("relatedModalOptionsContent").innerHTML = `
-    <div class="related-option-group">
-      <div class="related-option-label">Select Color</div>
-      <div class="related-option-values">
-        ${colors.map(color => `
-          <button type="button" class="related-option-btn" onclick="onRelatedColorSelected(${JSON.stringify(color).replace(/</g, "\\u003c")})">
-            ${color.replace(/[&<>"']/g, character => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[character]))}
-          </button>
-        `).join("")}
-      </div>
-    </div>
-  `;
+  const content = document.getElementById("relatedModalOptionsContent");
+  content.innerHTML = "";
+  const group = document.createElement("div");
+  group.className = "related-option-group";
+  const label = document.createElement("div");
+  label.className = "related-option-label";
+  label.textContent = "Select Color";
+  const values = document.createElement("div");
+  values.className = "related-option-values";
+
+  colors.forEach(color => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "related-option-btn";
+    button.textContent = color;
+    button.addEventListener("click", () => onRelatedColorSelected(color));
+    values.appendChild(button);
+  });
+
+  group.append(label, values);
+  content.appendChild(group);
 }
 
 function onRelatedColorSelected(color) {
@@ -799,18 +808,27 @@ function renderRelatedSizeStep(color) {
     return;
   }
 
-  document.getElementById("relatedModalOptionsContent").innerHTML = `
-    <div class="related-option-group">
-      <div class="related-option-label">Select Size</div>
-      <div class="related-option-values">
-        ${sizes.map(size => `
-          <button type="button" class="related-option-btn" onclick="onRelatedSizeSelected(${JSON.stringify(size).replace(/</g, "\\u003c")})">
-            ${String(size).replace(/[&<>"']/g, character => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[character]))}
-          </button>
-        `).join("")}
-      </div>
-    </div>
-  `;
+  const content = document.getElementById("relatedModalOptionsContent");
+  content.innerHTML = "";
+  const group = document.createElement("div");
+  group.className = "related-option-group";
+  const label = document.createElement("div");
+  label.className = "related-option-label";
+  label.textContent = "Select Size";
+  const values = document.createElement("div");
+  values.className = "related-option-values";
+
+  sizes.forEach(size => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "related-option-btn";
+    button.textContent = size;
+    button.addEventListener("click", () => onRelatedSizeSelected(size));
+    values.appendChild(button);
+  });
+
+  group.append(label, values);
+  content.appendChild(group);
 }
 
 function onRelatedSizeSelected(size) {
