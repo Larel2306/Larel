@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#070a14">
+<title>Login / Sign Up - LAREL</title>
+<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/lakhangoyal2306-wq/Larel/refs/heads/main/Larel.png">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root{--bg:#070a14;--panel:#101522;--line:rgba(255,255,255,.11);--muted:#9ca8ba;--cyan:#00d2ff;--white:#f7fbff}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Plus Jakarta Sans',sans-serif}
+body{min-height:100vh;background:radial-gradient(ellipse at 50% 0%,rgba(0,210,255,.14),transparent 48%),var(--bg);color:var(--white);display:flex;flex-direction:column}
+a{color:inherit;text-decoration:none}.topbar{height:76px;padding:0 6%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,210,255,.12);background:rgba(7,10,20,.72);backdrop-filter:blur(16px)}
+.logo{font-size:24px;font-weight:800;letter-spacing:2px}.logo span{color:var(--cyan)}.back{color:#c2ccda;font-size:13px}.back:hover{color:var(--cyan)}
+main{flex:1;display:grid;place-items:center;padding:36px 16px}.auth-shell{width:min(100%,460px)}.eyebrow{text-align:center;color:var(--cyan);font-size:11px;font-weight:800;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px}.heading{text-align:center;font-size:clamp(27px,5vw,36px);letter-spacing:-1.2px;margin-bottom:9px}.subheading{text-align:center;color:var(--muted);font-size:13px;line-height:1.7;margin:0 auto 25px;max-width:340px}
+.card{background:linear-gradient(145deg,rgba(19,26,42,.97),rgba(12,16,28,.98));border:1px solid var(--line);border-radius:24px;padding:clamp(22px,5vw,32px);box-shadow:0 24px 80px #0005}
+.tabs{display:grid;grid-template-columns:1fr 1fr;padding:5px;background:#080d18;border:1px solid var(--line);border-radius:13px;margin-bottom:22px;gap:5px}.tab{border:0;border-radius:9px;background:transparent;color:#98a4b7;padding:11px;font-size:13px;font-weight:800;cursor:pointer}.tab.active{background:var(--cyan);color:#041019}
+.field{display:block;margin-bottom:15px}.field span{display:block;font-size:12px;color:#dbe5f2;font-weight:700;margin-bottom:8px}.field input{width:100%;height:47px;border:1px solid #293346;background:#090e19;color:#fff;border-radius:11px;padding:0 13px;outline:none;font-size:13px}.field input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #00d2ff18}.field input::placeholder{color:#657185}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:2px 0 17px;font-size:11px;color:var(--muted)}.check{display:flex;align-items:flex-start;gap:8px;line-height:1.6}.check input{accent-color:var(--cyan);margin-top:3px}.link{color:var(--cyan);cursor:pointer}.primary,.google{width:100%;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:10px;font-size:13px;font-weight:800;cursor:pointer;transition:.2s}.primary{background:var(--cyan);border:1px solid var(--cyan);color:#041019}.primary:hover{filter:brightness(1.08);transform:translateY(-1px)}.primary:disabled{opacity:.6;cursor:wait;transform:none}.google{background:#fff;color:#1a1d24;border:1px solid #fff}.google:hover{background:#eaf8ff}.divider{display:flex;align-items:center;gap:12px;color:#778398;font-size:10px;margin:18px 0}.divider:before,.divider:after{content:"";height:1px;background:var(--line);flex:1}.message{display:none;margin-bottom:16px;padding:12px;border-radius:10px;font-size:12px;line-height:1.6}.message.show{display:block}.message.error{background:#ff4d5d14;border:1px solid #ff4d5d55;color:#ffb5bd}.message.success{background:#00d2ff12;border:1px solid #00d2ff44;color:#a5f0ff}.fineprint{text-align:center;font-size:10px;line-height:1.7;color:#788498;margin-top:18px}.fineprint a{color:#c6d4e6;text-decoration:underline}.hidden{display:none!important}.account{text-align:center}.avatar{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:#00d2ff18;border:1px solid #00d2ff55;color:var(--cyan);font-size:25px;margin:0 auto 16px}.account p{color:var(--muted);font-size:13px;line-height:1.7;margin:12px 0 22px}.footer{text-align:center;color:#6f7c90;font-size:10px;padding:18px}
+@media(max-width:420px){.topbar{height:65px;padding:0 18px}.logo{font-size:21px}.back{font-size:12px}.card{border-radius:19px}}
+</style>
+</head>
+<body>
+<header class="topbar"><a class="logo" href="Home.html">LAREL<span>.</span></a><a class="back" href="Home.html"><i class="fa-solid fa-arrow-left"></i> Back to store</a></header>
+<main><section class="auth-shell">
+<div class="eyebrow">LAREL MEMBERS CLUB</div>
+<h1 class="heading" id="pageHeading">Create your account</h1>
+<p class="subheading" id="pageSubheading">Join LAREL for a smoother checkout and a place to keep your orders together.</p>
+<div class="card">
+<div id="authPanel">
+<div class="tabs" role="tablist" aria-label="Account options"><button class="tab active" id="signupTab" type="button">Create account</button><button class="tab" id="loginTab" type="button">Log in</button></div>
+<div id="notice" class="message" role="status" aria-live="polite"></div>
+<form id="authForm">
+<label class="field" id="nameField"><span>Full name</span><input id="fullName" name="name" type="text" autocomplete="name" placeholder="Your name" minlength="2"></label>
+<label class="field"><span>Email address</span><input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required></label>
+<label class="field"><span>Password</span><input id="password" name="password" type="password" autocomplete="new-password" placeholder="At least 8 characters" minlength="8" required></label>
+<label class="field" id="confirmField"><span>Confirm password</span><input id="confirmPassword" type="password" autocomplete="new-password" placeholder="Enter password again" minlength="8"></label>
+<div class="row" id="loginExtras"><label class="check"><input id="remember" type="checkbox" checked><span>Keep me signed in on this device</span></label><a class="link" href="#" id="forgotLink">Forgot password?</a></div>
+<label class="check" id="termsRow" style="font-size:11px;color:#aab5c6;margin:4px 0 18px"><input id="terms" type="checkbox"><span>I agree to the <a class="link" href="Terms.html">Terms</a> and <a class="link" href="Privacy.html">Privacy Policy</a>.</span></label>
+<button class="primary" id="submitBtn" type="submit">Create account <i class="fa-solid fa-arrow-right"></i></button>
+</form>
+<div class="divider">OR CONTINUE WITH</div>
+<button class="google" id="googleBtn" type="button"><i class="fa-brands fa-google"></i> Continue with Google</button>
+<div id="resetPanel" class="hidden">
+<form id="resetForm"><label class="field"><span>New password</span><input id="newPassword" type="password" minlength="8" autocomplete="new-password" required placeholder="At least 8 characters"></label><button class="primary" type="submit">Update password</button></form>
+</div>
+</div>
+<div id="accountPanel" class="account hidden"><div class="avatar"><i class="fa-regular fa-user"></i></div><h2 id="accountName">You're signed in</h2><p id="accountEmail"></p><button class="primary" id="continueBtn" type="button">Continue shopping <i class="fa-solid fa-arrow-right"></i></button><button class="google" id="logoutBtn" type="button" style="margin-top:10px">Log out</button></div>
+</div>
+<p class="fineprint">Your account is protected by Supabase Authentication. Never share your password or verification links.</p>
+</section></main><footer class="footer">© <span id="year"></span> LAREL. Built for everyday streetwear.</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
+</body></html>
