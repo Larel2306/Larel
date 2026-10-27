@@ -24,21 +24,26 @@
   function injectHeaderAccount() {
     if (authPage) return;
     const actions = document.querySelector(".nav-actions");
-    if (!actions || actions.querySelector("[data-larel-account]")) return;
+    const fallbackHeader = document.querySelector(".store-header");
+    const target = actions || fallbackHeader;
+    if (!target || target.querySelector("[data-larel-account]")) return;
     const link = document.createElement("a");
     link.href = "auth.html";
-    link.className = "nav-icon-btn";
+    link.className = actions ? "nav-icon-btn" : "back-to-account";
     link.setAttribute("data-larel-account", "");
     link.title = "Login / My Account";
     link.setAttribute("aria-label", "Login or My Account");
-    link.innerHTML = '<i class="fa-regular fa-user" aria-hidden="true"></i><span class="btn-text">Login / Sign Up</span>';
-    actions.insertBefore(link, actions.firstChild);
+    link.innerHTML = '<i class="fa-regular fa-user" aria-hidden="true"></i><span class="btn-text"> Login / Sign Up</span>';
+    if (actions) target.insertBefore(link, target.firstChild);
+    else {
+      link.style.cssText = "display:inline-flex;align-items:center;gap:8px;margin-left:16px;padding:9px 13px;border:1px solid rgba(45,212,191,.35);border-radius:22px;color:#fff;font-size:12px;text-decoration:none;background:rgba(45,212,191,.08)";
+      target.appendChild(link);
+    }
     if (client) client.auth.getSession().then(({data}) => {
       if (data?.session) {
-        link.href = "auth.html";
         link.title = "My Account";
         link.setAttribute("aria-label", "My Account");
-        link.innerHTML = '<i class="fa-regular fa-user" aria-hidden="true"></i><span class="btn-text">My Account</span>';
+        link.innerHTML = '<i class="fa-regular fa-user" aria-hidden="true"></i><span class="btn-text"> My Account</span>';
       }
     });
   }
