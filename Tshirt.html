@@ -633,6 +633,7 @@ function addToCart() {
     const cart = JSON.parse(localStorage.getItem("my_larel_cart") || "[]");
     cart.push(item);
     localStorage.setItem("my_larel_cart", JSON.stringify(cart));
+    updateHeaderCartCount();
   } catch (error) {
     alert("Cart save nahi ho paya. Browser storage check karein.");
     return;
