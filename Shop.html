@@ -531,6 +531,7 @@ body {
 <!-- PRODUCT SECTIONS -->
 <div id="shopContent"></div>
 
+<script src="products.js"></script>
 <script>
 /*
 =================================================
@@ -546,18 +547,16 @@ Apne actual product links yahan paste karna.
 =================================================
 */
 
-const PRODUCTS = [
-  {
-    cat: "tshirts",
-    id: "tshirt1",
-    name: "Find Your North – Compass Signature T-Shirt",
-    price: 499,
-    img: "https://i.ibb.co/wNSndt3s/mockup-4.png",
-    link: "https://lakhangoyal2306-wq.github.io/Larel/Tshirt?id=tshirt1",
-    colors: ["White", "Grey", "Lavender", "Mint"],
-    sizes: ["S", "M", "L", "XL", "XXL"]
-  }
-];
+const PRODUCTS = Object.entries(window.LAREL_PRODUCTS).map(([id, product]) => ({
+  cat: product.category,
+  id,
+  name: product.title,
+  price: product.price,
+  img: Object.values(product.colors)[0]?.images?.[0] || "",
+  link: "https://lakhangoyal2306-wq.github.io/Larel/Tshirt?id=" + encodeURIComponent(id),
+  colors: Object.keys(product.colors),
+  sizes: product.sizes
+}));
 
 const CATEGORIES = [
   { id: "tshirts", label: "T-Shirts" },
