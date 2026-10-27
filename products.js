@@ -5,6 +5,7 @@
 window.LAREL_PRODUCTS = {
   "tshirt1": {
     title: "Find Your North – Compass Signature T-Shirt",
+    shopImage: "https://i.ibb.co/wNSndt3s/mockup-4.png",
     tag: "New Drop",
     price: 499,
     oldPrice: 999,
