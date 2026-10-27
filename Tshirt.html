@@ -615,6 +615,18 @@ function submitOrder(event) {
   }
 }
 
+function getCategoryProductUrl(category, id) {
+  const categoryPages = {
+    tshirts: "Tshirt",
+    hoodies: "Hoodies",
+    jackets: "Jackets",
+    bottomwear: "Bottomwear",
+    kidswear: "Kidswear"
+  };
+  const page = categoryPages[category] || "Tshirt";
+  return page + "?id=" + encodeURIComponent(id);
+}
+
 function renderRelatedProducts() {
   const grid = document.getElementById("relatedGrid");
   const section = document.getElementById("relatedSection") || grid.closest(".related");
@@ -639,7 +651,7 @@ function renderRelatedProducts() {
     card.className = "related-card";
 
     const link = document.createElement("a");
-    link.href = "Tshirt.html?id=" + encodeURIComponent(id);
+    link.href = getCategoryProductUrl(product.category, id);
     link.setAttribute("aria-label", "View " + product.title);
 
     const imageBox = document.createElement("div");
@@ -669,7 +681,7 @@ function renderRelatedProducts() {
     button.type = "button";
     button.textContent = "View Product";
     button.onclick = () => {
-      window.location.href = "Tshirt.html?id=" + encodeURIComponent(id);
+      window.location.href = getCategoryProductUrl(product.category, id);
     };
 
     info.append(title, price, button);
