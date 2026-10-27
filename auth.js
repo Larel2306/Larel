@@ -6,8 +6,8 @@
 */
 (() => {
   "use strict";
-  const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
-  const SUPABASE_PUBLISHABLE_KEY = "YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY";
+  const SUPABASE_URL = "https://uqpzwpfucqcnyyplqbam.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_miTEn6-4xX0Vi1-twerxjA_CNk3kG99";
   const configured = /^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(SUPABASE_URL) &&
     !SUPABASE_URL.includes("YOUR_") && !SUPABASE_PUBLISHABLE_KEY.includes("YOUR_");
 
