@@ -161,8 +161,8 @@
         if (data.session && data.user) {
           showAccount(data.user);
         } else {
-          showMessage("Account created. Check your email and click the confirmation link before logging in.", "success");
           setMode("login");
+          showMessage("Account created. Check your email and click the confirmation link before logging in.", "success");
         }
       } else {
         const { data, error } = await client.auth.signInWithPassword({ email, password });
