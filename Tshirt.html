@@ -633,7 +633,7 @@ function renderRelatedProducts() {
 
   relatedProducts.forEach(([id, product]) => {
     const firstColor = Object.keys(product.colors)[0];
-    const image = getProductImages(product.colors[firstColor])[0] || "";
+    const image = product.shopImage || getProductImages(product.colors[firstColor])[0] || "";
 
     const card = document.createElement("div");
     card.className = "related-card";
