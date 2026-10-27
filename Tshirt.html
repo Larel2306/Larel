@@ -639,7 +639,7 @@ function renderRelatedProducts() {
     card.className = "related-card";
 
     const link = document.createElement("a");
-    link.href = "?id=" + encodeURIComponent(id);
+    link.href = "Tshirt.html?id=" + encodeURIComponent(id);
     link.setAttribute("aria-label", "View " + product.title);
 
     const imageBox = document.createElement("div");
@@ -669,7 +669,7 @@ function renderRelatedProducts() {
     button.type = "button";
     button.textContent = "View Product";
     button.onclick = () => {
-      window.location.href = "?id=" + encodeURIComponent(id);
+      window.location.href = "Tshirt.html?id=" + encodeURIComponent(id);
     };
 
     info.append(title, price, button);
