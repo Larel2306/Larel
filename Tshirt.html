@@ -86,20 +86,33 @@ h1{font-size:27px;line-height:1.3;margin-bottom:10px}
 .trust div{background:#19191f;border:1px solid #292930;border-radius:10px;padding:12px;color:#ccc;font-size:12px}
 .trust i{color:#2dd4bf;margin-right:9px}
 
-/* YOU MIGHT ALSO LIKE */
+/* YOU MIGHT ALSO LIKE — MATCH SHOP.HTML PRODUCT CARDS */
 .related{margin-top:38px}
 .related h2{font-size:20px;margin-bottom:18px}
-.related-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
-.related-card{background:#111116;border:1px solid #292930;border-radius:15px;overflow:hidden;min-width:0}
-
-/* Related product images have independent settings */
-.related-image-box{width:100%;height:240px;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#15151a}
-.related-image-box img{display:block;width:100%;height:100%;object-fit:fill;object-position:center;background:#15151a}
-.related-info{padding:13px}
-.related-info h3{font-size:13px;margin-bottom:10px}
-.related-info p{color:#2dd4bf;font-weight:800;margin-bottom:10px}
-.related-info a{display:block;text-decoration:none}
-.related-info button{width:100%;background:#15302d;color:#2dd4bf;border:1px solid #235b54;padding:9px;border-radius:8px;font-size:12px}
+.related-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;min-width:0}
+.related-card{background:transparent;border:0;border-radius:0;overflow:hidden;min-width:0;color:inherit;cursor:pointer;transition:.25s;display:block}
+.related-card:hover .related-image-box img{transform:scale(1.035)}
+.related-image-box{width:100%;aspect-ratio:3/4;position:relative;overflow:hidden;background:#15151a;border-radius:0}
+.related-image-box img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;transition:transform .4s ease}
+.related-badge{position:absolute;top:12px;left:12px;background:#000b;color:#fff;font-size:10px;font-weight:800;padding:5px 9px;border-radius:20px;text-transform:uppercase;z-index:2}
+.related-info{padding:12px 4px 4px}
+.related-info h3{font-size:13px;font-weight:700;line-height:1.35;margin-bottom:8px;color:#eaeaf0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:35px}
+.related-price-row{display:flex;justify-content:space-between;align-items:center}
+.related-info p{font-size:16px;color:#fff;font-weight:800;margin:0}
+.related-plus-btn{background:transparent;border:0;color:#fff;font-size:16px;cursor:pointer;padding:4px;display:flex;align-items:center;justify-content:center}
+.related-plus-btn:hover{transform:scale(1.2)}
+/* Related product quick-add modal uses the same flow as Shop.html */
+.related-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(5px);z-index:4000;display:flex;align-items:center;justify-content:center;padding:16px;opacity:0;visibility:hidden;transition:.25s ease}
+.related-modal-overlay.active{opacity:1;visibility:visible}
+.related-modal-container{background:#141419;border:1px solid #ffffff1a;border-radius:16px;width:100%;max-width:360px;max-height:85vh;overflow-y:auto;padding:24px;color:#f3f3f6;transform:scale(.95);transition:.25s ease}
+.related-modal-overlay.active .related-modal-container{transform:scale(1)}
+.related-modal-header{display:flex;justify-content:flex-end;margin-bottom:10px}
+.related-modal-close{background:transparent;border:0;color:#aaa;font-size:18px;cursor:pointer}
+.related-option-group{margin-bottom:12px}
+.related-option-label{font-size:11px;font-weight:700;color:#888;margin-bottom:10px;text-transform:uppercase;letter-spacing:1px}
+.related-option-values{display:flex;flex-direction:column;gap:10px}
+.related-option-btn{background:#1e1e24;border:1px solid #ffffff22;color:#fff;padding:12px 16px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;text-align:left;width:100%}
+.related-option-btn:hover{border-color:#0ea5e9;background:#25252c}
 
 .toast{position:fixed;top:20px;left:50%;transform:translate(-50%,-100px);opacity:0;transition:.3s;background:#2dd4bf;color:#000;padding:12px 20px;border-radius:30px;z-index:3000;font-size:13px;font-weight:800;white-space:nowrap}
 .toast.show{transform:translate(-50%,0);opacity:1}
@@ -142,16 +155,18 @@ h1{font-size:27px;line-height:1.3;margin-bottom:10px}
   h1{font-size:22px}
   .price{font-size:25px}
   .actions button{font-size:12px;padding:14px 5px}
-  .related-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-  .related-image-box{height:180px}
-  .related-info{padding:10px}
-  .related-info h3{font-size:12px}
+  .related-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 8px}
+  .related-info{padding:8px 2px}
+  .related-info h3{font-size:11.5px;min-height:31px}
+  .related-info p{font-size:14px}
+  .related-badge{font-size:9px;top:8px;left:8px;padding:4px 7px}
+  .related-modal-container{padding:20px}
   .form-grid{grid-template-columns:1fr}
   .modal{padding:18px}
 }
 
 @media(max-width:380px){
-  .related-image-box{height:150px}
+  .related-grid{gap:12px 7px}
 }
 </style>
 </head>
@@ -239,6 +254,15 @@ h1{font-size:27px;line-height:1.3;margin-bottom:10px}
     <div class="related-grid" id="relatedGrid"></div>
   </section>
 </main>
+
+<div class="related-modal-overlay" id="relatedProductModal">
+  <div class="related-modal-container">
+    <div class="related-modal-header">
+      <button class="related-modal-close" type="button" onclick="closeRelatedProductModal()" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div id="relatedModalOptionsContent"></div>
+  </div>
+</div>
 
 <div class="overlay" id="sizeOverlay">
   <div class="modal">
@@ -627,9 +651,30 @@ function getCategoryProductUrl(category, id) {
   return page + "?id=" + encodeURIComponent(id);
 }
 
+let activeRelatedProduct = null;
+let activeRelatedProductId = "";
+let relatedSelectedColor = null;
+
+function getCategoryProductUrl(category, id) {
+  const categoryPages = {
+    tshirts: "Tshirt",
+    hoodies: "Hoodies",
+    jackets: "Jackets",
+    bottomwear: "Bottomwear",
+    kidswear: "Kidswear"
+  };
+  return (categoryPages[category] || "Tshirt") + "?id=" + encodeURIComponent(id);
+}
+
+function openRelatedProduct(id) {
+  const product = productsDatabase[id];
+  if (!product) return;
+  window.location.href = getCategoryProductUrl(product.category, id);
+}
+
 function renderRelatedProducts() {
   const grid = document.getElementById("relatedGrid");
-  const section = document.getElementById("relatedSection") || grid.closest(".related");
+  const section = document.getElementById("relatedSection");
   grid.innerHTML = "";
 
   const relatedProducts = Object.entries(productsDatabase).filter(([id, product]) =>
@@ -637,58 +682,194 @@ function renderRelatedProducts() {
   );
 
   if (!relatedProducts.length) {
-    if (section) section.style.display = "none";
+    section.style.display = "none";
     return;
   }
 
-  if (section) section.style.display = "";
+  section.style.display = "";
 
   relatedProducts.forEach(([id, product]) => {
-    const firstColor = Object.keys(product.colors)[0];
-    const image = product.shopImage || getProductImages(product.colors[firstColor])[0] || "";
+    const firstColor = Object.keys(product.colors || {})[0];
+    const image = product.shopImage || getProductImages(product.colors && product.colors[firstColor])[0] || "";
 
     const card = document.createElement("div");
     card.className = "related-card";
-
-    const link = document.createElement("a");
-    link.href = getCategoryProductUrl(product.category, id);
-    link.setAttribute("aria-label", "View " + product.title);
+    card.setAttribute("role", "link");
+    card.setAttribute("tabindex", "0");
+    card.setAttribute("aria-label", "View " + product.title);
+    card.addEventListener("click", () => openRelatedProduct(id));
+    card.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openRelatedProduct(id);
+      }
+    });
 
     const imageBox = document.createElement("div");
     imageBox.className = "related-image-box";
 
+    if (product.tag) {
+      const badge = document.createElement("span");
+      badge.className = "related-badge";
+      badge.textContent = product.tag;
+      imageBox.appendChild(badge);
+    }
+
     const img = document.createElement("img");
     img.src = image;
-    img.alt = product.title;
+    img.alt = product.title || "Product";
     img.loading = "lazy";
     img.onerror = function() {
-      imageBox.innerHTML = '<span style="color:#aaa;font-size:12px">Image unavailable</span>';
+      this.style.visibility = "hidden";
+      imageBox.style.background = "#15151a";
     };
-
     imageBox.appendChild(img);
-    link.appendChild(imageBox);
 
     const info = document.createElement("div");
     info.className = "related-info";
 
     const title = document.createElement("h3");
-    title.textContent = product.title;
+    title.textContent = product.title || "Product";
+
+    const priceRow = document.createElement("div");
+    priceRow.className = "related-price-row";
 
     const price = document.createElement("p");
-    price.textContent = "₹" + product.price;
+    price.textContent = "₹" + Number(product.price || 0).toLocaleString("en-IN");
 
-    const button = document.createElement("button");
-    button.type = "button";
-    button.textContent = "View Product";
-    button.onclick = () => {
-      window.location.href = getCategoryProductUrl(product.category, id);
-    };
+    const plus = document.createElement("button");
+    plus.type = "button";
+    plus.className = "related-plus-btn";
+    plus.title = "Add to Cart";
+    plus.setAttribute("aria-label", "Add " + product.title + " to Cart");
+    plus.innerHTML = '<i class="fa-solid fa-plus"></i>';
+    plus.addEventListener("click", event => openRelatedAddModal(event, id));
 
-    info.append(title, price, button);
-    card.append(link, info);
+    priceRow.append(price, plus);
+    info.append(title, priceRow);
+    card.append(imageBox, info);
     grid.appendChild(card);
   });
 }
+
+function openRelatedAddModal(event, productId) {
+  event.stopPropagation();
+  activeRelatedProductId = productId;
+  activeRelatedProduct = productsDatabase[productId];
+  relatedSelectedColor = null;
+  if (!activeRelatedProduct) return;
+  renderRelatedColorStep();
+  document.getElementById("relatedProductModal").classList.add("active");
+}
+
+function renderRelatedColorStep() {
+  const product = activeRelatedProduct;
+  if (!product) return;
+  const colors = Object.keys(product.colors || {});
+  if (!colors.length) {
+    renderRelatedSizeStep(null);
+    return;
+  }
+
+  document.getElementById("relatedModalOptionsContent").innerHTML = `
+    <div class="related-option-group">
+      <div class="related-option-label">Select Color</div>
+      <div class="related-option-values">
+        ${colors.map(color => `
+          <button type="button" class="related-option-btn" onclick="onRelatedColorSelected(${JSON.stringify(color).replace(/</g, "\\u003c")})">
+            ${color.replace(/[&<>"']/g, character => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[character]))}
+          </button>
+        `).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function onRelatedColorSelected(color) {
+  relatedSelectedColor = color;
+  renderRelatedSizeStep(color);
+}
+
+function renderRelatedSizeStep(color) {
+  const product = activeRelatedProduct;
+  if (!product) return;
+  const sizes = Array.isArray(product.sizes) ? product.sizes : [];
+  if (!sizes.length) {
+    finishRelatedAddToCart(color, null);
+    return;
+  }
+
+  document.getElementById("relatedModalOptionsContent").innerHTML = `
+    <div class="related-option-group">
+      <div class="related-option-label">Select Size</div>
+      <div class="related-option-values">
+        ${sizes.map(size => `
+          <button type="button" class="related-option-btn" onclick="onRelatedSizeSelected(${JSON.stringify(size).replace(/</g, "\\u003c")})">
+            ${String(size).replace(/[&<>"']/g, character => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[character]))}
+          </button>
+        `).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function onRelatedSizeSelected(size) {
+  finishRelatedAddToCart(relatedSelectedColor, size);
+}
+
+function finishRelatedAddToCart(color, size) {
+  if (!activeRelatedProduct) return;
+
+  const product = activeRelatedProduct;
+  const firstImage = getProductImages(product.colors && product.colors[color])[0] ||
+    product.shopImage ||
+    getProductImages(product.colors && product.colors[Object.keys(product.colors || {})[0]])[0] || "";
+
+  const cartItem = {
+    cat: product.category,
+    id: activeRelatedProductId,
+    name: product.title,
+    price: Number(product.price || 0),
+    img: product.shopImage || firstImage,
+    link: getCategoryProductUrl(product.category, activeRelatedProductId),
+    colors: Object.keys(product.colors || {}),
+    sizes: Array.isArray(product.sizes) ? product.sizes : [],
+    selectedColor: color,
+    selectedSize: size
+  };
+
+  try {
+    const cart = JSON.parse(localStorage.getItem("larel_cart") || "[]");
+    const safeCart = Array.isArray(cart) ? cart : [];
+    safeCart.push(cartItem);
+    localStorage.setItem("larel_cart", JSON.stringify(safeCart));
+  } catch (error) {
+    alert("Cart save nahi ho paya. Browser storage check karein.");
+    return;
+  }
+
+  closeRelatedProductModal();
+  const toast = document.getElementById("toast");
+  toast.textContent = "Added to cart successfully!";
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 2200);
+}
+
+function closeRelatedProductModal() {
+  document.getElementById("relatedProductModal").classList.remove("active");
+  document.getElementById("relatedModalOptionsContent").innerHTML = "";
+  activeRelatedProduct = null;
+  activeRelatedProductId = "";
+  relatedSelectedColor = null;
+}
+
+document.getElementById("relatedProductModal").addEventListener("click", function(event) {
+  if (event.target === this) closeRelatedProductModal();
+});
+
+document.addEventListener("keydown", function(event) {
+  if (event.key === "Escape") closeRelatedProductModal();
+});
 
 function toggleMenu() {
   document.getElementById("navLinks").classList.toggle("mobile-open");
