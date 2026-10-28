@@ -304,7 +304,7 @@ body::before {
 .hero-slider-container {
     width: 100%;
     max-width: 1120px;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 16 / 9;
     height: auto;
     border-radius: 24px;
     overflow: hidden;
@@ -332,17 +332,6 @@ body::before {
     overflow: hidden;
     background: #070a14;
 }
-.slide-item::before {
-    content: "";
-    position: absolute;
-    inset: -18px;
-    background-image: var(--slide-image);
-    background-size: cover;
-    background-position: center;
-    filter: blur(18px) brightness(.48);
-    transform: scale(1.08);
-    z-index: -1;
-}
 .slide-item img {
     position: relative;
     z-index: 1;
@@ -351,7 +340,7 @@ body::before {
     height: 100%;
     object-fit: contain;
     object-position: center;
-    background: transparent;
+    background: #070a14;
 }
 
 .slide-caption {
@@ -637,7 +626,7 @@ body::before {
     .hero-slider-container {
         width: 100%;
         max-width: 100%;
-        aspect-ratio: 4 / 3;
+        aspect-ratio: 16 / 9;
     }
     .slide-caption { padding: 18px; }
     .slide-caption h3 { font-size: 17px; }
@@ -873,10 +862,6 @@ let currentSlide = 0;
 const totalSlides = 5;
 const track = document.getElementById("sliderTrack");
 const dots = document.querySelectorAll(".dot");
-document.querySelectorAll(".slide-item").forEach(slide => {
-    const image = slide.querySelector("img");
-    if (image && image.src) slide.style.setProperty("--slide-image", 'url("' + image.src + '")');
-});
 
 function autoSlide() {
     currentSlide = (currentSlide + 1) % totalSlides;
