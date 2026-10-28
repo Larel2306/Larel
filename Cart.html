@@ -249,18 +249,49 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             try {
                 let cart = JSON.parse(localStorage.getItem("larel_cart") || "[]");
                 if (!Array.isArray(cart)) cart = [];
-                const legacy = JSON.parse(localStorage.getItem("my_larel_cart") || "[]");
-                if (Array.isArray(legacy) && legacy.length) {
-                    const known = new Set(cart.map(item => [item.productId || item.id || item.name, item.color || item.selectedColor, item.size || item.selectedSize].join("|")));
+
+                // One-time compatibility import for older cart data.
+                let legacy = [];
+                try {
+                    const parsedLegacy = JSON.parse(localStorage.getItem("my_larel_cart") || "[]");
+                    if (Array.isArray(parsedLegacy)) legacy = parsedLegacy;
+                } catch (_) {}
+
+                if (legacy.length) {
+                    const keys = new Set(cart.map(item => [
+                        item.productId || item.id || item.name || item.title,
+                        item.color || item.selectedColor,
+                        item.size || item.selectedSize
+                    ].join("|")));
                     legacy.forEach(item => {
-                        const key = [item.productId || item.id || item.name, item.color || item.selectedColor, item.size || item.selectedSize].join("|");
-                        if (!known.has(key)) cart.push({...item, name:item.name || item.title || item.productName, img:item.img || item.image, selectedColor:item.selectedColor || item.color, selectedSize:item.selectedSize || item.size});
+                        const key = [
+                            item.productId || item.id || item.name || item.title,
+                            item.color || item.selectedColor,
+                            item.size || item.selectedSize
+                        ].join("|");
+                        if (!keys.has(key)) {
+                            cart.push({
+                                ...item,
+                                name: item.name || item.title || item.productName || "LAREL Product",
+                                title: item.title || item.name || item.productName || "LAREL Product",
+                                img: item.img || item.image || item.productImg || item.src || "",
+                                image: item.image || item.img || item.productImg || item.src || "",
+                                selectedColor: item.selectedColor || item.color || "Standard",
+                                selectedSize: item.selectedSize || item.size || "M",
+                                qty: Number(item.qty || item.quantity || item.count || 1),
+                                quantity: Number(item.quantity || item.qty || item.count || 1)
+                            });
+                            keys.add(key);
+                        }
                     });
                     localStorage.setItem("larel_cart", JSON.stringify(cart));
                     localStorage.removeItem("my_larel_cart");
                 }
                 return cart;
-            } catch (e) { return []; }
+            } catch (e) {
+                console.error("LAREL cart read error:", e);
+                return [];
+            }
         }
         function calculateCartTotal() {
             let cart = getCart();
