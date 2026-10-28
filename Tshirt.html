@@ -134,7 +134,7 @@ button{cursor:pointer}
 .gallery{padding:25px;background:#0d0d11;border-right:1px solid #292930;min-width:0}
 
 /* MAIN PRODUCT GALLERY */
-.gallery-main{aspect-ratio:3/4;width:100%;height:auto;position:relative;overflow:hidden;background:#08080b;border-radius:18px}
+.gallery-main{aspect-ratio:2/3;width:100%;height:auto;position:relative;overflow:hidden;background:#08080b;border-radius:18px;min-height:560px}
 .slides{height:100%;width:100%;display:flex;transition:transform .35s ease}
 .slide{flex:0 0 100%;width:100%;min-width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#08080b;position:relative;isolation:isolate}\n.slide::before{content:"";position:absolute;inset:-14px;z-index:0;background-image:var(--image-bg);background-position:center;background-size:cover;background-repeat:no-repeat;filter:blur(16px);opacity:1;transform:scale(1.08)}
 .slide img{display:block;position:relative;z-index:1;width:100%;height:100%;object-fit:fill;object-position:center;background:transparent}
@@ -254,7 +254,7 @@ h1{font-size:27px;line-height:1.3;margin-bottom:10px}
   .nav-icon-btn span{display:none}
   .product{grid-template-columns:1fr;border-radius:18px}
   .gallery{padding:12px;border-right:0;border-bottom:1px solid #282830}
-  .gallery-main{aspect-ratio:3/4;height:auto}
+  .gallery-main{aspect-ratio:2/3;height:auto;min-height:460px}
   .details{padding:22px 17px}
   h1{font-size:22px}
   .price{font-size:25px}
@@ -638,26 +638,47 @@ function showProductToast(message, isError) {
 }
 
 function addToCart() {
+  if (!currentProduct || !currentProduct.colors || !currentProduct.colors[selectedColorName]) {
+    showProductToast("Product load nahi hua. Page refresh karke dobara try karein.", true);
+    return;
+  }
+
   const item = makeCartItem();
+  const cartItem = {
+    ...item,
+    id: item.productId,
+    title: item.name,
+    img: item.image,
+    selectedColor: item.color,
+    selectedSize: item.size,
+    qty: Math.max(1, Number(item.qty) || 1),
+    quantity: Math.max(1, Number(item.qty) || 1)
+  };
 
   try {
-    const cart = JSON.parse(localStorage.getItem("larel_cart") || "[]");
-    cart.push({...item, id:item.productId, title:item.name, img:item.image, selectedColor:item.color, selectedSize:item.size});
-    localStorage.setItem("larel_cart", JSON.stringify(cart));
+    let savedCart = JSON.parse(localStorage.getItem("larel_cart") || "[]");
+    if (!Array.isArray(savedCart)) savedCart = [];
+    savedCart.push(cartItem);
+    const serializedCart = JSON.stringify(savedCart);
+    localStorage.setItem("larel_cart", serializedCart);
+
+    // Verify that the browser actually saved the updated cart.
+    const verifiedCart = JSON.parse(localStorage.getItem("larel_cart") || "[]");
+    if (!Array.isArray(verifiedCart) || verifiedCart.length !== savedCart.length) {
+      throw new Error("Cart save verification failed");
+    }
+
     updateHeaderCartCount();
+    showProductToast("Product cart mein add ho gaya!", false);
   } catch (error) {
-    showProductToast("Cart save nahi hua. Browser storage allow karein.", true);
+    console.error("LAREL cart save error:", error);
+    showProductToast("Cart save nahi hua. Browser storage/private mode check karein.", true);
     return;
   }
 
   if (typeof google !== "undefined" && google.script && google.script.run) {
     google.script.run.addToCartBackend(item);
   }
-
-  const toast = document.getElementById("toast");
-  toast.textContent = "Added to cart successfully!";
-  toast.classList.add("show");
-  setTimeout(() => toast.classList.remove("show"), 2200);
 }
 
 function openSizeGuide() {
