@@ -628,16 +628,25 @@ function makeCartItem() {
   };
 }
 
+function showProductToast(message, isError) {
+  const toast = document.getElementById("toast");
+  if (!toast) return;
+  toast.textContent = message;
+  toast.classList.toggle("error", Boolean(isError));
+  toast.classList.add("show");
+  setTimeout(() => toast.classList.remove("show"), 2600);
+}
+
 function addToCart() {
   const item = makeCartItem();
 
   try {
-    const cart = JSON.parse(localStorage.getItem("my_larel_cart") || "[]");
-    cart.push(item);
-    localStorage.setItem("my_larel_cart", JSON.stringify(cart));
+    const cart = JSON.parse(localStorage.getItem("larel_cart") || "[]");
+    cart.push({...item, id:item.productId, title:item.name, img:item.image, selectedColor:item.color, selectedSize:item.size});
+    localStorage.setItem("larel_cart", JSON.stringify(cart));
     updateHeaderCartCount();
   } catch (error) {
-    alert("Cart save nahi ho paya. Browser storage check karein.");
+    showProductToast("Cart save nahi hua. Browser storage allow karein.", true);
     return;
   }
 
@@ -729,13 +738,13 @@ function submitOrder(event) {
       .withSuccessHandler(function() {
         button.disabled = false;
         closeCheckout();
-        alert("Order successfully submit ho gaya!");
+        showProductToast("Order submit ho gaya!", false);
         document.getElementById("checkoutForm").reset();
       })
       .withFailureHandler(function(error) {
         button.disabled = false;
         updateSubmitButton();
-        alert("Order submit nahi hua: " + (error.message || error));
+        showProductToast("Order submit nahi hua. Dobara try karein.", true);
       })
       .placeOrderBackend(orderData);
   } else {
