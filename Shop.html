@@ -508,15 +508,15 @@ body {
 
 <!-- HEADER -->
 <header class="header">
-  <a href="https://lakhangoyal2306-wq.github.io/Larel/Home"
+  <a href="https://larel2306.github.io/Larel/Home"
      class="logo">LAREL</a>
 
   <nav class="navbar" id="navbar">
     <ul class="nav-links">
-      <li><a href="https://lakhangoyal2306-wq.github.io/Larel/Home">Home</a></li>
-      <li><a href="https://lakhangoyal2306-wq.github.io/Larel/Shop" class="active">Shop</a></li>
-      <li><a href="https://lakhangoyal2306-wq.github.io/Larel/About">About us</a></li>
-      <li><a href="https://lakhangoyal2306-wq.github.io/Larel/Contact">Contact</a></li>
+      <li><a href="https://larel2306.github.io/Larel/Home">Home</a></li>
+      <li><a href="https://larel2306.github.io/Larel/Shop" class="active">Shop</a></li>
+      <li><a href="https://larel2306.github.io/Larel/About">About us</a></li>
+      <li><a href="https://larel2306.github.io/Larel/Contact">Contact</a></li>
     </ul>
   </nav>
 
@@ -525,7 +525,7 @@ body {
       <i class="fa-solid fa-magnifying-glass"></i>
     </a>
 
-    <a href="https://lakhangoyal2306-wq.github.io/Larel/Cart"
+    <a href="https://larel2306.github.io/Larel/Cart"
        class="nav-icon-btn" id="cart-btn">
       <i class="fa-solid fa-bag-shopping"></i>
       <span>Cart</span>
@@ -568,7 +568,7 @@ const PRODUCTS = Object.entries(window.LAREL_PRODUCTS).map(([id, product]) => ({
   name: product.title,
   price: product.price,
   img: product.shopImage || Object.values(product.colors)[0]?.images?.[0] || "",
-  link: "https://lakhangoyal2306-wq.github.io/Larel/" + ({ tshirts: "Tshirt", hoodies: "Hoodies", jackets: "Jackets", bottomwear: "Bottomwear", kidswear: "Kidswear" }[product.category] || "Tshirt") + "?id=" + encodeURIComponent(id),
+  link: "https://larel2306.github.io/Larel/" + ({ tshirts: "Tshirt", hoodies: "Hoodies", jackets: "Jackets", bottomwear: "Bottomwear", kidswear: "Kidswear" }[product.category] || "Tshirt") + "?id=" + encodeURIComponent(id),
   colors: Object.keys(product.colors),
   sizes: product.sizes
 }));
