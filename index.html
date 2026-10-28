@@ -316,13 +316,13 @@ body::before {
 
 .hero-slider-track {
     display: flex;
-    width: 500%;
+    width: 400%;
     height: 100%;
     transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 .slide-item {
-    width: 20%;
+    width: 25%;
     height: 100%;
     position: relative;
 }
@@ -728,18 +728,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <p>Built for Your Daily Rotation</p>
                 </div>
             </div>
-            <!-- Banner 5 -->
-            <div class="slide-item">
-                <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1120&h=840&q=90" alt="Casual fashion style for LAREL">
-                <div class="slide-caption">
-                    <h3>Find Your Fit</h3>
-                    <p>Comfort Meets Street Style</p>
-                </div>
-            </div>
-        </div>
+</div>
         <div class="slider-dots">
             <div class="dot active"></div>
-            <div class="dot"></div>
             <div class="dot"></div>
             <div class="dot"></div>
             <div class="dot"></div>
@@ -863,13 +854,13 @@ function toggleMenu() {
 
 // Auto Banner Slider Script
 let currentSlide = 0;
-const totalSlides = 5;
+const totalSlides = 4;
 const track = document.getElementById("sliderTrack");
 const dots = document.querySelectorAll(".dot");
 
 function autoSlide() {
     currentSlide = (currentSlide + 1) % totalSlides;
-    track.style.transform = `translateX(-${currentSlide * 20}%)`;
+    track.style.transform = `translateX(-${currentSlide * 25}%)`;
     
     dots.forEach((dot, index) => {
         if(index === currentSlide) {
