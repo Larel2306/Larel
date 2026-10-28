@@ -50,6 +50,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         .summary-row.total span:last-child { color: #2dd4bf; }
         .btn-proceed-pay { width: 100%; padding: 16px; background: #2dd4bf; color: #000; border: none; border-radius: 14px; font-size: 15px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
 
+        .notice-toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,16px);display:flex;align-items:center;gap:10px;width:max-content;max-width:calc(100% - 28px);padding:14px 18px;background:#171923;border:1px solid rgba(45,212,191,.4);border-radius:14px;color:#fff;font-size:14px;font-weight:600;box-shadow:0 16px 40px rgba(0,0,0,.45);opacity:0;visibility:hidden;z-index:100000;transition:.25s ease}.notice-toast.show{opacity:1;visibility:visible;transform:translate(-50%,0)}.notice-toast i{color:#2dd4bf;font-size:18px}
         .fullscreen-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #0b0b0e; z-index: 999999; display: flex; flex-direction: column; opacity: 0; visibility: hidden; transform: scale(0.95); transition: all 0.3s ease; overflow-y: auto; }
         .fullscreen-overlay.active { opacity: 1; visibility: visible; transform: scale(1); }
         .modal-top-bar { width: 100%; padding: 16px 24px; background: #16161a; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 10; }
@@ -234,7 +235,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
     </div>
 
+    <div id="noticeToast" class="notice-toast" role="status" aria-live="polite"><i class="fa-solid fa-circle-check"></i><span></span></div>
     <script>
+        function showNotice(message){const el=document.getElementById("noticeToast");el.querySelector("span").textContent=message;el.classList.add("show");clearTimeout(window.__noticeTimer);window.__noticeTimer=setTimeout(()=>el.classList.remove("show"),2800)}
         const STORE_UPI_ID = "9252309446@ybl"; 
 
         let activeCartKey = null;
@@ -242,26 +245,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         let chosenUpiApp = "phonepe";
 
         function getCart() {
-            for (let i = 0; i < localStorage.length; i++) {
-                let key = localStorage.key(i);
-                try {
-                    let data = JSON.parse(localStorage.getItem(key));
-                    if (Array.isArray(data) && data.length > 0) {
-                        if (data[0].name || data[0].title || data[0].productName || data[0].price || data[0].cost) {
-                            activeCartKey = key;
-                            return data;
-                        }
-                    } else if (typeof data === 'object' && data !== null) {
-                        if (data.name || data.title || data.productName || data.price || data.cost) {
-                            activeCartKey = key;
-                            return [data];
-                        }
-                    }
-                } catch(e) {}
-            }
-            return [];
+            activeCartKey = "larel_cart";
+            try {
+                let cart = JSON.parse(localStorage.getItem("larel_cart") || "[]");
+                if (!Array.isArray(cart)) cart = [];
+                const legacy = JSON.parse(localStorage.getItem("my_larel_cart") || "[]");
+                if (Array.isArray(legacy) && legacy.length) {
+                    const known = new Set(cart.map(item => [item.productId || item.id || item.name, item.color || item.selectedColor, item.size || item.selectedSize].join("|")));
+                    legacy.forEach(item => {
+                        const key = [item.productId || item.id || item.name, item.color || item.selectedColor, item.size || item.selectedSize].join("|");
+                        if (!known.has(key)) cart.push({...item, name:item.name || item.title || item.productName, img:item.img || item.image, selectedColor:item.selectedColor || item.color, selectedSize:item.selectedSize || item.size});
+                    });
+                    localStorage.setItem("larel_cart", JSON.stringify(cart));
+                    localStorage.removeItem("my_larel_cart");
+                }
+                return cart;
+            } catch (e) { return []; }
         }
-
         function calculateCartTotal() {
             let cart = getCart();
             return cart.reduce((total, item) => {
@@ -395,7 +395,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
         function handleOrderSubmission(event) {
             event.preventDefault();
-            if (!chosenPayment) { alert("Please select a payment option!"); return; }
+            if (!chosenPayment) { showNotice("Pehle payment method select karein."); return; }
 
             let totalAmount = calculateCartTotal();
 
@@ -419,8 +419,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 }, 1000);
 
             } else {
-                alert("Order Placed Successfully!");
-                localStorage.clear();
+                showNotice("Order placed successfully!");
+                localStorage.removeItem("larel_cart");
+                localStorage.removeItem("my_larel_cart");
                 closeFullscreenCheckout();
                 renderCart();
             }
