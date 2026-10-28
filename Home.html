@@ -160,13 +160,21 @@ body::before {
 /* Optional Notification Badge Indicator */
 .nav-badge {
     position: absolute;
-    top: 2px;
-    right: 2px;
-    width: 8px;
-    height: 8px;
+    top: -6px;
+    right: -6px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: #00d2ff;
-    border-radius: 50%;
-    box-shadow: 0 0 8px #00d2ff;
+    color: #061018;
+    border: 2px solid #070a14;
+    border-radius: 50px;
+    font-size: 10px;
+    font-weight: 800;
+    box-shadow: 0 0 8px #00d2ff55;
 }
 
 /* Drawer Menu */
@@ -662,7 +670,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <a href="https://larel2306.github.io/Larel/Cart.html" class="nav-icon-btn" title="Cart">
             <i class="fa-solid fa-bag-shopping"></i>
             <span class="btn-text">Cart</span>
-            <span class="nav-badge"></span> <!-- Active Badge Dot -->
+            <span class="nav-badge" id="cartCount">0</span>
         </a>
     </div>
 </header>
@@ -860,6 +868,21 @@ function autoSlide() {
     });
 }
 setInterval(autoSlide, 3500);
+</script>
+<script>
+(function(){
+  function updateLarelCartCount(){
+    try {
+      const items = JSON.parse(localStorage.getItem("larel_cart") || "[]");
+      const count = Array.isArray(items) ? items.reduce((sum,item)=>sum + Math.max(1, Number(item.qty || item.quantity || item.count || 1)),0) : 0;
+      const badge = document.getElementById("cartCount");
+      if (badge) badge.textContent = String(count);
+    } catch(error) { console.error("LAREL cart count error:", error); }
+  }
+  updateLarelCartCount();
+  window.addEventListener("storage", event => { if(event.key === "larel_cart") updateLarelCartCount(); });
+  window.addEventListener("pageshow", updateLarelCartCount);
+})();
 </script>
 
 
