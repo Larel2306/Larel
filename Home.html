@@ -295,8 +295,9 @@ body::before {
 /* Banner Slider */
 .hero-slider-container {
     width: 100%;
-    max-width: 760px;
-    height: 300px;
+    max-width: 900px;
+    aspect-ratio: 3 / 2;
+    height: auto;
     border-radius: 24px;
     overflow: hidden;
     position: relative;
@@ -577,8 +578,7 @@ body::before {
         padding-top: 120px;
     }
     .hero-slider-container {
-        height: 400px;
-        max-width: 820px;
+        max-width: 900px;
     }
     .slide-caption h3 {
         font-size: 28px;
@@ -606,7 +606,14 @@ body::before {
 }
 
 @media (max-width: 768px) {
-    .hero-slider-container { height: 230px; }
+    .hero-slider-container {
+        width: 100%;
+        max-width: 100%;
+        aspect-ratio: 3 / 2;
+    }
+    .slide-caption { padding: 18px; }
+    .slide-caption h3 { font-size: 17px; }
+    .slide-caption p { font-size: 11px; }
     .btn-hero-group { flex-direction: column; }
 }
 </style>
