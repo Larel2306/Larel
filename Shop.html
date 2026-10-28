@@ -805,7 +805,7 @@ function onSizeSelected(size) {
   finalizeAddToCart(tempSelectedColor, size);
 }
 
-/* SAVE CART — NO TOAST, NO ALERT */
+/* SAVE CART + PREMIUM TOAST */
 function finalizeAddToCart(color, size) {
   if (!activeSelectedProduct) return;
 
@@ -820,11 +820,13 @@ function finalizeAddToCart(color, size) {
   try {
     localStorage.setItem("larel_cart", JSON.stringify(cart));
   } catch (error) {
-    // No popup or notification.
+    showStoreToast("Cart save nahi hua. Browser storage allow karein.", "error");
+    return;
   }
 
   updateCartCount();
   closeProductModal();
+  showStoreToast("Product cart mein add ho gaya!", "success");
 }
 
 /* CLOSE MODAL */
@@ -877,5 +879,12 @@ openTab("tshirts");
 <!-- LAREL customer authentication -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="auth.js"></script>
+<div id="storeToast" class="store-toast" role="status" aria-live="polite"><i class="fa-solid fa-circle-check"></i><span></span></div>
+<style>
+.store-toast{position:fixed;left:50%;bottom:26px;transform:translate(-50%,18px);display:flex;align-items:center;gap:10px;max-width:calc(100% - 28px);padding:14px 18px;background:#111827;border:1px solid rgba(0,210,255,.35);border-radius:14px;color:#f8fafc;box-shadow:0 14px 40px rgba(0,0,0,.4);font-size:14px;font-weight:600;opacity:0;visibility:hidden;z-index:99999;transition:.25s ease}.store-toast i{color:#00d2ff;font-size:18px}.store-toast.error i{color:#fb7185}.store-toast.show{opacity:1;visibility:visible;transform:translate(-50%,0)}
+</style>
+<script>
+function showStoreToast(message,type){const el=document.getElementById("storeToast");if(!el)return;el.classList.toggle("error",type==="error");el.querySelector("span").textContent=message;el.classList.add("show");clearTimeout(window.__larelToastTimer);window.__larelToastTimer=setTimeout(()=>el.classList.remove("show"),2600)}
+</script>
 </body>
 </html>
