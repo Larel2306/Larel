@@ -295,8 +295,8 @@ body::before {
 /* Banner Slider */
 .hero-slider-container {
     width: 100%;
-    max-width: 900px;
-    aspect-ratio: 3 / 2;
+    max-width: 1120px;
+    aspect-ratio: 16 / 9;
     height: auto;
     border-radius: 24px;
     overflow: hidden;
@@ -308,13 +308,13 @@ body::before {
 
 .hero-slider-track {
     display: flex;
-    width: 300%;
+    width: 500%;
     height: 100%;
     transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 .slide-item {
-    width: 33.333%;
+    width: 20%;
     height: 100%;
     position: relative;
 }
@@ -322,8 +322,8 @@ body::before {
 .slide-item img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
-    object-position: center center;
+    object-fit: cover;
+    object-position: center 25%;
     background: #070a14;
 }
 
@@ -579,7 +579,7 @@ body::before {
         padding-top: 120px;
     }
     .hero-slider-container {
-        max-width: 900px;
+        max-width: 1120px;
     }
     .slide-caption h3 {
         font-size: 28px;
@@ -610,7 +610,7 @@ body::before {
     .hero-slider-container {
         width: 100%;
         max-width: 100%;
-        aspect-ratio: 3 / 2;
+        aspect-ratio: 4 / 3;
     }
     .slide-caption { padding: 18px; }
     .slide-caption h3 { font-size: 17px; }
@@ -700,9 +700,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                     <p>High Comfort Premium Fit</p>
                 </div>
             </div>
+            <!-- Banner 4 -->
+            <div class="slide-item">
+                <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1600&h=1067&q=90" alt="Men's fashion look for LAREL streetwear">
+                <div class="slide-caption">
+                    <h3>Everyday Streetwear</h3>
+                    <p>Built for Your Daily Rotation</p>
+                </div>
+            </div>
+            <!-- Banner 5 -->
+            <div class="slide-item">
+                <img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=1600&h=1067&q=90" alt="Casual fashion style for LAREL">
+                <div class="slide-caption">
+                    <h3>Find Your Fit</h3>
+                    <p>Comfort Meets Street Style</p>
+                </div>
+            </div>
         </div>
         <div class="slider-dots">
             <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
             <div class="dot"></div>
             <div class="dot"></div>
         </div>
@@ -825,13 +843,13 @@ function toggleMenu() {
 
 // Auto Banner Slider Script
 let currentSlide = 0;
-const totalSlides = 3;
+const totalSlides = 5;
 const track = document.getElementById("sliderTrack");
 const dots = document.querySelectorAll(".dot");
 
 function autoSlide() {
     currentSlide = (currentSlide + 1) % totalSlides;
-    track.style.transform = `translateX(-${currentSlide * 33.333}%)`;
+    track.style.transform = `translateX(-${currentSlide * 20}%)`;
     
     dots.forEach((dot, index) => {
         if(index === currentSlide) {
