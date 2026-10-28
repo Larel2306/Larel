@@ -873,6 +873,10 @@ let currentSlide = 0;
 const totalSlides = 5;
 const track = document.getElementById("sliderTrack");
 const dots = document.querySelectorAll(".dot");
+document.querySelectorAll(".slide-item").forEach(slide => {
+    const image = slide.querySelector("img");
+    if (image && image.src) slide.style.setProperty("--slide-image", 'url("' + image.src + '")');
+});
 
 function autoSlide() {
     currentSlide = (currentSlide + 1) % totalSlides;
