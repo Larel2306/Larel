@@ -999,7 +999,7 @@ function finishRelatedAddToCart(color, size) {
     safeCart.push(cartItem);
     localStorage.setItem("larel_cart", JSON.stringify(safeCart));
   } catch (error) {
-    alert("Cart save nahi ho paya. Browser storage check karein.");
+    showProductToast("Cart save nahi hua. Browser storage allow karein.", true);
     return;
   }
 
