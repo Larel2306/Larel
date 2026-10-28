@@ -596,8 +596,18 @@ let activeSelectedProduct = null;
 let tempSelectedColor = null;
 
 function updateCartCount() {
-  document.getElementById("cartCount").textContent = cart.length;
+  try {
+    const saved = JSON.parse(localStorage.getItem("larel_cart") || "[]");
+    const count = Array.isArray(saved) ? saved.reduce((sum, item) => sum + Math.max(1, Number(item.qty || item.quantity || item.count || 1)), 0) : 0;
+    const el = document.getElementById("cartCount");
+    if (el) el.textContent = String(count);
+  } catch (error) {
+    const el = document.getElementById("cartCount");
+    if (el) el.textContent = "0";
+  }
 }
+window.addEventListener("storage", function(event) { if (event.key === "larel_cart") { cart = loadCart(); updateCartCount(); } });
+window.addEventListener("pageshow", function() { cart = loadCart(); updateCartCount(); });
 
 function safeText(value) {
   return String(value ?? "").replace(/[&<>"']/g, function(c) {
