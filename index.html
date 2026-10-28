@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    
+<link rel="icon" type="image/png" href="https://raw.githubusercontent.com/Larel2306/Larel/main/Larel.png">
+
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -157,13 +160,21 @@ body::before {
 /* Optional Notification Badge Indicator */
 .nav-badge {
     position: absolute;
-    top: 2px;
-    right: 2px;
-    width: 8px;
-    height: 8px;
+    top: -6px;
+    right: -6px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     background-color: #00d2ff;
-    border-radius: 50%;
-    box-shadow: 0 0 8px #00d2ff;
+    color: #061018;
+    border: 2px solid #070a14;
+    border-radius: 50px;
+    font-size: 10px;
+    font-weight: 800;
+    box-shadow: 0 0 8px #00d2ff55;
 }
 
 /* Drawer Menu */
@@ -292,8 +303,9 @@ body::before {
 /* Banner Slider */
 .hero-slider-container {
     width: 100%;
-    max-width: 900px;
-    height: 320px;
+    max-width: 1120px;
+    aspect-ratio: 3 / 2;
+    height: auto;
     border-radius: 24px;
     overflow: hidden;
     position: relative;
@@ -304,22 +316,31 @@ body::before {
 
 .hero-slider-track {
     display: flex;
-    width: 300%;
+    width: 500%;
     height: 100%;
     transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 .slide-item {
-    width: 33.333%;
+    width: 20%;
     height: 100%;
     position: relative;
 }
 
+.slide-item {
+    isolation: isolate;
+    overflow: hidden;
+    background: #070a14;
+}
 .slide-item img {
+    position: relative;
+    z-index: 1;
+    display: block;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    object-position: center center;
+    object-fit: contain;
+    object-position: center;
+    background: #070a14;
 }
 
 .slide-caption {
@@ -418,7 +439,8 @@ body::before {
 .cat-card img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    background: #070a14;
     object-position: center center;
     transition: 0.5s ease;
 }
@@ -477,7 +499,8 @@ body::before {
 .scroll-card img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    background: #070a14;
     object-position: center center;
 }
 
@@ -574,8 +597,7 @@ body::before {
         padding-top: 120px;
     }
     .hero-slider-container {
-        height: 480px;
-        max-width: 1000px;
+        max-width: 1120px;
     }
     .slide-caption h3 {
         font-size: 28px;
@@ -603,7 +625,14 @@ body::before {
 }
 
 @media (max-width: 768px) {
-    .hero-slider-container { height: 260px; }
+    .hero-slider-container {
+        width: 100%;
+        max-width: 100%;
+        aspect-ratio: 3 / 2;
+    }
+    .slide-caption { padding: 18px; }
+    .slide-caption h3 { font-size: 17px; }
+    .slide-caption p { font-size: 11px; }
     .btn-hero-group { flex-direction: column; }
 }
 </style>
@@ -621,15 +650,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- Drawer Navigation Menu -->
 <div class="drawer-menu" id="drawerMenu">
     <div class="drawer-header">
-        <a href="#" class="logo">LAREL<span>.</span></a>
+        <a href="#" class="logo">LAREL<span></span></a>
         <button class="drawer-close" onclick="toggleMenu()"><i class="fa-solid fa-xmark"></i></button>
     </div>
     <ul class="drawer-links">
-        <li><a href="#" class="active" onclick="toggleMenu()"><i class="fa-solid fa-house"></i> Home</a></li>
-        <li><a href="https://sites.google.com/view/lakhanshop/shop-all"><i class="fa-solid fa-shirt"></i> Shop All</a></li>
-        <li><a href="https://sites.google.com/view/lakhanshop/size-chart"><i class="fa-solid fa-ruler-combined"></i> Size Chart</a></li>
-        <li><a href="https://sites.google.com/view/lakhanshop/about-us"><i class="fa-solid fa-circle-info"></i> About Us</a></li>
-        <li><a href="https://sites.google.com/view/lakhanshop/contact"><i class="fa-solid fa-envelope"></i> Contact</a></li>
+        <li><a href="https://larel2306.github.io/Larel/Home" class="active" onclick="toggleMenu()"><i class="fa-solid fa-house"></i> Home</a></li>
+        <li><a href="https://larel2306.github.io/Larel/Shop"><i class="fa-solid fa-shirt"></i> Shop All</a></li>
+        <li><a href="https://larel2306.github.io/Larel/Size-Chart"><i class="fa-solid fa-ruler-combined"></i> Size Chart</a></li>
+        <li><a href="https://larel2306.github.io/Larel/About"><i class="fa-solid fa-circle-info"></i> About Us</a></li>
+        <li><a href="https://larel2306.github.io/Larel/Contact"><i class="fa-solid fa-envelope"></i> Contact</a></li>
     </ul>
 </div>
 
@@ -643,15 +672,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
 
     <div class="nav-actions">
-        <a href="https://script.google.com/macros/s/AKfycby5gmx1hpghrLYPotuQQAwNokQAa5hiEFVDfEonFeRKKkrSgugpJe7_7G16mLbsbrxD/exec?page=orders" class="nav-icon-btn" title="My Orders">
+        <a href="https://larel2306.github.io/Larel/Orders" class="nav-icon-btn" title="My Orders">
             <i class="fa-solid fa-box"></i>
             <span class="btn-text">Orders</span>
         </a>
 
-        <a href="https://script.google.com/macros/s/AKfycby5gmx1hpghrLYPotuQQAwNokQAa5hiEFVDfEonFeRKKkrSgugpJe7_7G16mLbsbrxD/exec?page=cart" class="nav-icon-btn" title="Cart">
+        <a href="https://larel2306.github.io/Larel/Cart.html" class="nav-icon-btn" title="Cart">
             <i class="fa-solid fa-bag-shopping"></i>
             <span class="btn-text">Cart</span>
-            <span class="nav-badge"></span> <!-- Active Badge Dot -->
+            <span class="nav-badge" id="cartCount">0</span>
         </a>
     </div>
 </header>
@@ -667,7 +696,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="hero-slider-track" id="sliderTrack">
             <!-- Banner 1 -->
             <div class="slide-item">
-                <img src="https://images.unsplash.com/photo-1516257984-b1b4d707412e?auto=format&fit=crop&w=1200&q=80" alt="Centered Male Model Oversized Tee">
+                <img src="https://images.unsplash.com/photo-1523398002811-999ca8dec234?auto=format&fit=crop&w=1600&h=1067&q=90" alt="Male model wearing streetwear T-shirt for LAREL">
                 <div class="slide-caption">
                     <h3>240 GSM Oversized Tees</h3>
                     <p>100% Super Combed Bio-Washed Cotton</p>
@@ -675,7 +704,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div>
             <!-- Banner 2 -->
             <div class="slide-item">
-                <img src="https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=1200&q=80" alt="Centered Male Streetwear Hoodie">
+                <img src="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?auto=format&fit=crop&w=1600&h=1067&q=90" alt="Male streetwear fashion model for LAREL">
                 <div class="slide-caption">
                     <h3>400 GSM Heavy Sweatshirts & Hoodies</h3>
                     <p>Double Stitched Premium Fleece</p>
@@ -683,10 +712,26 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div>
             <!-- Banner 3 -->
             <div class="slide-item">
-                <img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=1200&q=80" alt="Centered Male Model Outfit">
+                <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1600&h=1067&q=90" alt="Men streetwear fashion collection for LAREL">
                 <div class="slide-caption">
                     <h3>Polo Tees & Sweatpants</h3>
                     <p>High Comfort Premium Fit</p>
+                </div>
+            </div>
+            <!-- Banner 4 -->
+            <div class="slide-item">
+                <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1600&h=1067&q=90" alt="Men's fashion look for LAREL streetwear">
+                <div class="slide-caption">
+                    <h3>Everyday Streetwear</h3>
+                    <p>Built for Your Daily Rotation</p>
+                </div>
+            </div>
+            <!-- Banner 5 -->
+            <div class="slide-item">
+                <img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=1600&h=1067&q=90" alt="Casual fashion style for LAREL">
+                <div class="slide-caption">
+                    <h3>Find Your Fit</h3>
+                    <p>Comfort Meets Street Style</p>
                 </div>
             </div>
         </div>
@@ -694,15 +739,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="dot active"></div>
             <div class="dot"></div>
             <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
         </div>
     </div>
     
     <!-- Hero CTA Buttons -->
     <div class="btn-hero-group">
-        <a href="https://script.google.com/macros/s/AKfycbyewfTcnYiU7JjIsL0GLL-7uFtX6gd66WHOnlMJ4pElLXvQLFNgcfC-q0dkNKQ8vgwG/exec?category=tshirt" class="btn-mobile btn-main">
+        <a href="https://larel2306.github.io/Larel/Shop" class="btn-mobile btn-main">
             Explore Collection <i class="fa-solid fa-arrow-right"></i>
         </a>
-        <a href="https://sites.google.com/view/lakhanshop/size-chart" class="btn-mobile btn-sub">
+        <a href="https://larel2306.github.io/Larel/Size-Chart" class="btn-mobile btn-sub">
             <i class="fa-solid fa-ruler-combined"></i> Size Chart
         </a>
     </div>
@@ -714,19 +761,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <h2>Shop By Category</h2>
     </div>
     <div class="category-grid">
-        <a href="https://script.google.com/macros/s/AKfycby5ynuGG3yJxqHeD_JGiPCD9hQC_B_60m8WmGw49xFXgQiY2hnCH09PHgn47Nth-E_J/exec?category=tshirt" class="cat-card">
+        <a href="https://larel2306.github.io/Larel/Shop" class="cat-card">
             <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80" alt="Oversized Tee">
             <div class="cat-overlay"><h3>Oversized Tees</h3></div>
         </a>
-        <a href="https://script.google.com/macros/s/AKfycby5ynuGG3yJxqHeD_JGiPCD9hQC_B_60m8WmGw49xFXgQiY2hnCH09PHgn47Nth-E_J/exec?category=hoodies" class="cat-card">
+        <a href="https://larel2306.github.io/Larel/Shop" class="cat-card">
             <img src="https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=600&q=80" alt="Hoodie Model">
             <div class="cat-overlay"><h3>Sweatshirts & Hoodies</h3></div>
         </a>
-        <a href="https://script.google.com/macros/s/AKfycby5ynuGG3yJxqHeD_JGiPCD9hQC_B_60m8WmGw49xFXgQiY2hnCH09PHgn47Nth-E_J/exec?category=tshirt" class="cat-card">
+        <a href="https://larel2306.github.io/Larel/Shop" class="cat-card">
             <img src="https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?auto=format&fit=crop&w=600&q=80" alt="Polo T-Shirt Model">
             <div class="cat-overlay"><h3>Polo T-Shirts</h3></div>
         </a>
-        <a href="https://script.google.com/macros/s/AKfycby5ynuGG3yJxqHeD_JGiPCD9hQC_B_60m8WmGw49xFXgQiY2hnCH09PHgn47Nth-E_J/exec?category=bootomwear" class="cat-card">
+        <a href="https://larel2306.github.io/Larel/Shop" class="cat-card">
             <img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=600&q=80" alt="Streetwear Joggers">
             <div class="cat-overlay"><h3>Sweatpants & Joggers</h3></div>
         </a>
@@ -737,11 +784,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section class="section" id="featured">
     <div class="section-title">
         <h2>Trending Drops</h2>
-        <a href="https://sites.google.com/view/lakhanshop/shop-all">View All</a>
+        <a href="https://larel2306.github.io/Larel/Shop">View All</a>
     </div>
 
     <div class="horizontal-scroll">
-        <a href="https://script.google.com/macros/s/AKfycby5ynuGG3yJxqHeD_JGiPCD9hQC_B_60m8WmGw49xFXgQiY2hnCH09PHgn47Nth-E_J/exec?category=tshirt" class="scroll-card">
+        <a href="https://larel2306.github.io/Larel/Shop" class="scroll-card">
             <span class="badge-drop">240 GSM</span>
             <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?auto=format&fit=crop&w=600&q=80" alt="Heavyweight Graphic Tee">
             <div class="card-overlay">
@@ -750,7 +797,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div>
         </a>
 
-        <a href="https://script.google.com/macros/s/AKfycby5ynuGG3yJxqHeD_JGiPCD9hQC_B_60m8WmGw49xFXgQiY2hnCH09PHgn47Nth-E_J/exec?category=hoodies" class="scroll-card">
+        <a href="https://larel2306.github.io/Larel/Shop" class="scroll-card">
             <span class="badge-drop">400 GSM</span>
             <img src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=600&q=80" alt="Streetwear Pullover Hoodie">
             <div class="card-overlay">
@@ -759,7 +806,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div>
         </a>
 
-        <a href="https://script.google.com/macros/s/AKfycby5ynuGG3yJxqHeD_JGiPCD9hQC_B_60m8WmGw49xFXgQiY2hnCH09PHgn47Nth-E_J/exec?category=tshirt" class="scroll-card">
+        <a href="https://larel2306.github.io/Larel/Shop" class="scroll-card">
             <span class="badge-drop">MATTY COTTON</span>
             <img src="https://images.unsplash.com/photo-1626497764746-6dc36546b388?auto=format&fit=crop&w=600&q=80" alt="Classic Polo T-Shirt">
             <div class="card-overlay">
@@ -768,7 +815,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </div>
         </a>
 
-        <a href="https://script.google.com/macros/s/AKfycby5ynuGG3yJxqHeD_JGiPCD9hQC_B_60m8WmGw49xFXgQiY2hnCH09PHgn47Nth-E_J/exec?category=bottomwear" class="scroll-card">
+        <a href="https://larel2306.github.io/Larel/Shop" class="scroll-card">
             <span class="badge-drop">FLEECE</span>
             <img src="https://images.unsplash.com/photo-1517445312882-bc9910d016b7?auto=format&fit=crop&w=600&q=80" alt="Relaxed Fit Sweatpants">
             <div class="card-overlay">
@@ -790,9 +837,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="footer-col">
             <h4>Policies</h4>
             <ul>
-                <li><a href="https://sites.google.com/view/lakhanshop/contact">Privacy Policy</a></li>
-                <li><a href="https://sites.google.com/view/lakhanshop/contact">Refund Policy</a></li>
-                <li><a href="https://sites.google.com/view/lakhanshop/contact">Terms & Conditions</a></li>
+                <li><a href="https://larel2306.github.io/Larel/privacy-policy.html">Privacy Policy</a></li>
+                <li><a href="https://larel2306.github.io/Larel/refund-policy.html">Refund, Return &amp; Exchange Policy</a></li>
+                <li><a href="https://larel2306.github.io/Larel/shipping-policy.html">Shipping Policy</a></li>
+                <li><a href="https://larel2306.github.io/Larel/terms-and-conditions.html">Terms &amp; Conditions</a></li>
             </ul>
         </div>
     </div>
@@ -813,13 +861,13 @@ function toggleMenu() {
 
 // Auto Banner Slider Script
 let currentSlide = 0;
-const totalSlides = 3;
+const totalSlides = 5;
 const track = document.getElementById("sliderTrack");
 const dots = document.querySelectorAll(".dot");
 
 function autoSlide() {
     currentSlide = (currentSlide + 1) % totalSlides;
-    track.style.transform = `translateX(-${currentSlide * 33.333}%)`;
+    track.style.transform = `translateX(-${currentSlide * 20}%)`;
     
     dots.forEach((dot, index) => {
         if(index === currentSlide) {
@@ -831,6 +879,25 @@ function autoSlide() {
 }
 setInterval(autoSlide, 3500);
 </script>
+<script>
+(function(){
+  function updateLarelCartCount(){
+    try {
+      const items = JSON.parse(localStorage.getItem("larel_cart") || "[]");
+      const count = Array.isArray(items) ? items.reduce((sum,item)=>sum + Math.max(1, Number(item.qty || item.quantity || item.count || 1)),0) : 0;
+      const badge = document.getElementById("cartCount");
+      if (badge) badge.textContent = String(count);
+    } catch(error) { console.error("LAREL cart count error:", error); }
+  }
+  updateLarelCartCount();
+  window.addEventListener("storage", event => { if(event.key === "larel_cart") updateLarelCartCount(); });
+  window.addEventListener("pageshow", updateLarelCartCount);
+})();
+</script>
 
+
+<!-- LAREL customer authentication -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
 </body>
 </html>
