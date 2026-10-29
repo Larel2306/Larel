@@ -711,6 +711,94 @@ body { background:#020b12; color:#fff; }
  .editorial-category-grid .cat-card { height:clamp(220px,55vw,300px) !important; }
 }
 
+
+/* Final image and box layout correction */
+.hero.editorial-hero {
+  width: 100%;
+  max-width: none;
+  height: auto;
+  aspect-ratio: 3 / 1;
+  min-height: 0;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  position: relative;
+}
+.lookbook-hero {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: fill;
+  object-position: center;
+  display: block;
+}
+.editorial-categories { width: 100%; max-width: none; padding: 0; margin: 0; }
+.editorial-category-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0 !important;
+  width: 100%;
+}
+.editorial-category-grid .cat-card {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto !important;
+  min-height: 0 !important;
+  aspect-ratio: 4 / 5 !important;
+  overflow: hidden;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: #07111a;
+}
+.editorial-category-grid .cat-card img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  object-fit: cover !important;
+  object-position: center center !important;
+  transform: none !important;
+  transition: none !important;
+  background: #07111a;
+}
+.editorial-category-grid .cat-overlay {
+  position: absolute;
+  inset: auto 0 0;
+  display: block;
+  padding: 20px 16px;
+  background: linear-gradient(transparent, rgba(0,0,0,.75));
+}
+.editorial-category-grid .cat-overlay h3 {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: #fff;
+  font-size: clamp(12px, 1.35vw, 20px);
+  font-weight: 800;
+  text-transform: none;
+  letter-spacing: 0;
+}
+@media (max-width: 760px) {
+  .hero.editorial-hero {
+    aspect-ratio: 3 / 1;
+    height: auto;
+    min-height: 0;
+  }
+  .editorial-category-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .editorial-category-grid .cat-card {
+    aspect-ratio: 4 / 5 !important;
+  }
+  .editorial-category-grid .cat-overlay { padding: 14px 12px; }
+  .editorial-category-grid .cat-overlay h3 { font-size: 14px; }
+}
+
 </style>
 </head>
 
