@@ -641,6 +641,41 @@ body::before {
     .slide-caption p { font-size: 11px; }
     .btn-hero-group { flex-direction: column; }
 }
+
+/* ---------- LAREL full-bleed campaign layout ---------- */
+body { background:#020b12; color:#fff; }
+.hero.editorial-hero { width:100%; max-width:none; padding:0; margin:0; height:clamp(280px,29.2vw,500px); overflow:hidden; position:relative; }
+.lookbook-hero { position:absolute; top:0; left:0; width:100%; height:285.8%; max-width:none; object-fit:fill; object-position:top; display:block; }
+.editorial-categories { max-width:none; width:100%; padding:0; margin:0; }
+.editorial-categories .section-title { min-height:60px; margin:0; display:flex; justify-content:center; align-items:center; background:#020b12; }
+.editorial-categories .section-title h2 { color:#fff; font-size:clamp(15px,1.6vw,22px); letter-spacing:5px; margin:0; }
+.editorial-category-grid { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:0 !important; width:100%; }
+.editorial-category-grid .cat-card { display:block; position:relative; width:100%; aspect-ratio:0.62; height:auto; overflow:hidden; border:0 !important; border-radius:0 !important; box-shadow:none !important; background:#07111a; }
+.editorial-category-grid .cat-card img { position:absolute; top:0; left:0; width:500%; height:200%; max-width:none; object-fit:fill; border:0; border-radius:0; transition:none; }
+.editorial-category-grid .cat-card:nth-child(1) img { transform:translate(0,-72%); }
+.editorial-category-grid .cat-card:nth-child(2) img { transform:translate(-20%,-72%); }
+.editorial-category-grid .cat-card:nth-child(3) img { transform:translate(-40%,-72%); }
+.editorial-category-grid .cat-card:nth-child(4) img { transform:translate(-60%,-72%); }
+.editorial-category-grid .cat-card:nth-child(5) img { transform:translate(-80%,-72%); }
+.editorial-category-grid .cat-overlay { position:absolute; inset:auto 0 0; padding:20px 18px; background:linear-gradient(transparent,rgba(0,0,0,.72)); border:0; display:block; }
+.editorial-category-grid .cat-overlay h3 { color:#fff; font-size:clamp(13px,1.5vw,22px); font-weight:800; margin:0; padding:0; border:0; text-transform:none; }
+.editorial-category-grid .cat-overlay::after,.editorial-category-grid .cat-overlay span { display:none !important; }
+.editorial-category-grid .cat-card:hover img { transform:none; }
+@media(max-width:760px) {
+ .hero.editorial-hero { height:36vw; min-height:190px; }
+ .lookbook-hero { height:285.8%; }
+ .editorial-categories .section-title { min-height:48px; }
+ .editorial-categories .section-title h2 { letter-spacing:3px; }
+ .editorial-category-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+ .editorial-category-grid .cat-card { aspect-ratio:0.78; }
+ .editorial-category-grid .cat-card img { width:500%; height:200%; }
+ .editorial-category-grid .cat-card:nth-child(1) img { transform:translate(0,-72%); }
+ .editorial-category-grid .cat-card:nth-child(2) img { transform:translate(-20%,-72%); }
+ .editorial-category-grid .cat-card:nth-child(3) img { transform:translate(-40%,-72%); }
+ .editorial-category-grid .cat-card:nth-child(4) img { transform:translate(-60%,-72%); }
+ .editorial-category-grid .cat-card:nth-child(5) img { transform:translate(-80%,-72%); }
+}
+
 </style>
 </head>
 
@@ -692,98 +727,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </header>
 
 <!-- Hero Section -->
-<section class="hero">
-    <div class="tagline"><i class="fa-solid fa-bolt"></i> Urban Streetwear Edition</div>
-    <h1>Heavyweight <span>Streetwear.</span></h1>
-    <p>240 GSM Oversized Tees, 400 GSM Sweatshirts, Hoodies, Polo T-Shirts & Premium Sweatpants.</p>
-
-    <!-- Auto Sliding Banners -->
-    <div class="hero-slider-container">
-        <div class="hero-slider-track" id="sliderTrack">
-            <!-- Banner 1 -->
-            <div class="slide-item">
-                <img src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=1600&h=1200&q=90" alt="Male model wearing streetwear T-shirt for LAREL">
-                <div class="slide-caption">
-                    <h3>240 GSM Oversized Tees</h3>
-                    <p>100% Super Combed Bio-Washed Cotton</p>
-                </div>
-            </div>
-            <!-- Banner 2 -->
-            <div class="slide-item">
-                <img src="https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1600&h=1200&q=90" alt="Male streetwear fashion model for LAREL">
-                <div class="slide-caption">
-                    <h3>400 GSM Heavy Sweatshirts & Hoodies</h3>
-                    <p>Double Stitched Premium Fleece</p>
-                </div>
-            </div>
-            <!-- Banner 3 -->
-            <div class="slide-item">
-                <img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1600&h=1067&q=90" alt="Men streetwear fashion collection for LAREL">
-                <div class="slide-caption">
-                    <h3>Polo Tees & Sweatpants</h3>
-                    <p>High Comfort Premium Fit</p>
-                </div>
-            </div>
-            <!-- Banner 4 -->
-            <div class="slide-item">
-                <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1600&h=1067&q=90" alt="Men's fashion look for LAREL streetwear">
-                <div class="slide-caption">
-                    <h3>Everyday Streetwear</h3>
-                    <p>Built for Your Daily Rotation</p>
-                </div>
-            </div>
-            <!-- Banner 5 -->
-            <div class="slide-item">
-                <img src="https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?auto=format&fit=crop&w=1600&h=1200&q=90" alt="Casual fashion style for LAREL">
-                <div class="slide-caption">
-                    <h3>Find Your Fit</h3>
-                    <p>Comfort Meets Street Style</p>
-                </div>
-            </div>
-        </div>
-        <div class="slider-dots">
-            <div class="dot active"></div>
-            <div class="dot"></div>
-            <div class="dot"></div>
-            <div class="dot"></div>
-            <div class="dot"></div>
-        </div>
-    </div>
-    
-    <!-- Hero CTA Buttons -->
-    <div class="btn-hero-group">
-        <a href="https://larel2306.github.io/Larel/Shop" class="btn-mobile btn-main">
-            Explore Collection <i class="fa-solid fa-arrow-right"></i>
-        </a>
-        <a href="https://larel2306.github.io/Larel/Size-Chart" class="btn-mobile btn-sub">
-            <i class="fa-solid fa-ruler-combined"></i> Size Chart
-        </a>
-    </div>
+<!-- LAREL Streetwear Editorial Hero -->
+<section class="hero editorial-hero">
+  <img class="lookbook-hero" src="https://raw.githubusercontent.com/Larel2306/Larel/main/Streetwear%20Redefined_%20Urban%20Lookbook.png" alt="LAREL Streetwear Redefined campaign">
 </section>
 
 <!-- Apparel Categories -->
-<section class="section">
-    <div class="section-title">
-        <h2>Shop By Category</h2>
-    </div>
-    <div class="category-grid">
-        <a href="https://larel2306.github.io/Larel/Shop" class="cat-card">
-            <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=600&q=80" alt="Oversized Tee">
-            <div class="cat-overlay"><h3>Oversized Tees</h3></div>
-        </a>
-        <a href="https://larel2306.github.io/Larel/Shop" class="cat-card">
-            <img src="https://images.unsplash.com/photo-1578587018452-892bacefd3f2?auto=format&fit=crop&w=600&q=80" alt="Hoodie Model">
-            <div class="cat-overlay"><h3>Sweatshirts & Hoodies</h3></div>
-        </a>
-        <a href="https://larel2306.github.io/Larel/Shop" class="cat-card">
-            <img src="https://images.unsplash.com/photo-1586363104862-3a5e2ab60d99?auto=format&fit=crop&w=600&q=80" alt="Polo T-Shirt Model">
-            <div class="cat-overlay"><h3>Polo T-Shirts</h3></div>
-        </a>
-        <a href="https://larel2306.github.io/Larel/Shop" class="cat-card">
-            <img src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=600&q=80" alt="Streetwear Joggers">
-            <div class="cat-overlay"><h3>Sweatpants & Joggers</h3></div>
-        </a>
-    </div>
+<section class="section editorial-categories" id="categories">
+  <div class="section-title"><h2>SHOP BY CATEGORY</h2></div>
+  <div class="category-grid editorial-category-grid">
+    <a href="https://larel2306.github.io/Larel/Shop" class="cat-card"><img src="https://raw.githubusercontent.com/Larel2306/Larel/main/Streetwear%20Redefined_%20Urban%20Lookbook.png" alt="LAREL T-Shirts"><div class="cat-overlay"><h3>T-Shirts</h3></div></a>
+    <a href="https://larel2306.github.io/Larel/Shop" class="cat-card"><img src="https://raw.githubusercontent.com/Larel2306/Larel/main/Streetwear%20Redefined_%20Urban%20Lookbook.png" alt="LAREL Hoodies"><div class="cat-overlay"><h3>Hoodies</h3></div></a>
+    <a href="https://larel2306.github.io/Larel/Shop" class="cat-card"><img src="https://raw.githubusercontent.com/Larel2306/Larel/main/Streetwear%20Redefined_%20Urban%20Lookbook.png" alt="LAREL Bottom Wear"><div class="cat-overlay"><h3>Bottom Wear</h3></div></a>
+    <a href="https://larel2306.github.io/Larel/Shop" class="cat-card"><img src="https://raw.githubusercontent.com/Larel2306/Larel/main/Streetwear%20Redefined_%20Urban%20Lookbook.png" alt="LAREL Sweatshirts"><div class="cat-overlay"><h3>Sweatshirts</h3></div></a>
+    <a href="https://larel2306.github.io/Larel/Shop" class="cat-card"><img src="https://raw.githubusercontent.com/Larel2306/Larel/main/Streetwear%20Redefined_%20Urban%20Lookbook.png" alt="LAREL Polos"><div class="cat-overlay"><h3>Polos</h3></div></a>
+  </div>
 </section>
 
 <!-- Trending Drops Scroll -->
