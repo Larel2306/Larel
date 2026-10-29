@@ -10,6 +10,7 @@
 
 <style>
 * {
+  -webkit-tap-highlight-color: transparent;
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -187,6 +188,8 @@ body {
 }
 
 .product-card {
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
   background: transparent;
   border-radius: 0;
   overflow: hidden;
@@ -208,6 +211,9 @@ body {
 }
 
 .product-image img {
+  -webkit-user-drag: none;
+  user-select: none;
+  pointer-events: none;
   width: 100%;
   height: 100%;
   object-fit: fill;
@@ -275,9 +281,10 @@ body {
   justify-content: center;
 }
 
-.pure-plus-btn:hover {
-  transform: scale(1.2);
-}
+.pure-plus-btn:hover { transform: scale(1.08); }
+.pure-plus-btn:focus, .pure-plus-btn:focus-visible, .pure-plus-btn:active { outline: none; box-shadow: none; background: transparent; color: #fff; }
+.product-card:active, .product-card:focus, .product-card:focus-within { outline: none; box-shadow: none; background: transparent; }
+::selection { background: transparent; color: inherit; }
 
 .empty-category {
   grid-column: 1 / -1;
@@ -739,6 +746,7 @@ function openTab(name) {
 
 /* ADD TO CART */
 function quickAddToCart(event, productId) {
+  event.preventDefault();
   event.stopPropagation();
 
   const product = PRODUCTS.find(p => p.id === productId);
@@ -882,7 +890,9 @@ navbar.querySelectorAll("a").forEach(function(link) {
 
 /* INITIALIZE */
 renderShop();
-openTab("tshirts");
+const requestedCategory = new URLSearchParams(window.location.search).get("category");
+const validCategories = CATEGORIES.map(c => c.id);
+openTab(validCategories.includes(requestedCategory) ? requestedCategory : "tshirts");
 </script>
 
 
