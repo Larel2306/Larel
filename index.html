@@ -304,7 +304,7 @@ body::before {
 .hero-slider-container {
     width: 100%;
     max-width: 1120px;
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 3 / 2;
     height: auto;
     border-radius: 24px;
     overflow: hidden;
@@ -338,7 +338,7 @@ body::before {
     display: block;
     width: 100%;
     height: 100%;
-    object-fit: fill;
+    object-fit: contain;
     object-position: center;
     background: #070a14;
 }
@@ -428,7 +428,8 @@ body::before {
 }
 
 .cat-card {
-    height: 195px;
+    height: auto;
+    aspect-ratio: 4 / 5;
     border-radius: 20px;
     overflow: hidden;
     position: relative;
@@ -439,7 +440,7 @@ body::before {
 .cat-card img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     background: #070a14;
     object-position: center center;
     transition: 0.5s ease;
@@ -480,7 +481,9 @@ body::before {
 
 .scroll-card {
     min-width: 230px;
-    height: 330px;
+    width: 230px;
+    height: auto;
+    aspect-ratio: 3 / 4;
     border-radius: 20px;
     overflow: hidden;
     position: relative;
@@ -499,7 +502,7 @@ body::before {
 .scroll-card img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     background: #070a14;
     object-position: center center;
 }
@@ -611,7 +614,8 @@ body::before {
         gap: 24px;
     }
     .cat-card {
-        height: 280px;
+        height: auto;
+        aspect-ratio: 4 / 5;
     }
     .horizontal-scroll {
         gap: 24px;
@@ -620,7 +624,9 @@ body::before {
     }
     .scroll-card {
         min-width: 270px;
-        height: 380px;
+        width: 270px;
+        height: auto;
+        aspect-ratio: 3 / 4;
     }
 }
 
@@ -628,7 +634,7 @@ body::before {
     .hero-slider-container {
         width: 100%;
         max-width: 100%;
-        aspect-ratio: 4 / 3;
+        aspect-ratio: 3 / 2;
     }
     .slide-caption { padding: 18px; }
     .slide-caption h3 { font-size: 17px; }
