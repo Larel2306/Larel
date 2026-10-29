@@ -676,6 +676,41 @@ body { background:#020b12; color:#fff; }
  .editorial-category-grid .cat-card:nth-child(5) img { transform:translate(-80%,-72%); }
 }
 
+
+/* Final category card sizing: no hover effects, pointer cursor only */
+.editorial-category-grid .cat-card {
+  height:clamp(250px,27vw,350px) !important;
+  min-height:0 !important;
+  aspect-ratio:auto !important;
+  cursor:pointer !important;
+  transition:none !important;
+  transform:none !important;
+  filter:none !important;
+}
+.editorial-category-grid .cat-card:hover,
+.editorial-category-grid .cat-card:focus,
+.editorial-category-grid .cat-card:focus-visible,
+.editorial-category-grid .cat-card:active {
+  transform:none !important;
+  filter:none !important;
+  box-shadow:none !important;
+  outline:none !important;
+}
+.editorial-category-grid .cat-card:hover img,
+.editorial-category-grid .cat-card:focus img,
+.editorial-category-grid .cat-card:focus-visible img,
+.editorial-category-grid .cat-card:active img {
+  transition:none !important;
+}
+.editorial-category-grid .cat-overlay,
+.editorial-category-grid .cat-overlay h3 {
+  transform:none !important;
+  transition:none !important;
+}
+@media(max-width:760px) {
+ .editorial-category-grid .cat-card { height:clamp(220px,55vw,300px) !important; }
+}
+
 </style>
 </head>
 
