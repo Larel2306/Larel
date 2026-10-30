@@ -854,6 +854,49 @@ body { background:#020b12; color:#fff; }
   border:0 !important;
 }
 
+
+/* Category artwork: keep the original dark theme and let each garment stand out */
+.editorial-category-grid .cat-card {
+  background: #07111a !important;
+  overflow: hidden;
+}
+.editorial-category-grid .cat-card img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  background: #07111a !important;
+  padding: 10px;
+}
+@media (max-width: 760px) {
+  .editorial-category-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 8px !important;
+  }
+  .editorial-category-grid .cat-card {
+    aspect-ratio: 4 / 5 !important;
+    min-width: 0;
+  }
+  .editorial-category-grid .cat-card:nth-child(5) {
+    grid-column: 1 / -1;
+    width: calc(50% - 4px);
+    justify-self: center;
+  }
+  .editorial-category-grid .cat-card img {
+    padding: 6px;
+  }
+  .editorial-category-grid .cat-overlay {
+    padding: 12px 10px;
+  }
+  .editorial-category-grid .cat-overlay h3 {
+    font-size: clamp(12px, 3.5vw, 15px);
+  }
+}
+@media (max-width: 360px) {
+  .editorial-category-grid { gap: 6px !important; }
+  .editorial-category-grid .cat-card:nth-child(5) { width: calc(50% - 3px); }
+}
+
 </style>
 </head>
 
@@ -918,11 +961,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <section class="section editorial-categories" id="categories">
   <div class="section-title"><h2>SHOP BY CATEGORY</h2></div>
   <div class="category-grid editorial-category-grid">
-    <a href="https://larel2306.github.io/Larel/Shop.html?category=tshirts" class="cat-card" data-category="tshirts"><img src="https://raw.githubusercontent.com/Larel2306/Larel/main/assets/category-tshirts.svg" alt="LAREL Graphic Streetwear T-Shirt"><div class="cat-overlay"><h3>T-Shirts</h3></div></a>
-    <a href="https://larel2306.github.io/Larel/Shop.html?category=hoodies" class="cat-card" data-category="hoodies"><img src="https://raw.githubusercontent.com/Larel2306/Larel/main/assets/category-hoodies.svg" alt="LAREL Oversized Graphic Hoodie"><div class="cat-overlay"><h3>Hoodies</h3></div></a>
-    <a href="https://larel2306.github.io/Larel/Shop.html?category=bottomwear" class="cat-card" data-category="bottomwear"><img src="https://raw.githubusercontent.com/Larel2306/Larel/main/assets/category-bottomwear.svg" alt="LAREL Utility Cargo Bottomwear"><div class="cat-overlay"><h3>Bottom Wear</h3></div></a>
-    <a href="https://larel2306.github.io/Larel/Shop.html?category=Sweatshirt" class="cat-card" data-category="Sweatshirt"><img src="https://raw.githubusercontent.com/Larel2306/Larel/main/assets/category-sweatshirts.svg" alt="LAREL Graphic Streetwear Sweatshirt"><div class="cat-overlay"><h3>Sweatshirts</h3></div></a>
-    <a href="https://larel2306.github.io/Larel/Shop.html?category=Polos" class="cat-card" data-category="Polos"><img src="https://raw.githubusercontent.com/Larel2306/Larel/main/assets/category-polos.svg" alt="LAREL Premium Graphic Polo"><div class="cat-overlay"><h3>Polos</h3></div></a>
+    <a href="https://larel2306.github.io/Larel/Shop.html?category=tshirts" class="cat-card" data-category="tshirts"><img src="https://raw.githubusercontent.com/Larel2306/Larel/main/assets/category-tshirts.svg" alt="Graphic Streetwear T-Shirt"><div class="cat-overlay"><h3>T-Shirts</h3></div></a>
+    <a href="https://larel2306.github.io/Larel/Shop.html?category=hoodies" class="cat-card" data-category="hoodies"><img src="https://raw.githubusercontent.com/Larel2306/Larel/main/assets/category-hoodies.svg" alt="Oversized Graphic Hoodie"><div class="cat-overlay"><h3>Hoodies</h3></div></a>
+    <a href="https://larel2306.github.io/Larel/Shop.html?category=bottomwear" class="cat-card" data-category="bottomwear"><img src="https://raw.githubusercontent.com/Larel2306/Larel/main/assets/category-bottomwear.svg" alt="Utility Cargo Bottomwear"><div class="cat-overlay"><h3>Bottom Wear</h3></div></a>
+    <a href="https://larel2306.github.io/Larel/Shop.html?category=Sweatshirt" class="cat-card" data-category="Sweatshirt"><img src="https://raw.githubusercontent.com/Larel2306/Larel/main/assets/category-sweatshirts.svg" alt="Graphic Streetwear Sweatshirt"><div class="cat-overlay"><h3>Sweatshirts</h3></div></a>
+    <a href="https://larel2306.github.io/Larel/Shop.html?category=Polos" class="cat-card" data-category="Polos"><img src="https://raw.githubusercontent.com/Larel2306/Larel/main/assets/category-polos.svg" alt="Premium Graphic Polo"><div class="cat-overlay"><h3>Polos</h3></div></a>
   </div>
 </section>
 
