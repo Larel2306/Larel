@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://larel2306.github.io/Larel/sitemap.xml
