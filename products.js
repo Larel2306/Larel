@@ -88,7 +88,7 @@ window.LAREL_PRODUCTS_FALLBACK = {
       const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
       const { data, error } = await client
         .from("products")
-        .select("product_id,title,category,price,old_price,stock,images,description,sizes,colors,is_active,tag")
+        .select("product_id,title,category,price,old_price,stock,images,description,sizes,colors,is_active")
         .eq("is_active", true)
         .order("created_at", { ascending: false });
 
