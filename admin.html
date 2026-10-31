@@ -37,16 +37,16 @@
   <button class="nav" data-view="customers"><i class="fa-solid fa-users"></i> Customers</button>
   <button class="nav" data-view="content"><i class="fa-solid fa-images"></i> Website Content</button>
   <div class="side-label">ACCOUNT</div><button class="nav" id="logoutBtn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign out</button>
-  <div class="sidebar-bottom muted" style="font-size:10px;padding:10px 13px">LAREL Admin • Secure access</div>
+  <div class="sidebar-bottom muted" style="font-size:10px;padding:10px 13px">LAREL Admin • Secure access • Tab session</div>
  </aside>
  <main class="main">
   <header class="topbar"><div style="display:flex;align-items:center;gap:12px"><button class="btn secondary mobile-menu" id="menuBtn"><i class="fa-solid fa-bars"></i></button><div><h1 id="pageTitle">Dashboard</h1><p id="pageSubtitle">Your store at a glance.</p></div></div><div class="user-chip"><span class="dot"></span><span id="adminEmail">Admin</span></div></header>
   <section id="dashboardView" class="view active">
    <div class="stats">
-    <div class="stat"><div class="stat-top">Total orders <i class="fa-solid fa-bag-shopping stat-icon"></i></div><strong id="statOrders">—</strong><small>All recorded orders</small></div>
-    <div class="stat"><div class="stat-top">Revenue <i class="fa-solid fa-indian-rupee-sign stat-icon"></i></div><strong id="statRevenue">—</strong><small>From recorded orders</small></div>
-    <div class="stat"><div class="stat-top">Products <i class="fa-solid fa-shirt stat-icon"></i></div><strong id="statProducts">—</strong><small>In product catalog</small></div>
-    <div class="stat"><div class="stat-top">Customers <i class="fa-solid fa-users stat-icon"></i></div><strong id="statCustomers">—</strong><small>Registered profiles</small></div>
+    <div class="stat"><div class="stat-top">Total Orders <i class="fa-solid fa-bag-shopping stat-icon"></i></div><strong id="statOrders">—</strong><small>All orders saved in the database</small></div>
+    <div class="stat"><div class="stat-top">Total Order Value <i class="fa-solid fa-indian-rupee-sign stat-icon"></i></div><strong id="statRevenue">—</strong><small>Calculated from saved order totals</small></div>
+    <div class="stat"><div class="stat-top">Products <i class="fa-solid fa-shirt stat-icon"></i></div><strong id="statProducts">—</strong><small>Products in your catalog</small></div>
+    <div class="stat"><div class="stat-top">Customers <i class="fa-solid fa-users stat-icon"></i></div><strong id="statCustomers">—</strong><small>Customer profiles saved in the database</small></div>
    </div>
    <div class="section-head"><h2>Recent orders</h2><button class="btn secondary tiny" data-go="orders">View all</button></div>
    <div class="panel table-wrap"><table><thead><tr><th>Order</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead><tbody id="recentOrders"><tr><td colspan="5" class="empty">Loading orders…</td></tr></tbody></table></div>
@@ -59,7 +59,7 @@
      <div><label>Product ID (e.g. tshirt3)</label><input id="pId" required></div><div><label>Product title</label><input id="pTitle" required></div>
      <div><label>Category</label><select id="pCategory"><option value="tshirts">T-shirts</option><option value="hoodies">Hoodies</option><option value="sweatshirts">Sweatshirts</option><option value="polos">Polos</option><option value="other">Other</option></select></div>
      <div><label>Price (₹)</label><input id="pPrice" type="number" min="0" step="0.01" required></div>
-     <div><label>Old price (₹)</label><input id="pOldPrice" type="number" min="0" step="0.01"></div><div class="wide"><label>Colour-wise product images</label><p class="muted">Har colour ke liye alag images add karo. Customer colour select karega to usi colour ki gallery dikhegi. Image file upload karo ya URL paste karo.</p><div id="productColorFields"></div><button type="button" class="btn secondary tiny" id="addProductColor">+ Add another colour</button></div>
+     <div><label>Old price (₹)</label><input id="pOldPrice" type="number" min="0" step="0.01"></div><div class="wide"><label>Colour-wise product images</label><p class="muted">Add separate images for each colour. When a customer selects a colour, the product page will display that colour’s image gallery. Upload image files or paste image URLs.</p><div id="productColorFields"></div><button type="button" class="btn secondary tiny" id="addProductColor">+ Add another colour</button></div>
      <div class="wide"><label>Description</label><textarea id="pDescription" rows="3"></textarea></div>
      <div><label>Sizes (comma separated)</label><input id="pSizes" placeholder="S, M, L, XL, XXL"></div>
      <div><label>Active on store?</label><select id="pActive"><option value="true">Yes</option><option value="false">No</option></select></div>
@@ -83,7 +83,7 @@
 <script>
 const SUPABASE_URL = "https://gghpenzosdqudtqhpekp.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_LgOR6E51qGFLRcIecWqA3w_kHHoGtVa";
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, { auth: { storage: window.sessionStorage, persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
 const $ = id => document.getElementById(id);
 const money = n => "₹" + Number(n || 0).toLocaleString("en-IN",{maximumFractionDigits:2});
 const safe = value => String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
