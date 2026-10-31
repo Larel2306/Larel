@@ -156,7 +156,7 @@ async function loadProducts(){
 
 function addColorImageField(container,value=""){
  const row=document.createElement("div");row.style.cssText="display:flex;gap:8px;align-items:center;margin:8px 0;flex-wrap:wrap";
- const input=document.createElement("input");input.type="url";input.className="color-image-url";input.placeholder="Image URL (or upload file)";input.value=value;input.style.flex="1;min-width:180px";
+ const input=document.createElement("input");input.type="url";input.className="color-image-url";input.placeholder="Image URL (or upload file)";input.value=value;input.style.flex="1";input.style.minWidth="180px";
  const upload=makeUploadButton(input,"products");
  const remove=document.createElement("button");remove.type="button";remove.className="btn danger tiny";remove.textContent="Remove";
  remove.onclick=()=>{if(container.children.length>1)row.remove();else input.value="";};
@@ -213,7 +213,7 @@ $("productForm").addEventListener("submit",async e=>{
 });
 function addTrendingImageField(value=""){const wrap=document.createElement("div");wrap.style.cssText="display:flex;gap:8px;margin:8px 0;align-items:center;flex-wrap:wrap";const input=document.createElement("input");input.type="url";input.className="trending-image-url";input.placeholder="Trending image URL (or upload)";input.value=value;input.style.flex="1";const upload=makeUploadButton(input,"homepage/trending");const remove=document.createElement("button");remove.type="button";remove.className="btn danger tiny";remove.textContent="Remove";remove.onclick=()=>wrap.remove();wrap.append(input,upload,remove);$("homeTrendingFields").appendChild(wrap);}
 $("addTrendingImage").onclick=()=>addTrendingImageField();
-["homeHeroImage","homeCatTshirts","homeCatHoodies","homeCatBottomwear","homeCatSweatshirts","homeCatPolos"].forEach(id=>{const input=$(id);const upload=makeUploadButton(input,"homepage");input.parentElement.appendChild(upload);});
+["homeHeroImage","homeCatTshirts","homeCatHoodies","homeCatBottomwear","homeCatSweatshirts","homeCatPolos"].forEach(id=>{const input=$(id);const upload=makeUploadButton(input,"homepage");input.insertAdjacentElement("afterend",upload);});
 async function loadContent(){const {data,error}=await db.from("site_content").select("content").eq("section_key","homepage_images").maybeSingle();if(error){$("homeImagesPreview").textContent=error.message;return;}const c=data?.content||{}; $("homeHeroImage").value=c.hero||"";const cats=c.categories||{};["tshirts","hoodies","bottomwear","sweatshirts","polos"].forEach(k=>$("homeCat"+k[0].toUpperCase()+k.slice(1)).value=cats[k]||"");$("homeTrendingFields").innerHTML="";(c.trending||[""]).forEach(url=>addTrendingImageField(url));$("homeImagesPreview").textContent=JSON.stringify(c,null,2);}
 $("homeImagesForm").addEventListener("submit",async e=>{e.preventDefault();const content={hero:$("homeHeroImage").value.trim(),categories:{tshirts:$("homeCatTshirts").value.trim(),hoodies:$("homeCatHoodies").value.trim(),bottomwear:$("homeCatBottomwear").value.trim(),sweatshirts:$("homeCatSweatshirts").value.trim(),polos:$("homeCatPolos").value.trim()},trending:[...document.querySelectorAll(".trending-image-url")].map(x=>x.value.trim()).filter(Boolean)};const {error}=await db.from("site_content").upsert({section_key:"homepage_images",content,updated_at:new Date().toISOString()},{onConflict:"section_key"});showMessage("homeImagesMessage",error?error.message:"Homepage images saved successfully.",!!error);if(!error)$("homeImagesPreview").textContent=JSON.stringify(content,null,2);});
 
