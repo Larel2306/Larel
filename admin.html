@@ -59,9 +59,9 @@
      <div><label>Product ID (e.g. tshirt3)</label><input id="pId" required></div><div><label>Product title</label><input id="pTitle" required></div>
      <div><label>Category</label><select id="pCategory"><option value="tshirts">T-shirts</option><option value="hoodies">Hoodies</option><option value="sweatshirts">Sweatshirts</option><option value="polos">Polos</option><option value="other">Other</option></select></div>
      <div><label>Price (₹)</label><input id="pPrice" type="number" min="0" step="0.01" required></div>
-     <div><label>Old price (₹)</label><input id="pOldPrice" type="number" min="0" step="0.01"></div><div class="wide"><label>Product images</label><p class="muted">Add as many image URLs as you need. First image is used as the main Shop image.</p><div id="productImageFields"></div><button type="button" class="btn secondary tiny" id="addProductImage">+ Add another image</button></div>
+     <div><label>Old price (₹)</label><input id="pOldPrice" type="number" min="0" step="0.01"></div><div class="wide"><label>Colour-wise product images</label><p class="muted">Har colour ke liye alag images add karo. Customer colour select karega to usi colour ki gallery dikhegi. Image file upload karo ya URL paste karo.</p><div id="productColorFields"></div><button type="button" class="btn secondary tiny" id="addProductColor">+ Add another colour</button></div>
      <div class="wide"><label>Description</label><textarea id="pDescription" rows="3"></textarea></div>
-     <div><label>Sizes (comma separated)</label><input id="pSizes" placeholder="S, M, L, XL, XXL"></div><div><label>Colors (comma separated)</label><input id="pColors" placeholder="Black, White"></div>
+     <div><label>Sizes (comma separated)</label><input id="pSizes" placeholder="S, M, L, XL, XXL"></div>
      <div><label>Active on store?</label><select id="pActive"><option value="true">Yes</option><option value="false">No</option></select></div>
     </div><button class="btn" type="submit" style="margin-top:18px">Save product</button><span id="productMessage" class="message"></span></form>
    </div>
@@ -70,11 +70,11 @@
   <section id="customersView" class="view"><div class="section-head"><h2>Customer profiles</h2><button class="btn secondary tiny" id="refreshCustomers">Refresh</button></div><div class="panel table-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Customer since</th></tr></thead><tbody id="customersRows"><tr><td colspan="4" class="empty">Loading…</td></tr></tbody></table></div></section>
   <section id="contentView" class="view">
 <div class="section-head"><h2>Homepage Images</h2><span class="muted">Manage images shown on your home page</span></div>
-<div class="panel"><p class="muted">Paste image URLs from your image host (for example ImgBB). Add unlimited Trending Drops images. Save changes to update the homepage.</p>
-<form id="homeImagesForm"><h3>Hero / Main banner</h3><label>Hero image URL</label><input id="homeHeroImage" type="url" placeholder="https://...">
+<div class="panel"><p class="muted">Upload images directly to LAREL Supabase Storage or paste an image URL. Add unlimited Trending Drops images.</p>
+<form id="homeImagesForm"><h3>Hero / Main banner</h3><label>Hero image URL</label><input id="homeHeroImage" type="url" placeholder="https://..."><span class="home-upload-homeHeroImage"></span>
 <h3 style="margin-top:22px">Shop by Category</h3><div class="form-grid">
-<div><label>T-Shirts image URL</label><input id="homeCatTshirts" type="url"></div><div><label>Hoodies image URL</label><input id="homeCatHoodies" type="url"></div>
-<div><label>Bottomwear image URL</label><input id="homeCatBottomwear" type="url"></div><div><label>Sweatshirts image URL</label><input id="homeCatSweatshirts" type="url"></div><div><label>Polos image URL</label><input id="homeCatPolos" type="url"></div></div>
+<div><label>T-Shirts image URL</label><input id="homeCatTshirts" type="url"><span class="home-upload-homeCatTshirts"></span></div><div><label>Hoodies image URL</label><input id="homeCatHoodies" type="url"><span class="home-upload-homeCatHoodies"></span></div>
+<div><label>Bottomwear image URL</label><input id="homeCatBottomwear" type="url"><span class="home-upload-homeCatBottomwear"></span></div><div><label>Sweatshirts image URL</label><input id="homeCatSweatshirts" type="url"><span class="home-upload-homeCatSweatshirts"></span></div><div><label>Polos image URL</label><input id="homeCatPolos" type="url"><span class="home-upload-homeCatPolos"></span></div></div>
 <h3 style="margin-top:22px">Trending Drops images</h3><div id="homeTrendingFields"></div><button type="button" class="btn secondary tiny" id="addTrendingImage">+ Add another Trending image</button>
 <div><button class="btn" type="submit" style="margin-top:18px">Save Homepage Images</button><span id="homeImagesMessage" class="message"></span></div></form></div>
 <div class="panel"><h3>Saved homepage image settings</h3><pre id="homeImagesPreview" class="muted" style="white-space:pre-wrap;overflow-wrap:anywhere"></pre></div></section>
@@ -89,6 +89,42 @@ const money = n => "₹" + Number(n || 0).toLocaleString("en-IN",{maximumFractio
 const safe = value => String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const showMessage = (id,msg,error=true) => { $(id).textContent=msg; $(id).style.color=error?"#ff8797":"#35d49a"; };
 let currentUser=null;
+
+async function compressImage(file){
+ if(!file || !file.type.startsWith("image/")) throw new Error("Please choose an image file.");
+ if(!("createImageBitmap" in window)) return file;
+ const bitmap=await createImageBitmap(file);
+ const scale=Math.min(1,1800/Math.max(bitmap.width,bitmap.height));
+ const canvas=document.createElement("canvas");
+ canvas.width=Math.max(1,Math.round(bitmap.width*scale));canvas.height=Math.max(1,Math.round(bitmap.height*scale));
+ const ctx=canvas.getContext("2d");ctx.drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close?.();
+ const blob=await new Promise(resolve=>canvas.toBlob(resolve,"image/webp",0.84));
+ return blob ? new File([blob],(file.name.replace(/\\.[^.]+$/,"")||"larel-image")+".webp",{type:"image/webp"}) : file;
+}
+async function uploadImageFile(file,folder="uploads"){
+ if(!currentUser) throw new Error("Please sign in as admin first.");
+ const optimized=await compressImage(file);
+ const ext=optimized.type==="image/webp"?"webp":(optimized.name.split(".").pop()||"jpg").toLowerCase();
+ const clean=(optimized.name||"image").toLowerCase().replace(/[^a-z0-9.-]+/g,"-").slice(-70);
+ const path=folder+"/"+Date.now()+"-"+crypto.randomUUID()+"-"+clean;
+ const {error}=await db.storage.from("larel-images").upload(path,optimized,{cacheControl:"31536000",upsert:false,contentType:optimized.type});
+ if(error) throw error;
+ const {data}=db.storage.from("larel-images").getPublicUrl(path);
+ if(!data?.publicUrl) throw new Error("Could not create public image URL.");
+ return data.publicUrl;
+}
+function makeUploadButton(input,folder){
+ const file=document.createElement("input");file.type="file";file.accept="image/*";file.style.cssText="max-width:150px;padding:7px;font-size:11px";
+ file.addEventListener("change",async()=>{
+  if(!file.files?.[0])return;
+  const old=file.disabled;file.disabled=true;input.disabled=true;
+  try{input.value=await uploadImageFile(file.files[0],folder);input.dispatchEvent(new Event("change",{bubbles:true}));}
+  catch(err){alert("Image upload failed: "+(err.message||err)+"\\nCheck that the Supabase Storage bucket and policies are created.");}
+  finally{file.disabled=old;input.disabled=false;file.value="";}
+ });
+ return file;
+}
+
 async function checkAdmin(){
  const {data:{session}}=await db.auth.getSession();
  if(!session){showLogin();return}
@@ -117,17 +153,67 @@ async function loadProducts(){
  const {data,error}=await db.from("products").select("*").order("created_at",{ascending:false});
  $("productsRows").innerHTML=error?'<tr><td colspan="6" class="empty">'+safe(error.message)+'</td></tr>':(data||[]).map(p=>'<tr><td><div style="display:flex;align-items:center;gap:10px">'+(p.images?.[0]?'<img class="product-thumb" src="'+safe(p.images[0])+'" alt="">':'')+'<span>'+safe(p.title)+'</span></div></td><td>'+safe(p.product_id)+'</td><td>'+safe(p.category)+'</td><td>'+money(p.price)+'</td><td><span class="pill">'+(p.is_active?"Active":"Hidden")+'</span></td><td><div class="actions"><button class="btn secondary tiny" onclick="editProduct('+p.id+')">Edit</button><button class="btn danger tiny" onclick="deleteProduct('+p.id+')">Delete</button></div></td></tr>').join("")||'<tr><td colspan="6" class="empty">No products yet. Add your first product.</td></tr>';
 }
-function addProductImageField(value=""){const wrap=document.createElement("div");wrap.style.cssText="display:flex;gap:8px;margin:8px 0";const input=document.createElement("input");input.type="url";input.className="product-image-url";input.placeholder="https://image-url";input.value=value;input.style.flex="1";const remove=document.createElement("button");remove.type="button";remove.className="btn danger tiny";remove.textContent="Remove";remove.onclick=()=>{if($("productImageFields").children.length>1)wrap.remove();else input.value="";};wrap.append(input,remove);$("productImageFields").appendChild(wrap);}
-function setProductImageFields(urls=[]){$("productImageFields").innerHTML="";(urls.length?urls:[""]).forEach(url=>addProductImageField(url));}
-$("addProductImage").onclick=()=>addProductImageField();
-window.editProduct=async id=>{const {data,error}=await db.from("products").select("*").eq("id",id).single();if(error)return alert(error.message);$("productEditor").classList.remove("hidden");$("productFormTitle").textContent="Edit product";$("productRowId").value=data.id;$("pId").value=data.product_id;$("pTitle").value=data.title;$("pCategory").value=data.category;$("pPrice").value=data.price;$("pOldPrice").value=data.old_price||"";setProductImageFields(data.images||[]);$("pDescription").value=data.description||"";$("pSizes").value=(data.sizes||[]).join(", ");$("pColors").value=(data.colors||[]).map(c=>typeof c==="string"?c:c.name||"").join(", ");$("pActive").value=String(data.is_active);$("productEditor").scrollIntoView({behavior:"smooth"});};
+
+function addColorImageField(container,value=""){
+ const row=document.createElement("div");row.style.cssText="display:flex;gap:8px;align-items:center;margin:8px 0;flex-wrap:wrap";
+ const input=document.createElement("input");input.type="url";input.className="color-image-url";input.placeholder="Image URL (or upload file)";input.value=value;input.style.flex="1;min-width:180px";
+ const upload=makeUploadButton(input,"products");
+ const remove=document.createElement("button");remove.type="button";remove.className="btn danger tiny";remove.textContent="Remove";
+ remove.onclick=()=>{if(container.children.length>1)row.remove();else input.value="";};
+ row.append(input,upload,remove);container.appendChild(row);
+}
+function addProductColorField(color={name:"",code:"#888888",images:[]}){
+ const card=document.createElement("div");card.className="panel color-editor-card";card.style.cssText="margin:12px 0;padding:14px";
+ const top=document.createElement("div");top.style.cssText="display:grid;grid-template-columns:1fr 110px auto;gap:9px;align-items:end";
+ const nameWrap=document.createElement("div");const nameLabel=document.createElement("label");nameLabel.textContent="Colour name";const name=document.createElement("input");name.className="product-color-name";name.placeholder="Black";name.value=color.name||"";nameWrap.append(nameLabel,name);
+ const codeWrap=document.createElement("div");const codeLabel=document.createElement("label");codeLabel.textContent="Colour code";const code=document.createElement("input");code.type="color";code.className="product-color-code";code.value=color.code||"#888888";codeWrap.append(codeLabel,code);
+ const remove=document.createElement("button");remove.type="button";remove.className="btn danger tiny";remove.textContent="Remove colour";remove.onclick=()=>{if($("productColorFields").children.length>1)card.remove();else{name.value="";card.querySelector(".color-image-fields").innerHTML="";addColorImageField(card.querySelector(".color-image-fields"));}};
+ top.append(nameWrap,codeWrap,remove);
+ const title=document.createElement("label");title.textContent="Images for "+(color.name||"this colour");name.addEventListener("input",()=>title.textContent="Images for "+(name.value||"this colour"));
+ const images=document.createElement("div");images.className="color-image-fields";
+ (color.images?.length?color.images:[""]).forEach(url=>addColorImageField(images,url));
+ const add=document.createElement("button");add.type="button";add.className="btn secondary tiny";add.textContent="+ Add image for this colour";add.onclick=()=>addColorImageField(images);
+ card.append(top,title,images,add);$("productColorFields").appendChild(card);
+}
+function setProductColorFields(colors=[]){
+ $("productColorFields").innerHTML="";
+ const normalized=(colors||[]).map(c=>typeof c==="string"?{name:c,code:defaultColorCode(c),images:[]}:c);
+ (normalized.length?normalized:[{name:"",code:"#888888",images:[]}]).forEach(addProductColorField);
+}
+function defaultColorCode(name){
+ const codes={black:"#171717",white:"#ffffff",grey:"#C0C4C8",gray:"#C0C4C8",red:"#dc2626",blue:"#2563eb",navy:"#172554",green:"#16a34a",mint:"#3EB489",lavender:"#E6E6FA",pink:"#ec4899",yellow:"#eab308",beige:"#d6c2a1",brown:"#783f04"};
+ return codes[String(name||"").toLowerCase()]||"#888888";
+}
+$("addProductColor").onclick=()=>addProductColorField();
+window.editProduct=async id=>{
+ const {data,error}=await db.from("products").select("*").eq("id",id).single();if(error)return alert(error.message);
+ $("productEditor").classList.remove("hidden");$("productFormTitle").textContent="Edit product";$("productRowId").value=data.id;$("pId").value=data.product_id;$("pTitle").value=data.title;$("pCategory").value=data.category;$("pPrice").value=data.price;$("pOldPrice").value=data.old_price||"";
+ setProductColorFields(data.colors||[]);$("pDescription").value=data.description||"";$("pSizes").value=(data.sizes||[]).join(", ");$("pActive").value=String(data.is_active);$("productEditor").scrollIntoView({behavior:"smooth"});
+};
 window.deleteProduct=async id=>{if(!confirm("Delete this product?"))return;const {error}=await db.from("products").delete().eq("id",id);if(error)alert(error.message);else{await loadProducts();await loadDashboard();}};
-$("newProductBtn").onclick=()=>{$("productForm").reset();$("productRowId").value="";setProductImageFields([]);$("productFormTitle").textContent="Add product";$("productMessage").textContent="";$("productEditor").classList.remove("hidden");};
+$("newProductBtn").onclick=()=>{$("productForm").reset();$("productRowId").value="";setProductColorFields([]);$("productFormTitle").textContent="Add product";$("productMessage").textContent="";$("productEditor").classList.remove("hidden");};
 $("closeProductForm").onclick=()=>$("productEditor").classList.add("hidden");
-setProductImageFields([]);
-$("productForm").addEventListener("submit",async e=>{e.preventDefault();const rowId=$("productRowId").value;const productId=$("pId").value.trim();const images=[...document.querySelectorAll(".product-image-url")].map(x=>x.value.trim()).filter(Boolean);if(!images.length){showMessage("productMessage","Please add at least one product image URL.");return;}const payload={product_id:productId,title:$("pTitle").value.trim(),category:$("pCategory").value,price:Number($("pPrice").value),old_price:$("pOldPrice").value?Number($("pOldPrice").value):null,images,description:$("pDescription").value,sizes:$("pSizes").value.split(",").map(x=>x.trim()).filter(Boolean),colors:$("pColors").value.split(",").map(x=>x.trim()).filter(Boolean),is_active:$("pActive").value==="true",updated_at:new Date().toISOString()};const saveButton=$("productForm").querySelector('button[type="submit"]');saveButton.disabled=true;saveButton.textContent="Saving…";try{if(!rowId){const {data:existing,error:checkError}=await db.from("products").select("id").eq("product_id",productId).maybeSingle();if(checkError)throw checkError;if(existing)throw new Error("This Product ID already exists. Please use a different Product ID, or edit the existing product.");}const q=rowId?db.from("products").update(payload).eq("id",rowId):db.from("products").insert(payload);const {error}=await q;if(error){if(error.code==="23505")throw new Error("This Product ID already exists. Please use a different Product ID, or edit the existing product.");throw error;}showMessage("productMessage","Product saved successfully.",false);await loadProducts();await loadDashboard();$("productForm").reset();$("productRowId").value="";setProductImageFields([]);}catch(error){showMessage("productMessage",error.message||"Could not save product.");}finally{saveButton.disabled=false;saveButton.textContent="Save product";}});
-function addTrendingImageField(value=""){const wrap=document.createElement("div");wrap.style.cssText="display:flex;gap:8px;margin:8px 0";const input=document.createElement("input");input.type="url";input.className="trending-image-url";input.placeholder="https://trending-image-url";input.value=value;input.style.flex="1";const remove=document.createElement("button");remove.type="button";remove.className="btn danger tiny";remove.textContent="Remove";remove.onclick=()=>wrap.remove();wrap.append(input,remove);$("homeTrendingFields").appendChild(wrap);}
+setProductColorFields([]);
+$("productForm").addEventListener("submit",async e=>{
+ e.preventDefault();const rowId=$("productRowId").value;const productId=$("pId").value.trim();
+ const colors=[...document.querySelectorAll("#productColorFields .color-editor-card")].map(card=>({
+  name:card.querySelector(".product-color-name").value.trim(),
+  code:card.querySelector(".product-color-code").value,
+  images:[...card.querySelectorAll(".color-image-url")].map(x=>x.value.trim()).filter(Boolean)
+ })).filter(c=>c.name);
+ if(!colors.length){showMessage("productMessage","Please add at least one colour.");return;}
+ if(colors.some(c=>!c.images.length)){showMessage("productMessage","Please upload or add at least one image for every colour.");return;}
+ const images=colors.flatMap(c=>c.images);
+ const payload={product_id:productId,title:$("pTitle").value.trim(),category:$("pCategory").value,price:Number($("pPrice").value),old_price:$("pOldPrice").value?Number($("pOldPrice").value):null,images,description:$("pDescription").value,sizes:$("pSizes").value.split(",").map(x=>x.trim()).filter(Boolean),colors,is_active:$("pActive").value==="true",updated_at:new Date().toISOString()};
+ const saveButton=$("productForm").querySelector('button[type="submit"]');saveButton.disabled=true;saveButton.textContent="Saving…";
+ try{if(!rowId){const {data:existing,error:checkError}=await db.from("products").select("id").eq("product_id",productId).maybeSingle();if(checkError)throw checkError;if(existing)throw new Error("This Product ID already exists. Please use a different Product ID, or edit the existing product.");}
+ const q=rowId?db.from("products").update(payload).eq("id",rowId):db.from("products").insert(payload);const {error}=await q;if(error){if(error.code==="23505")throw new Error("This Product ID already exists. Please use a different Product ID, or edit the existing product.");throw error;}
+ showMessage("productMessage","Product saved successfully.",false);await loadProducts();await loadDashboard();$("productForm").reset();$("productRowId").value="";setProductColorFields([]);
+ }catch(error){showMessage("productMessage",error.message||"Could not save product.");}finally{saveButton.disabled=false;saveButton.textContent="Save product";}
+});
+function addTrendingImageField(value=""){const wrap=document.createElement("div");wrap.style.cssText="display:flex;gap:8px;margin:8px 0;align-items:center;flex-wrap:wrap";const input=document.createElement("input");input.type="url";input.className="trending-image-url";input.placeholder="Trending image URL (or upload)";input.value=value;input.style.flex="1";const upload=makeUploadButton(input,"homepage/trending");const remove=document.createElement("button");remove.type="button";remove.className="btn danger tiny";remove.textContent="Remove";remove.onclick=()=>wrap.remove();wrap.append(input,upload,remove);$("homeTrendingFields").appendChild(wrap);}
 $("addTrendingImage").onclick=()=>addTrendingImageField();
+["homeHeroImage","homeCatTshirts","homeCatHoodies","homeCatBottomwear","homeCatSweatshirts","homeCatPolos"].forEach(id=>{const input=$(id);const upload=makeUploadButton(input,"homepage");input.parentElement.appendChild(upload);});
 async function loadContent(){const {data,error}=await db.from("site_content").select("content").eq("section_key","homepage_images").maybeSingle();if(error){$("homeImagesPreview").textContent=error.message;return;}const c=data?.content||{}; $("homeHeroImage").value=c.hero||"";const cats=c.categories||{};["tshirts","hoodies","bottomwear","sweatshirts","polos"].forEach(k=>$("homeCat"+k[0].toUpperCase()+k.slice(1)).value=cats[k]||"");$("homeTrendingFields").innerHTML="";(c.trending||[""]).forEach(url=>addTrendingImageField(url));$("homeImagesPreview").textContent=JSON.stringify(c,null,2);}
 $("homeImagesForm").addEventListener("submit",async e=>{e.preventDefault();const content={hero:$("homeHeroImage").value.trim(),categories:{tshirts:$("homeCatTshirts").value.trim(),hoodies:$("homeCatHoodies").value.trim(),bottomwear:$("homeCatBottomwear").value.trim(),sweatshirts:$("homeCatSweatshirts").value.trim(),polos:$("homeCatPolos").value.trim()},trending:[...document.querySelectorAll(".trending-image-url")].map(x=>x.value.trim()).filter(Boolean)};const {error}=await db.from("site_content").upsert({section_key:"homepage_images",content,updated_at:new Date().toISOString()},{onConflict:"section_key"});showMessage("homeImagesMessage",error?error.message:"Homepage images saved successfully.",!!error);if(!error)$("homeImagesPreview").textContent=JSON.stringify(content,null,2);});
 
