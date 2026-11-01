@@ -180,17 +180,59 @@ function makeUploadButton(input,folder){
 }
 
 async function checkAdmin(){
- const {data:{session}}=await db.auth.getSession();
- if(!session){showLogin();return}
- const {data,error}=await db.from("admin_users").select("id,role").eq("id",session.user.id).maybeSingle();
- if(error || !data || data.role!=="admin"){await db.auth.signOut();showLogin("This account is not authorized as a LAREL administrator.");return}
- currentUser=session.user;$("adminEmail").textContent=currentUser.email||"Admin";
- $("loginScreen").classList.add("hidden");$("adminApp").classList.remove("hidden");await loadDashboard();
+ try{
+  const {data:{session},error:sessionError}=await db.auth.getSession();
+  if(sessionError)throw sessionError;
+  if(!session){showLogin("Please sign in to continue.");return false;}
+  const {data,error}=await db.from("admin_users").select("id,role").eq("id",session.user.id).maybeSingle();
+  if(error)throw new Error("Admin verification failed: "+error.message);
+  if(!data || data.role!=="admin"){
+   await db.auth.signOut();
+   showLogin("This account is signed in, but it is not listed as a LAREL admin. Check the admin_users table and role = admin.");
+   return false;
+  }
+  currentUser=session.user;$("adminEmail").textContent=currentUser.email||"Admin";
+  $("loginScreen").classList.add("hidden");$("adminApp").classList.remove("hidden");
+  try{await loadDashboard();}catch(dashboardError){console.error("Dashboard load failed:",dashboardError);showMessage("dashboardMessage","Dashboard could not load: "+(dashboardError.message||dashboardError));}
+  return true;
+ }catch(error){
+  console.error("Admin check failed:",error);
+  showLogin(error.message||"Could not verify admin access. Please try again.");
+  return false;
+ }
 }
 function showLogin(msg=""){ $("adminApp").classList.add("hidden");$("loginScreen").classList.remove("hidden");$("loginMessage").textContent=msg; }
-$("loginForm").addEventListener("submit",async e=>{e.preventDefault();showMessage("loginMessage","Signing in…",false);const {error}=await db.auth.signInWithPassword({email:$("loginEmail").value.trim(),password:$("loginPassword").value});if(error){showMessage("loginMessage",error.message)}else{await checkAdmin()}});
-$("logoutBtn").addEventListener("click",async()=>{await db.auth.signOut();currentUser=null;showLogin("You have signed out.");});
-db.auth.onAuthStateChange((_event,session)=>{if(!session){currentUser=null;showLogin()}});
+let loginInProgress=false;
+$("loginForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ if(loginInProgress)return;
+ loginInProgress=true;
+ const button=$("loginForm").querySelector('button[type="submit"]');
+ if(button){button.disabled=true;button.textContent="Signing in…";}
+ showMessage("loginMessage","Signing in…",false);
+ try{
+  const {error}=await db.auth.signInWithPassword({email:$("loginEmail").value.trim(),password:$("loginPassword").value});
+  if(error){showMessage("loginMessage",error.message);return;}
+  await checkAdmin();
+ }catch(error){
+  console.error("Admin sign-in failed:",error);
+  showLogin(error.message||"Sign in failed. Please try again.");
+ }finally{
+  loginInProgress=false;
+  if(button){button.disabled=false;button.textContent="Sign in";}
+ }
+});
+$("logoutBtn").addEventListener("click",async()=>{
+ try{await db.auth.signOut();currentUser=null;showLogin("You have signed out.");}
+ catch(error){showLogin(error.message||"Could not sign out.");}
+});
+db.auth.onAuthStateChange((event,session)=>{
+ if(event==="SIGNED_OUT"){
+  currentUser=null;
+  $("adminApp").classList.add("hidden");
+  $("loginScreen").classList.remove("hidden");
+ }
+});
 const viewInfo={dashboard:["Dashboard","Your store at a glance."],products:["Products","Manage the LAREL product catalog."],orders:["Orders","Review orders and update fulfilment status."],customers:["Customer CRM","Customer profiles, order history and lifetime spend."],content:["Website Content","Manage content records for future storefront sync."],reports:["Sales Reports","Filter, review and export your saved order data."],profit:["Profit & Loss","Track sales and manually recorded business expenses."],coupons:["Coupons","Create and manage discount codes."],notifications:["Notifications","Monitor new orders saved in your store database."]};
 function openView(name){document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));$(name+"View").classList.add("active");document.querySelectorAll(".nav[data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===name));$("pageTitle").textContent=viewInfo[name][0];$("pageSubtitle").textContent=viewInfo[name][1];$("sidebar").classList.remove("open");if(name==="dashboard")loadDashboard();if(name==="products")loadProducts();if(name==="orders")loadOrders();if(name==="customers")loadCustomers();if(name==="content")loadContent();if(name==="reports")loadReports();if(name==="profit")loadProfit();if(name==="coupons")loadCoupons();if(name==="notifications")loadNotifications();}
 document.querySelectorAll(".nav[data-view]").forEach(b=>b.addEventListener("click",()=>openView(b.dataset.view)));
