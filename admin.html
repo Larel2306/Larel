@@ -17,7 +17,9 @@
 @media(max-width:900px){.app{grid-template-columns:1fr}.sidebar{position:fixed;z-index:10;left:-270px;width:250px;transition:.25s}.sidebar.open{left:0}.mobile-menu{display:inline-flex}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.main{padding:20px 15px}}
 @media(max-width:520px){.stats{gap:9px}.stat{padding:14px}.stat strong{font-size:21px}.topbar h1{font-size:20px}.form-grid{grid-template-columns:1fr}.form-grid .wide{grid-column:auto}.login-card{padding:25px}}
 </style>
-<style id="larel-coupon-multiselect-style">#couponProduct{width:100%;min-height:148px;padding:10px;border:1px solid rgba(0,210,255,.28);border-radius:10px;background:#071522;color:#f5f8fc;font:inherit}#couponProduct option{padding:7px 9px}#couponProduct option:checked{background:#075b78 linear-gradient(0deg,#075b78 0%,#075b78 100%);color:#fff}#couponSelectionCount{color:#00d2ff}</style>
+<style id="larel-coupon-multiselect-style">
+.coupon-product-picker{position:relative;width:100%}.coupon-picker-trigger{display:flex;align-items:center;gap:10px;width:100%;min-height:44px;padding:10px 13px;border:1px solid rgba(0,210,255,.28);border-radius:11px;background:linear-gradient(135deg,#091a2a,#071522);color:#f5f8fc;text-align:left;cursor:pointer}.coupon-picker-trigger:focus,.coupon-picker-trigger:hover{border-color:#00c8f0;box-shadow:0 0 0 3px rgba(0,210,255,.08)}.coupon-picker-trigger .picker-summary{flex:1;color:#b9cbd8;font-size:13px}.coupon-picker-trigger .picker-arrow{color:#00d2ff}.coupon-picker-menu{position:absolute;z-index:30;top:calc(100% + 7px);left:0;right:0;padding:10px;border:1px solid rgba(0,210,255,.25);border-radius:13px;background:#071522;box-shadow:0 16px 38px rgba(0,0,0,.42)}.coupon-picker-menu.hidden{display:none}.coupon-picker-search{width:100%;margin-bottom:8px!important;background:#0b2032!important}.coupon-picker-results{max-height:220px;overflow:auto;display:grid;gap:5px}.coupon-product-option{display:flex;align-items:center;gap:9px;width:100%;padding:9px 10px;border:1px solid transparent;border-radius:9px;background:transparent;color:#eaf5fb;text-align:left;cursor:pointer;font:inherit}.coupon-product-option:hover{background:rgba(0,210,255,.08)}.coupon-product-option.selected{border-color:rgba(0,195,255,.45);background:rgba(0,145,205,.22);color:#fff}.coupon-product-option .picker-check{width:17px;height:17px;display:grid;place-items:center;border:1px solid #527084;border-radius:5px;color:transparent;font-size:11px;flex:none}.coupon-product-option.selected .picker-check{background:#00aee0;border-color:#00d2ff;color:#00131e}.coupon-selected-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.coupon-selected-chip{display:inline-flex;align-items:center;gap:7px;padding:5px 9px;border:1px solid rgba(0,210,255,.25);border-radius:999px;background:rgba(0,145,205,.13);color:#dff8ff;font-size:11px}.coupon-selected-chip button{border:0;background:none;color:#00d2ff;cursor:pointer;font-size:14px;padding:0}.coupon-picker-note{font-size:11px;color:#8da8b9;margin-top:6px}.coupon-native-select{display:none!important}
+</style>
 <style id="larel-unlimited-hero-admin">.hero-image-row input{min-width:0}.hero-image-row .file-upload{min-width:112px}@media(max-width:600px){.hero-image-row{grid-template-columns:1fr!important}.hero-image-row .hero-image-alt{grid-column:1!important}}</style></head>
 <body>
 <section id="loginScreen" class="login-wrap">
@@ -87,7 +89,7 @@
   </section>
   <section id="couponsView" class="view">
    <div class="section-head"><h2>Coupon Management</h2><button class="btn secondary tiny" id="refreshCoupons">Refresh</button></div>
-   <div class="panel"><form id="couponForm" class="form-grid"><div><label>Coupon Code</label><input id="couponCode" required placeholder="LAREL10"></div><div><label>Discount Type</label><select id="couponType"><option value="percentage">Percentage (%)</option><option value="fixed">Fixed amount (₹)</option></select></div><div><label>Discount Value</label><input id="couponValue" type="number" min="0.01" step="0.01" required></div><div class="wide"><label for="couponProduct">Applies To Products</label><select id="couponProduct" multiple size="6" aria-describedby="couponProductHelp"></select><div class="actions" style="margin-top:8px"><button type="button" class="btn secondary tiny" id="couponSelectAll">Select all products</button><button type="button" class="btn secondary tiny" id="couponClearProducts">Clear selection</button></div><small class="muted" id="couponProductHelp">Select any number of products. No selection means All Products. Use Ctrl (Windows) or Cmd (Mac) to select multiple items.</small><div id="couponSelectionCount" class="muted" style="font-size:11px;margin-top:5px">All products selected</div></div><div><label>Minimum Order Value (₹)</label><input id="couponMin" type="number" min="0" step="0.01" value="0"></div><div><label>Maximum Discount (₹, optional)</label><input id="couponMax" type="number" min="0" step="0.01"></div><div><label>Usage Limit (optional)</label><input id="couponLimit" type="number" min="1" step="1"></div><div><label>Expiry Date (optional)</label><input id="couponExpiry" type="date"></div><div><label>Active?</label><select id="couponActive"><option value="true">Yes</option><option value="false">No</option></select></div><div class="wide"><button class="btn" type="submit">Create Coupon</button><span id="couponMessage" class="message"></span></div></form></div>
+   <div class="panel"><form id="couponForm" class="form-grid"><div><label>Coupon Code</label><input id="couponCode" required placeholder="LAREL10"></div><div><label>Discount Type</label><select id="couponType"><option value="percentage">Percentage (%)</option><option value="fixed">Fixed amount (₹)</option></select></div><div><label>Discount Value</label><input id="couponValue" type="number" min="0.01" step="0.01" required></div><div class="wide"><label for="couponProductSearch">Apply To Products</label><div class="coupon-product-picker"><button type="button" class="coupon-picker-trigger" id="couponPickerToggle" aria-expanded="false"><i class="fa-solid fa-magnifying-glass" style="color:#00d2ff"></i><span class="picker-summary" id="couponSelectionCount">All products (store-wide)</span><i class="fa-solid fa-chevron-down picker-arrow"></i></button><div class="coupon-picker-menu hidden" id="couponPickerMenu"><input id="couponProductSearch" class="coupon-picker-search" type="search" placeholder="Search any product..." autocomplete="off"><div class="coupon-picker-results" id="couponProductResults"></div></div><div class="coupon-selected-chips" id="couponSelectedChips"></div></div><select id="couponProduct" class="coupon-native-select" multiple aria-hidden="true" tabindex="-1"></select><div class="coupon-picker-note">Search and tap products to select multiple. Selected products turn blue. Leave empty to apply to all products.</div></div><div><label>Minimum Order Value (₹)</label><input id="couponMin" type="number" min="0" step="0.01" value="0"></div><div><label>Maximum Discount (₹, optional)</label><input id="couponMax" type="number" min="0" step="0.01"></div><div><label>Usage Limit (optional)</label><input id="couponLimit" type="number" min="1" step="1"></div><div><label>Expiry Date (optional)</label><input id="couponExpiry" type="date"></div><div><label>Active?</label><select id="couponActive"><option value="true">Yes</option><option value="false">No</option></select></div><div class="wide"><button class="btn" type="submit">Create Coupon</button><span id="couponMessage" class="message"></span></div></form></div>
    <div class="panel table-wrap"><table><thead><tr><th>Code</th><th>Discount</th><th>Applies To</th><th>Minimum Order</th><th>Expiry</th><th>Usage</th><th>Status</th><th>Action</th></tr></thead><tbody id="couponRows"><tr><td colspan="8" class="empty">Loading…</td></tr></tbody></table></div>
    <p class="muted" style="font-size:11px">A coupon set to All Products is store-wide. A coupon assigned to a product is restricted to that product. Checkout validation and redemption still need to be connected to the storefront before customers can use coupons.</p>
   </section>
@@ -399,19 +401,45 @@ function couponProductIds(value){
  try{const parsed=JSON.parse(raw);if(Array.isArray(parsed))return parsed.map(String);if(typeof parsed==="string")return [parsed];}catch(_){}
  return [raw];
 }
+function selectedCouponProducts(){return [...$("couponProduct").selectedOptions];}
 function updateCouponSelectionCount(){
- const selected=[...$("couponProduct").selectedOptions];
- $("couponSelectionCount").textContent=selected.length?selected.length+" product"+(selected.length===1?"":"s")+" selected":"All products selected";
+ const selected=selectedCouponProducts();
+ $("couponSelectionCount").textContent=selected.length?selected.length+" product"+(selected.length===1?"":"s")+" selected":"All products (store-wide)";
+ $("couponSelectedChips").innerHTML=selected.map(o=>'<span class="coupon-selected-chip">'+safe(o.textContent)+'<button type="button" data-remove-coupon-product="'+safe(o.value)+'" aria-label="Remove '+safe(o.textContent)+'">×</button></span>').join("");
+ renderCouponProductOptions();
 }
-$("couponSelectAll").addEventListener("click",()=>{
- [...$("couponProduct").options].forEach(option=>option.selected=true);
+function renderCouponProductOptions(){
+ const term=$("couponProductSearch").value.trim().toLowerCase();
+ const options=[...$("couponProduct").options].filter(o=>o.textContent.toLowerCase().includes(term));
+ $("couponProductResults").innerHTML=options.map(o=>'<button type="button" class="coupon-product-option '+(o.selected?"selected":"")+'" data-coupon-product="'+safe(o.value)+'"><span class="picker-check"><i class="fa-solid fa-check"></i></span><span>'+safe(o.textContent)+'</span></button>').join("")||'<div class="coupon-picker-note" style="padding:10px">No matching products found.</div>';
+}
+function toggleCouponProduct(id){
+ const option=[...$("couponProduct").options].find(o=>o.value===id);
+ if(!option)return;
+ option.selected=!option.selected;
  updateCouponSelectionCount();
+}
+$("couponPickerToggle").addEventListener("click",()=>{
+ const menu=$("couponPickerMenu"),opening=menu.classList.contains("hidden");
+ menu.classList.toggle("hidden",!opening);
+ $("couponPickerToggle").setAttribute("aria-expanded",String(opening));
+ if(opening){$("couponProductSearch").focus();renderCouponProductOptions();}
 });
-$("couponClearProducts").addEventListener("click",()=>{
- [...$("couponProduct").options].forEach(option=>option.selected=false);
- updateCouponSelectionCount();
+$("couponProductSearch").addEventListener("input",renderCouponProductOptions);
+$("couponProductResults").addEventListener("click",e=>{
+ const button=e.target.closest("[data-coupon-product]");
+ if(button)toggleCouponProduct(button.dataset.couponProduct);
 });
-$("couponProduct").addEventListener("change",updateCouponSelectionCount);
+$("couponSelectedChips").addEventListener("click",e=>{
+ const button=e.target.closest("[data-remove-coupon-product]");
+ if(button)toggleCouponProduct(button.dataset.removeCouponProduct);
+});
+document.addEventListener("click",e=>{
+ if(!e.target.closest(".coupon-product-picker")){
+  $("couponPickerMenu").classList.add("hidden");
+  $("couponPickerToggle").setAttribute("aria-expanded","false");
+ }
+});
 async function loadCoupons(){
  const [couponResult,productResult]=await Promise.all([
   db.from("coupons").select("*").order("created_at",{ascending:false}),
