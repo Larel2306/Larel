@@ -1117,13 +1117,14 @@ function toggleMenu() {
 (async function(){try{const client=window.supabase.createClient("https://gghpenzosdqudtqhpekp.supabase.co","sb_publishable_LgOR6E51qGFLRcIecWqA3w_kHHoGtVa");const {data,error}=await client.from("site_content").select("content").eq("section_key","homepage_images").maybeSingle();if(error||!data?.content)return;const c=data.content;const set=(sel,url)=>{if(url){const el=document.querySelector(sel);if(el)el.src=url;}};set('[data-home-image="hero"]',c.hero);Object.entries(c.categories||{}).forEach(([k,v])=>set('[data-home-image="cat-'+k+'"]',v));const trending=c.trending||[];const track=document.querySelector(".horizontal-scroll");const existing=[...document.querySelectorAll("[data-home-trending]")];existing.forEach((img,i)=>{const card=img.closest(".scroll-card");if(card)card.style.display=i<trending.length?"":"none";if(trending[i])img.src=trending[i];});if(track){for(let i=existing.length;i<trending.length;i++){const card=document.createElement("a");card.className="scroll-card";card.href="https://larel2306.github.io/Larel/Shop.html";card.innerHTML='<img alt="LAREL Trending Drop"><div class="card-overlay"><h3>New Trending Drop</h3><span>Explore collection</span></div>';card.querySelector("img").src=trending[i];card.dataset.homeTrendingExtra=String(i);track.appendChild(card);}}}catch(e){console.error("Homepage image sync:",e);}})();</script>
 <script>
 (function(){
- const labels={tshirts:"T-Shirts",hoodies:"Hoodies",jackets:"Jackets",bottomwear:"Bottomwear",kidswear:"Kids Wear",sweatshirts:"Sweatshirts",polos:"Polos"};
- const route={tshirts:"Tshirt",hoodies:"Hoodies",jackets:"Jackets",bottomwear:"Bottomwear",kidswear:"Kidswear",sweatshirts:"Sweatshirt",polos:"Tshirt"};
+ const labels={tshirts:"T-Shirts",hoodies:"Hoodies",jackets:"Jackets",bottomwear:"Bottomwear",sweatshirts:"Sweatshirts",polos:"Polos"};
+ const route={tshirts:"Tshirt",hoodies:"Hoodies",jackets:"Jackets",bottomwear:"Bottomwear",sweatshirts:"Sweatshirt",polos:"Tshirt"};
  const safe=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
  function draw(products,selected){
   const chips=document.getElementById("homeProductCategories"),grid=document.getElementById("homeProductGrid");if(!chips||!grid)return;
   // Keep every storefront category visible, even when it currently has no products.
-  const standardCats=["tshirts","hoodies","jackets","bottomwear","kidswear","sweatshirts","polos"];
+  products=products.filter(p=>String(p.category||"").toLowerCase()!=="kidswear");
+  const standardCats=["tshirts","hoodies","jackets","bottomwear","sweatshirts","polos"];
   const extraCats=[...new Set(products.map(p=>String(p.category||"other").toLowerCase()))].filter(c=>!standardCats.includes(c));
   const cats=[...standardCats,...extraCats];
   chips.innerHTML=["all",...cats].map(c=>'<button type="button" class="larel-home-category-chip '+(c===selected?'active':'')+'" data-home-cat="'+safe(c)+'">'+(c==="all"?"All":safe(labels[c]||c.replace(/\\b\\w/g,x=>x.toUpperCase())))+'</button>').join("");
