@@ -329,19 +329,56 @@ async function loadProfit(){
 $("expenseForm").addEventListener("submit",async e=>{e.preventDefault();const payload={expense_date:$("expenseDate").value,category:$("expenseCategory").value,description:$("expenseDescription").value.trim(),amount:Number($("expenseAmount").value)};const {error}=await db.from("expenses").insert(payload);if(error){showMessage("expenseMessage",error.message);return;}showMessage("expenseMessage","Expense saved.",false);$("expenseDescription").value="";$("expenseAmount").value="";loadProfit();});
 window.deleteExpense=async id=>{if(!confirm("Delete this expense record?"))return;const {error}=await db.from("expenses").delete().eq("id",id);if(error)alert(error.message);else loadProfit();};
 $("refreshProfit").onclick=loadProfit;
+function couponProductIds(value){
+ if(!value)return [];
+ const raw=String(value);
+ try{const parsed=JSON.parse(raw);if(Array.isArray(parsed))return parsed.map(String);if(typeof parsed==="string")return [parsed];}catch(_){}
+ return [raw];
+}
+function updateCouponSelectionCount(){
+ const selected=[...$("couponProduct").selectedOptions];
+ $("couponSelectionCount").textContent=selected.length?selected.length+" product"+(selected.length===1?"":"s")+" selected":"All products selected";
+}
+$("couponSelectAll").addEventListener("click",()=>{
+ [...$("couponProduct").options].forEach(option=>option.selected=true);
+ updateCouponSelectionCount();
+});
+$("couponClearProducts").addEventListener("click",()=>{
+ [...$("couponProduct").options].forEach(option=>option.selected=false);
+ updateCouponSelectionCount();
+});
+$("couponProduct").addEventListener("change",updateCouponSelectionCount);
 async function loadCoupons(){
  const [couponResult,productResult]=await Promise.all([
   db.from("coupons").select("*").order("created_at",{ascending:false}),
   db.from("products").select("product_id,title").order("title")
  ]);
- const productMap=new Map((productResult.data||[]).map(p=>[String(p.product_id),p.title]));
- const selector=$("couponProduct"),previous=selector.value;
- selector.innerHTML='<option value="">All Products</option>'+(productResult.data||[]).map(p=>'<option value="'+safe(p.product_id)+'">'+safe(p.title)+' ('+safe(p.product_id)+')</option>').join("");
- if([...selector.options].some(o=>o.value===previous))selector.value=previous;
+ const products=productResult.data||[];
+ const productMap=new Map(products.map(p=>[String(p.product_id),p.title]));
+ const selector=$("couponProduct");
+ const previous=[...selector.selectedOptions].map(o=>o.value);
+ selector.innerHTML=products.map(p=>'<option value="'+safe(p.product_id)+'">'+safe(p.title)+' ('+safe(p.product_id)+')</option>').join("");
+ previous.forEach(id=>{const option=[...selector.options].find(o=>o.value===id);if(option)option.selected=true;});
+ updateCouponSelectionCount();
  const {data,error}=couponResult;
- $("couponRows").innerHTML=error?'<tr><td colspan="8" class="empty">Database setup required: '+safe(error.message)+'</td></tr>':(data||[]).map(c=>'<tr><td>'+safe(c.code)+'</td><td>'+safe(c.discount_type==="percentage"?c.discount_value+"%":money(c.discount_value))+'</td><td>'+safe(c.product_id?productMap.get(String(c.product_id))||c.product_id:"All Products")+'</td><td>'+money(c.min_order_value)+'</td><td>'+safe(c.expires_at||"No expiry")+'</td><td>'+Number(c.usage_count||0)+' / '+safe(c.usage_limit||"∞")+'</td><td><span class="pill">'+(c.is_active?"Active":"Inactive")+'</span></td><td><button class="btn secondary tiny" onclick="toggleCoupon(\''+safe(c.id)+'\','+(!c.is_active)+')">'+(c.is_active?"Disable":"Enable")+'</button> <button class="btn danger tiny" onclick="deleteCoupon(\''+safe(c.id)+'\')">Delete</button></td></tr>').join("")||'<tr><td colspan="8" class="empty">No coupons created yet.</td></tr>';
+ $("couponRows").innerHTML=error?'<tr><td colspan="8" class="empty">Database setup required: '+safe(error.message)+'</td></tr>':(data||[]).map(c=>{
+  const ids=couponProductIds(c.product_id);
+  const applies=ids.length?ids.map(id=>productMap.get(id)||id).join(", "):"All Products";
+  return '<tr><td>'+safe(c.code)+'</td><td>'+safe(c.discount_type==="percentage"?c.discount_value+"%":money(c.discount_value))+'</td><td>'+safe(applies)+'</td><td>'+money(c.min_order_value)+'</td><td>'+safe(c.expires_at||"No expiry")+'</td><td>'+Number(c.usage_count||0)+' / '+safe(c.usage_limit||"∞")+'</td><td><span class="pill">'+(c.is_active?"Active":"Inactive")+'</span></td><td><button class="btn secondary tiny" onclick="toggleCoupon(\\''+safe(c.id)+'\\','+(!c.is_active)+')">'+(c.is_active?"Disable":"Enable")+'</button> <button class="btn danger tiny" onclick="deleteCoupon(\\''+safe(c.id)+'\\')">Delete</button></td></tr>';
+ }).join("")||'<tr><td colspan="8" class="empty">No coupons created yet.</td></tr>';
 }
-$("couponForm").addEventListener("submit",async e=>{e.preventDefault();const code=$("couponCode").value.trim().toUpperCase();const type=$("couponType").value,value=Number($("couponValue").value);if(type==="percentage"&&value>100){showMessage("couponMessage","Percentage discount cannot exceed 100%.");return;}const payload={code,product_id:$("couponProduct").value||null,discount_type:type,discount_value:value,min_order_value:Number($("couponMin").value||0),max_discount:$("couponMax").value?Number($("couponMax").value):null,usage_limit:$("couponLimit").value?Number($("couponLimit").value):null,expires_at:$("couponExpiry").value||null,is_active:$("couponActive").value==="true"};const {error}=await db.from("coupons").insert(payload);if(error){showMessage("couponMessage",error.message);return;}showMessage("couponMessage","Coupon created successfully.",false);$("couponForm").reset();$("couponMin").value="0";loadCoupons();});
+$("couponForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ const code=$("couponCode").value.trim().toUpperCase();
+ const type=$("couponType").value,value=Number($("couponValue").value);
+ const selectedProducts=[...$("couponProduct").selectedOptions].map(o=>o.value);
+ if(type==="percentage"&&value>100){showMessage("couponMessage","Percentage discount cannot exceed 100%.");return;}
+ const payload={code,product_id:selectedProducts.length?JSON.stringify(selectedProducts):null,discount_type:type,discount_value:value,min_order_value:Number($("couponMin").value||0),max_discount:$("couponMax").value?Number($("couponMax").value):null,usage_limit:$("couponLimit").value?Number($("couponLimit").value):null,expires_at:$("couponExpiry").value||null,is_active:$("couponActive").value==="true"};
+ const {error}=await db.from("coupons").insert(payload);
+ if(error){showMessage("couponMessage",error.message);return;}
+ showMessage("couponMessage","Coupon created successfully.",false);
+ $("couponForm").reset();$("couponMin").value="0";updateCouponSelectionCount();loadCoupons();
+});
 window.toggleCoupon=async(id,active)=>{const {error}=await db.from("coupons").update({is_active:active}).eq("id",id);if(error)alert(error.message);else loadCoupons();};
 window.deleteCoupon=async id=>{if(!confirm("Delete this coupon?"))return;const {error}=await db.from("coupons").delete().eq("id",id);if(error)alert(error.message);else loadCoupons();};
 $("refreshCoupons").onclick=loadCoupons;
