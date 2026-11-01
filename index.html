@@ -926,6 +926,37 @@ body { background:#020b12; color:#fff; }
 @media(max-width:760px){.hero.editorial-hero{aspect-ratio:3/1}.hero-carousel-dots{bottom:8px;gap:6px;padding:6px 9px}.hero-carousel-dot{width:6px;height:6px}.hero-carousel-dot.active{width:18px}.larel-edit-section{padding:32px 14px}.larel-edit-heading{align-items:flex-end;margin-bottom:15px}.larel-edit-heading p{font-size:11px;max-width:230px}.larel-edit-all{font-size:9px}.larel-edit-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.larel-edit-card{height:clamp(165px,48vw,230px);padding:9px}.larel-edit-card img{padding:5px}.larel-edit-number{top:8px;left:8px;font-size:7px;letter-spacing:.6px}.larel-edit-name{font-size:9px;line-height:1.35}.larel-edit-name i{font-size:8px;margin-left:2px}}
 @media(prefers-reduced-motion:reduce){.hero-carousel-track,.larel-edit-card img{transition:none}}
 
+
+/* LAREL homepage collection refresh */
+.larel-wide-edit{position:relative;width:100%;height:clamp(390px,68vw,690px);min-height:390px;margin:clamp(28px,5vw,68px) 0;overflow:hidden;background:#050914;isolation:isolate}
+.larel-wide-edit>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 42%;z-index:-2}
+.larel-wide-edit-shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(2,5,13,.94),rgba(2,5,13,.68) 40%,rgba(2,5,13,.08));z-index:-1}
+.larel-wide-edit-copy{position:absolute;left:clamp(22px,8vw,120px);top:50%;transform:translateY(-50%);max-width:560px;padding:24px 0}
+.larel-wide-edit-copy>span{display:block;color:#00d2ff;font-size:11px;font-weight:800;letter-spacing:3px;margin-bottom:15px}
+.larel-wide-edit-copy h2{font-size:clamp(38px,7vw,82px);line-height:.98;letter-spacing:-2px;color:#fff;font-weight:900;margin:0 0 18px}
+.larel-wide-edit-copy p{color:#cbd5e1;font-size:clamp(13px,1.5vw,17px);margin:0 0 28px}
+.larel-wide-edit-copy a,.larel-home-products-head>a{display:inline-flex;align-items:center;gap:12px;padding:14px 20px;background:#00d2ff;color:#04101b;text-decoration:none;font-size:11px;font-weight:900;letter-spacing:1.2px;border-radius:2px}
+.larel-home-products{padding:clamp(34px,5vw,68px) clamp(16px,6vw,88px);background:linear-gradient(180deg,#070d19,#04070e);border-top:1px solid rgba(0,210,255,.12)}
+.larel-home-products-head{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-bottom:24px}
+.larel-home-products-head h2{font-size:clamp(25px,4vw,42px);font-weight:900;letter-spacing:-1px;color:#fff;margin:0}
+.larel-home-products-head p{color:#91a0b5;font-size:13px;margin:8px 0 0}
+.larel-home-products-head>a{white-space:nowrap;padding:11px 15px}
+.larel-home-category-chips{display:flex;gap:9px;overflow-x:auto;padding:4px 0 18px;scrollbar-width:thin}
+.larel-home-category-chip{flex:0 0 auto;border:1px solid rgba(0,210,255,.24);background:#0b1423;color:#b8c5d6;padding:9px 15px;border-radius:30px;font-size:11px;font-weight:800;cursor:pointer;transition:.2s}
+.larel-home-category-chip.active,.larel-home-category-chip:hover{background:#00d2ff;color:#04101b;border-color:#00d2ff}
+.larel-home-product-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.larel-home-product-card{min-width:0;background:#09111f;border:1px solid rgba(0,210,255,.10);text-decoration:none;color:#fff;transition:transform .2s,border-color .2s;overflow:hidden}
+.larel-home-product-card:hover{transform:translateY(-4px);border-color:rgba(0,210,255,.55)}
+.larel-home-product-image{width:100%;aspect-ratio:4/5;background:#101a29;overflow:hidden}
+.larel-home-product-image img{width:100%;height:100%;object-fit:cover;display:block}
+.larel-home-product-info{padding:13px 14px 16px}
+.larel-home-product-info small{display:block;color:#00d2ff;text-transform:uppercase;letter-spacing:1.3px;font-size:9px;font-weight:800;margin-bottom:7px}
+.larel-home-product-info h3{font-size:13px;line-height:1.4;font-weight:700;margin:0 0 8px;color:#f8fafc}
+.larel-home-product-info strong{font-size:14px;color:#fff}
+.larel-home-products-loading,.larel-home-empty{grid-column:1/-1;color:#94a3b8;padding:28px 0;text-align:center}
+@media(max-width:850px){.larel-home-product-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}}
+@media(max-width:560px){.larel-wide-edit{height:440px;min-height:440px;margin:26px 0}.larel-wide-edit>img{object-position:58% center}.larel-wide-edit-shade{background:linear-gradient(90deg,rgba(2,5,13,.9),rgba(2,5,13,.48) 68%,rgba(2,5,13,.2))}.larel-wide-edit-copy{left:20px;right:16px}.larel-wide-edit-copy h2{font-size:42px}.larel-home-products{padding:34px 13px}.larel-home-products-head{align-items:start;flex-direction:column}.larel-home-product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.larel-home-product-info{padding:10px}.larel-home-product-info h3{font-size:11px}.larel-home-product-info strong{font-size:13px}}
+
 </style>
 <style id="larel-style-journal-css">
 .larel-style-journal{max-width:1200px;margin:0 auto;padding:42px 6%}.larel-style-journal .section-title{align-items:end}.journal-kicker{font-size:10px;letter-spacing:3px;color:#00d2ff;font-weight:800;margin-bottom:7px}.journal-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.journal-card{position:relative;display:block;min-height:260px;aspect-ratio:4/5;overflow:hidden;border:1px solid rgba(0,210,255,.22);border-radius:16px;background:#071522;color:#fff;text-decoration:none}.journal-card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}.journal-card:hover img{transform:scale(1.045)}.journal-card:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(2,11,18,.9))}.journal-index,.journal-title{position:absolute;z-index:1;left:18px;right:18px}.journal-index{bottom:58px;color:#00d2ff;font-size:10px;font-weight:800;letter-spacing:1.5px}.journal-title{bottom:22px;font-size:clamp(15px,2vw,22px);font-weight:800}@media(max-width:680px){.journal-grid{grid-template-columns:1fr 1fr;gap:10px}.journal-card{min-height:190px}.journal-card:last-child{grid-column:1/-1;aspect-ratio:16/9}.larel-style-journal{padding:30px 5%}}
@@ -1000,14 +1031,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </section>
 
-<!-- LAREL EDIT — curated discovery section below categories -->
-<section class="larel-edit-section" aria-labelledby="larelEditTitle">
-  <div class="larel-edit-heading"><div><span class="larel-eyebrow">FIND YOUR EVERYDAY LOOK</span><h2 id="larelEditTitle">THE LAREL EDIT</h2><p>Fresh fits. Easy layers. Your own kind of streetwear.</p></div><a href="https://larel2306.github.io/Larel/Shop" class="larel-edit-all">EXPLORE ALL <i class="fa-solid fa-arrow-right"></i></a></div>
-  <div class="larel-edit-grid">
-    <a class="larel-edit-card" href="https://larel2306.github.io/Larel/Shop.html?category=tshirts"><img src="https://raw.githubusercontent.com/Larel2306/Larel/main/assets/category-tshirts.svg" alt="T-shirt collection"><span class="larel-edit-number">01 / DAILY ROTATION</span><span class="larel-edit-name">THE EVERYDAY FIT <i class="fa-solid fa-arrow-up-right-from-square"></i></span></a>
-    <a class="larel-edit-card" href="https://larel2306.github.io/Larel/Shop.html?category=hoodies"><img src="https://i.ibb.co/Jw0xmhDh/Black-Hoodie-with-White-Star-Emblem.png" alt="Hoodie collection"><span class="larel-edit-number">02 / LAYER UP</span><span class="larel-edit-name">OFF-DUTY LAYERS <i class="fa-solid fa-arrow-up-right-from-square"></i></span></a>
-    <a class="larel-edit-card" href="https://larel2306.github.io/Larel/Shop.html?category=bottomwear"><img src="https://raw.githubusercontent.com/Larel2306/Larel/main/assets/category-bottomwear.svg" alt="Bottomwear collection"><span class="larel-edit-number">03 / COMPLETE THE LOOK</span><span class="larel-edit-name">THE FINISHING TOUCH <i class="fa-solid fa-arrow-up-right-from-square"></i></span></a>
-  </div>
+<!-- LAREL full-width editorial collection banner -->
+<section class="larel-wide-edit" aria-label="Discover the LAREL collection">
+ <img src="https://raw.githubusercontent.com/Larel2306/Larel/main/Streetwear%20Redefined_%20Bold%20Urban%20Style.png" alt="LAREL streetwear collection" loading="lazy">
+ <div class="larel-wide-edit-shade"></div><div class="larel-wide-edit-copy"><span>THE NEW STREETWEAR STANDARD</span><h2>OWN YOUR<br>EVERYDAY LOOK.</h2><p>Fresh fits. Easy layers. Your own kind of streetwear.</p><a href="https://larel2306.github.io/Larel/Shop.html">EXPLORE COLLECTION <i class="fa-solid fa-arrow-right"></i></a></div>
 </section>
 
 <!-- LAREL Style Journal -->
@@ -1018,6 +1045,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <a class="journal-card" href="https://larel2306.github.io/Larel/Shop.html?category=hoodies"><img src="https://raw.githubusercontent.com/Larel2306/Larel/main/Streetwear%20Redefined_%20Bold%20Urban%20Style.png" alt="LAREL hoodie style preview"><span class="journal-index">02 / OFF-DUTY LAYERS</span><span class="journal-title">Layer Your Way</span></a>
 <a class="journal-card" href="https://larel2306.github.io/Larel/Shop.html?category=bottomwear"><img src="https://raw.githubusercontent.com/Larel2306/Larel/main/Streetwear%20Redefined_%20Bold%20Urban%20Style.png" alt="LAREL outfit style preview"><span class="journal-index">03 / COMPLETE THE LOOK</span><span class="journal-title">The Finishing Touch</span></a>
 </div></section>
+
+<section class="larel-home-products" id="homeProducts">
+ <div class="larel-home-products-head"><div><span class="larel-eyebrow">THE LAREL COLLECTION</span><h2>SHOP THE LATEST</h2><p>Explore every product currently available in our store.</p></div><a href="https://larel2306.github.io/Larel/Shop.html">VIEW ALL <i class="fa-solid fa-arrow-right"></i></a></div>
+ <div class="larel-home-category-chips" id="homeProductCategories" aria-label="Filter products by category"></div>
+ <div class="larel-home-product-grid" id="homeProductGrid"><p class="larel-home-products-loading">Loading the latest collection...</p></div>
+</section>
 
 <!-- Footer -->
 <footer class="footer">
@@ -1072,7 +1105,7 @@ function toggleMenu() {
 </script>
 
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="products.js"></script><script>
 (async function(){
  const FALLBACK="https://raw.githubusercontent.com/Larel2306/Larel/main/Streetwear%20Redefined_%20Bold%20Urban%20Style.png";let active=0,timer=null;
  function render(raw){const arr=Array.isArray(raw)?raw:(raw?[raw]:[]);const list=arr.map(v=>typeof v==="string"?{image:v}:v).filter(v=>v&&(v.image||v.url||v.src));const slides=list.length?list:[{image:FALLBACK,alt:"LAREL Streetwear campaign"}];const track=document.getElementById("larelHeroTrack"),dots=document.getElementById("larelHeroDots");if(!track||!dots)return;track.innerHTML=slides.map((s,i)=>{const img=s.image||s.url||s.src;const alt=s.alt||s.title||"LAREL campaign";return '<div class="hero-carousel-slide"><img src="'+String(img).replace(/&/g,"&amp;").replace(/"/g,"&quot;")+'" alt="'+String(alt).replace(/&/g,"&amp;").replace(/"/g,"&quot;")+'" loading="'+(i?"lazy":"eager")+'"></div>'}).join("");dots.innerHTML=slides.length>1?slides.map((_,i)=>'<button type="button" class="hero-carousel-dot'+(!i?' active':'')+'" aria-label="Show banner '+(i+1)+'" data-index="'+i+'"></button>').join(""):"";dots.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>go(Number(b.dataset.index),true)));active=0;track.style.transform="translateX(0)";clearInterval(timer);if(slides.length>1)timer=setInterval(()=>go(active+1,false),4500);}
@@ -1082,6 +1115,32 @@ function toggleMenu() {
 })();
 </script><script>
 (async function(){try{const client=window.supabase.createClient("https://gghpenzosdqudtqhpekp.supabase.co","sb_publishable_LgOR6E51qGFLRcIecWqA3w_kHHoGtVa");const {data,error}=await client.from("site_content").select("content").eq("section_key","homepage_images").maybeSingle();if(error||!data?.content)return;const c=data.content;const set=(sel,url)=>{if(url){const el=document.querySelector(sel);if(el)el.src=url;}};set('[data-home-image="hero"]',c.hero);Object.entries(c.categories||{}).forEach(([k,v])=>set('[data-home-image="cat-'+k+'"]',v));const trending=c.trending||[];const track=document.querySelector(".horizontal-scroll");const existing=[...document.querySelectorAll("[data-home-trending]")];existing.forEach((img,i)=>{const card=img.closest(".scroll-card");if(card)card.style.display=i<trending.length?"":"none";if(trending[i])img.src=trending[i];});if(track){for(let i=existing.length;i<trending.length;i++){const card=document.createElement("a");card.className="scroll-card";card.href="https://larel2306.github.io/Larel/Shop.html";card.innerHTML='<img alt="LAREL Trending Drop"><div class="card-overlay"><h3>New Trending Drop</h3><span>Explore collection</span></div>';card.querySelector("img").src=trending[i];card.dataset.homeTrendingExtra=String(i);track.appendChild(card);}}}catch(e){console.error("Homepage image sync:",e);}})();</script>
+<script>
+(function(){
+ const labels={tshirts:"T-Shirts",hoodies:"Hoodies",jackets:"Jackets",bottomwear:"Bottomwear",kidswear:"Kids Wear",sweatshirts:"Sweatshirts",polos:"Polos"};
+ const route={tshirts:"Tshirt",hoodies:"Hoodies",jackets:"Jackets",bottomwear:"Bottomwear",kidswear:"Kidswear",sweatshirts:"Sweatshirt",polos:"Tshirt"};
+ const safe=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+ function draw(products,selected){
+  const chips=document.getElementById("homeProductCategories"),grid=document.getElementById("homeProductGrid");if(!chips||!grid)return;
+  const cats=[...new Set(products.map(p=>String(p.category||"other").toLowerCase()))];
+  chips.innerHTML=["all",...cats].map(c=>'<button type="button" class="larel-home-category-chip '+(c===selected?'active':'')+'" data-home-cat="'+safe(c)+'">'+(c==="all"?"All":safe(labels[c]||c.replace(/\b\w/g,x=>x.toUpperCase())))+'</button>').join("");
+  const shown=selected==="all"?products:products.filter(p=>String(p.category||"other").toLowerCase()===selected);
+  grid.innerHTML=shown.map(p=>{
+   const cat=String(p.category||"other").toLowerCase(),image=p.shopImage||Object.values(p.colors||{})[0]?.images?.[0]||"",url="https://larel2306.github.io/Larel/"+(route[cat]||"Tshirt")+"?id="+encodeURIComponent(p.id);
+   return '<a class="larel-home-product-card" href="'+safe(url)+'"><div class="larel-home-product-image"><img src="'+safe(image)+'" alt="'+safe(p.title)+'" loading="lazy"></div><div class="larel-home-product-info"><small>'+safe(labels[cat]||cat)+'</small><h3>'+safe(p.title)+'</h3><strong>₹'+Number(p.price||0).toLocaleString("en-IN")+'</strong></div></a>';
+  }).join("")||'<p class="larel-home-empty">No products available in this category yet.</p>';
+  chips.querySelectorAll("button").forEach(btn=>btn.addEventListener("click",()=>draw(products,btn.dataset.homeCat)));
+ }
+ async function init(){
+  const grid=document.getElementById("homeProductGrid");if(!grid)return;
+  try{if(window.LAREL_PRODUCTS_READY)await window.LAREL_PRODUCTS_READY;
+   const source=window.LAREL_PRODUCTS||{},products=Object.entries(source).map(([id,p])=>({...p,id})).filter(p=>p.title&&(p.shopImage||Object.keys(p.colors||{}).length));
+   draw(products,"all");
+  }catch(e){console.error("LAREL homepage product catalogue:",e);grid.innerHTML='<p class="larel-home-empty">Collection is temporarily unavailable. Please visit the Shop page.</p>';}
+ }
+ if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
+})();
+</script>
 <!-- LAREL customer authentication -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="auth.js"></script>
