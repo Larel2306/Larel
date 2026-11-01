@@ -281,7 +281,7 @@ async function loadReports(){ $("reportRows").innerHTML='<tr><td colspan="6" cla
 $("refreshReports").onclick=loadReports;$("applyReportFilters").onclick=renderReport;
 $("clearReportFilters").onclick=()=>{$("reportFrom").value="";$("reportTo").value="";$("reportStatus").value="";$("reportSearch").value="";renderReport();};
 $("reportSearch").addEventListener("input",renderReport);
-$("exportOrdersCsv").onclick=()=>{const rows=[["Order","Customer","Email","Phone","Total","Payment Method","Payment Status","Order Status","Created At"],...filteredReportOrders.map(o=>[o.order_number||o.id,o.customer_name||"",o.email||"",o.phone||"",o.total_amount||0,o.payment_method||"",o.payment_status||"",o.order_status||"",o.created_at||""])];const csv=rows.map(row=>row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")).join("\\r\\n");const blob=new Blob(["\\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="larel-orders-report.csv";a.click();URL.revokeObjectURL(url);};
+$("exportOrdersCsv").onclick=()=>{const rows=[["Order","Customer","Email","Phone","Total","Payment Method","Payment Status","Order Status","Created At"],...filteredReportOrders.map(o=>[o.order_number||o.id,o.customer_name||"",o.email||"",o.phone||"",o.total_amount||0,o.payment_method||"",o.payment_status||"",o.order_status||"",o.created_at||""])];const csv=rows.map(row=>row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")).join("\r\n");const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="larel-orders-report.csv";a.click();URL.revokeObjectURL(url);};
 
 checkAdmin();
 </script>
