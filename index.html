@@ -897,6 +897,35 @@ body { background:#020b12; color:#fff; }
   .editorial-category-grid .cat-card:nth-child(5) { width: calc(50% - 3px); }
 }
 
+
+/* LAREL unlimited hero carousel + editorial edit section */
+.hero.editorial-hero{aspect-ratio:3/1;height:auto;min-height:0;overflow:hidden;background:#020b12}
+.hero-carousel{position:absolute;inset:0;width:100%;height:100%;overflow:hidden}
+.hero-carousel-track{display:flex;width:100%;height:100%;transition:transform .8s cubic-bezier(.22,.7,.25,1);will-change:transform}
+.hero-carousel-slide{position:relative;flex:0 0 100%;width:100%;height:100%;overflow:hidden;background:#020b12}
+.hero-carousel-slide img{display:block;width:100%;height:100%;object-fit:fill;object-position:center;background:#020b12}
+.hero-carousel-dots{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);display:flex;align-items:center;justify-content:center;gap:8px;z-index:5;padding:7px 11px;border:1px solid rgba(0,210,255,.22);border-radius:30px;background:rgba(2,11,18,.65);backdrop-filter:blur(10px)}
+.hero-carousel-dot{width:7px;height:7px;border:0;border-radius:20px;padding:0;background:rgba(255,255,255,.4);cursor:pointer;transition:width .25s,background .25s}
+.hero-carousel-dot.active{width:23px;background:#00d2ff}
+.larel-edit-section{width:100%;padding:48px 6% 42px;background:linear-gradient(180deg,#020b12 0%,#071522 100%);border-top:1px solid rgba(0,210,255,.12);border-bottom:1px solid rgba(0,210,255,.12)}
+.larel-edit-heading{max-width:1200px;margin:0 auto 22px;display:flex;align-items:flex-end;justify-content:space-between;gap:20px}
+.larel-eyebrow{display:block;margin-bottom:9px;color:#00d2ff;font-size:10px;font-weight:800;letter-spacing:2.8px}
+.larel-edit-heading h2{color:#fff;font-size:clamp(22px,3vw,34px);font-weight:800;letter-spacing:1.4px}
+.larel-edit-heading p{margin-top:7px;color:#91a4b7;font-size:13px}
+.larel-edit-all{flex-shrink:0;color:#00d2ff;text-decoration:none;font-size:11px;font-weight:800;letter-spacing:1px}
+.larel-edit-all i{margin-left:6px;transition:transform .2s}
+.larel-edit-all:hover i{transform:translateX(4px)}
+.larel-edit-grid{max-width:1200px;margin:auto;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.larel-edit-card{height:clamp(210px,27vw,330px);position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:19px;text-decoration:none;background:#091522;border:1px solid rgba(0,210,255,.18);isolation:isolate}
+.larel-edit-card::after{content:"";position:absolute;inset:0;z-index:0;background:linear-gradient(180deg,rgba(2,11,18,.04) 25%,rgba(2,11,18,.92) 100%)}
+.larel-edit-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:12px;transition:transform .45s ease}
+.larel-edit-card:hover img{transform:scale(1.045)}
+.larel-edit-number{position:absolute;top:16px;left:17px;z-index:1;color:#00d2ff;font-size:9px;font-weight:800;letter-spacing:1.6px}
+.larel-edit-name{position:relative;z-index:1;color:#fff;font-size:clamp(12px,1.4vw,17px);font-weight:800;letter-spacing:.5px}
+.larel-edit-name i{margin-left:6px;color:#00d2ff;font-size:11px}
+@media(max-width:760px){.hero.editorial-hero{aspect-ratio:3/1}.hero-carousel-dots{bottom:8px;gap:6px;padding:6px 9px}.hero-carousel-dot{width:6px;height:6px}.hero-carousel-dot.active{width:18px}.larel-edit-section{padding:32px 14px}.larel-edit-heading{align-items:flex-end;margin-bottom:15px}.larel-edit-heading p{font-size:11px;max-width:230px}.larel-edit-all{font-size:9px}.larel-edit-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.larel-edit-card{height:clamp(165px,48vw,230px);padding:9px}.larel-edit-card img{padding:5px}.larel-edit-number{top:8px;left:8px;font-size:7px;letter-spacing:.6px}.larel-edit-name{font-size:9px;line-height:1.35}.larel-edit-name i{font-size:8px;margin-left:2px}}
+@media(prefers-reduced-motion:reduce){.hero-carousel-track,.larel-edit-card img{transition:none}}
+
 </style>
 </head>
 
@@ -954,7 +983,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <h1>LAREL – Independent Print-on-Demand Streetwear</h1>
     <p>LAREL is a locally run independent clothing label offering print-on-demand streetwear, oversized T-shirts, hoodies, sweatshirts, polos and bottomwear. Browse the collection and shop online.</p>
   </div>
-  <img data-home-image="hero" class="lookbook-hero" src="https://raw.githubusercontent.com/Larel2306/Larel/main/Streetwear%20Redefined_%20Bold%20Urban%20Style.png" alt="LAREL Streetwear Redefined campaign">
+  <div class="hero-carousel" id="larelHeroCarousel" aria-label="LAREL campaign banners"><div class="hero-carousel-track" id="larelHeroTrack"><div class="hero-carousel-slide"><img data-home-image="hero" src="https://raw.githubusercontent.com/Larel2306/Larel/main/Streetwear%20Redefined_%20Bold%20Urban%20Style.png" alt="LAREL Streetwear Redefined campaign"></div></div><div class="hero-carousel-dots" id="larelHeroDots" aria-label="Choose banner"></div></div>
 </section>
 
 <!-- Apparel Categories -->
@@ -966,6 +995,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <a href="https://larel2306.github.io/Larel/Shop.html?category=bottomwear" class="cat-card" data-category="bottomwear"><img data-home-image="cat-bottomwear" src="https://raw.githubusercontent.com/Larel2306/Larel/main/assets/category-bottomwear.svg" alt="Utility Cargo Bottomwear"><div class="cat-overlay"><h3>Bottom Wear</h3></div></a>
     <a href="https://larel2306.github.io/Larel/Shop.html?category=Sweatshirt" class="cat-card" data-category="Sweatshirt"><img data-home-image="cat-sweatshirts" src="https://raw.githubusercontent.com/Larel2306/Larel/main/assets/category-sweatshirts.svg" alt="Graphic Streetwear Sweatshirt"><div class="cat-overlay"><h3>Sweatshirts</h3></div></a>
     <a href="https://larel2306.github.io/Larel/Shop.html?category=Polos" class="cat-card" data-category="Polos"><img data-home-image="cat-polos" src="https://raw.githubusercontent.com/Larel2306/Larel/main/assets/category-polos.svg" alt="Premium Graphic Polo"><div class="cat-overlay"><h3>Polos</h3></div></a>
+  </div>
+</section>
+
+<!-- LAREL EDIT — curated discovery section below categories -->
+<section class="larel-edit-section" aria-labelledby="larelEditTitle">
+  <div class="larel-edit-heading"><div><span class="larel-eyebrow">FIND YOUR EVERYDAY LOOK</span><h2 id="larelEditTitle">THE LAREL EDIT</h2><p>Fresh fits. Easy layers. Your own kind of streetwear.</p></div><a href="https://larel2306.github.io/Larel/Shop" class="larel-edit-all">EXPLORE ALL <i class="fa-solid fa-arrow-right"></i></a></div>
+  <div class="larel-edit-grid">
+    <a class="larel-edit-card" href="https://larel2306.github.io/Larel/Shop.html?category=tshirts"><img src="https://raw.githubusercontent.com/Larel2306/Larel/main/assets/category-tshirts.svg" alt="T-shirt collection"><span class="larel-edit-number">01 / DAILY ROTATION</span><span class="larel-edit-name">THE EVERYDAY FIT <i class="fa-solid fa-arrow-up-right-from-square"></i></span></a>
+    <a class="larel-edit-card" href="https://larel2306.github.io/Larel/Shop.html?category=hoodies"><img src="https://i.ibb.co/Jw0xmhDh/Black-Hoodie-with-White-Star-Emblem.png" alt="Hoodie collection"><span class="larel-edit-number">02 / LAYER UP</span><span class="larel-edit-name">OFF-DUTY LAYERS <i class="fa-solid fa-arrow-up-right-from-square"></i></span></a>
+    <a class="larel-edit-card" href="https://larel2306.github.io/Larel/Shop.html?category=bottomwear"><img src="https://raw.githubusercontent.com/Larel2306/Larel/main/assets/category-bottomwear.svg" alt="Bottomwear collection"><span class="larel-edit-number">03 / COMPLETE THE LOOK</span><span class="larel-edit-name">THE FINISHING TOUCH <i class="fa-solid fa-arrow-up-right-from-square"></i></span></a>
   </div>
 </section>
 
@@ -1086,9 +1125,18 @@ setInterval(autoSlide, 3500);
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
+(async function(){
+ const FALLBACK="https://raw.githubusercontent.com/Larel2306/Larel/main/Streetwear%20Redefined_%20Bold%20Urban%20Style.png";let active=0,timer=null;
+ function render(raw){const arr=Array.isArray(raw)?raw:(raw?[raw]:[]);const list=arr.map(v=>typeof v==="string"?{image:v}:v).filter(v=>v&&(v.image||v.url||v.src));const slides=list.length?list:[{image:FALLBACK,alt:"LAREL Streetwear campaign"}];const track=document.getElementById("larelHeroTrack"),dots=document.getElementById("larelHeroDots");if(!track||!dots)return;track.innerHTML=slides.map((s,i)=>{const img=s.image||s.url||s.src;const alt=s.alt||s.title||"LAREL campaign";return '<div class="hero-carousel-slide"><img src="'+String(img).replace(/&/g,"&amp;").replace(/"/g,"&quot;")+'" alt="'+String(alt).replace(/&/g,"&amp;").replace(/"/g,"&quot;")+'" loading="'+(i?"lazy":"eager")+'"></div>'}).join("");dots.innerHTML=slides.length>1?slides.map((_,i)=>'<button type="button" class="hero-carousel-dot'+(!i?' active':'')+'" aria-label="Show banner '+(i+1)+'" data-index="'+i+'"></button>').join(""):"";dots.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>go(Number(b.dataset.index),true)));active=0;track.style.transform="translateX(0)";clearInterval(timer);if(slides.length>1)timer=setInterval(()=>go(active+1,false),4500);}
+ function go(n,manual){const track=document.getElementById("larelHeroTrack"),dots=document.getElementById("larelHeroDots"),count=track?.children.length||0;if(!count)return;active=(n+count)%count;track.style.transform="translateX(-"+active*100+"%)";dots.querySelectorAll("button").forEach((d,i)=>d.classList.toggle("active",i===active));if(manual){clearInterval(timer);timer=setInterval(()=>go(active+1,false),4500);}}
+ render(FALLBACK);
+ try{const client=window.supabase.createClient("https://gghpenzosdqudtqhpekp.supabase.co","sb_publishable_LgOR6E51qGFLRcIecWqA3w_kHHoGtVa");const {data,error}=await client.from("site_content").select("content").eq("section_key","homepage_images").maybeSingle();if(error||!data?.content)return;const c=data.content;render(c.heroSlides||c.hero_slides||c.hero);Object.entries(c.categories||{}).forEach(([k,v])=>{const el=document.querySelector('[data-home-image="cat-'+k+'"]');if(el&&v)el.src=v;});const trending=Array.isArray(c.trending)?c.trending:[];const track=document.querySelector(".horizontal-scroll"),old=[...document.querySelectorAll("[data-home-trending]")];old.forEach((img,i)=>{const card=img.closest(".scroll-card");if(card)card.style.display=i<trending.length?"":"none";if(trending[i])img.src=typeof trending[i]==="string"?trending[i]:(trending[i].image||trending[i].url||"");});if(track){for(let i=old.length;i<trending.length;i++){const item=typeof trending[i]==="string"?{image:trending[i]}:trending[i];const card=document.createElement("a");card.className="scroll-card";card.href="https://larel2306.github.io/Larel/Shop";const img=document.createElement("img");img.alt=item.title||"LAREL Trending Drop";img.src=item.image||item.url||"";const overlay=document.createElement("div");overlay.className="card-overlay";const h=document.createElement("h3");h.textContent=item.title||"New Trending Drop";const sub=document.createElement("span");sub.textContent=item.subtitle||"Explore collection";overlay.append(h,sub);card.append(img,overlay);track.append(card);}}}catch(e){console.error("Homepage image sync:",e);}
+})();
+</script><script>
 (async function(){try{const client=window.supabase.createClient("https://gghpenzosdqudtqhpekp.supabase.co","sb_publishable_LgOR6E51qGFLRcIecWqA3w_kHHoGtVa");const {data,error}=await client.from("site_content").select("content").eq("section_key","homepage_images").maybeSingle();if(error||!data?.content)return;const c=data.content;const set=(sel,url)=>{if(url){const el=document.querySelector(sel);if(el)el.src=url;}};set('[data-home-image="hero"]',c.hero);Object.entries(c.categories||{}).forEach(([k,v])=>set('[data-home-image="cat-'+k+'"]',v));const trending=c.trending||[];const track=document.querySelector(".horizontal-scroll");const existing=[...document.querySelectorAll("[data-home-trending]")];existing.forEach((img,i)=>{const card=img.closest(".scroll-card");if(card)card.style.display=i<trending.length?"":"none";if(trending[i])img.src=trending[i];});if(track){for(let i=existing.length;i<trending.length;i++){const card=document.createElement("a");card.className="scroll-card";card.href="https://larel2306.github.io/Larel/Shop.html";card.innerHTML='<img alt="LAREL Trending Drop"><div class="card-overlay"><h3>New Trending Drop</h3><span>Explore collection</span></div>';card.querySelector("img").src=trending[i];card.dataset.homeTrendingExtra=String(i);track.appendChild(card);}}}catch(e){console.error("Homepage image sync:",e);}})();</script>
 <!-- LAREL customer authentication -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="auth.js"></script>
+<script src="notifications.js"></script>
 </body>
 </html>
