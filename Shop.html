@@ -918,5 +918,6 @@ navbar.querySelectorAll("a").forEach(function(link) {
 <script>
 function showStoreToast(message,type){const el=document.getElementById("storeToast");if(!el)return;el.classList.toggle("error",type==="error");el.querySelector("span").textContent=message;el.classList.add("show");clearTimeout(window.__larelToastTimer);window.__larelToastTimer=setTimeout(()=>el.classList.remove("show"),2600)}
 </script>
+<script src="notifications.js"></script>
 </body>
 </html>
