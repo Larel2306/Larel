@@ -1122,8 +1122,11 @@ function toggleMenu() {
  const safe=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
  function draw(products,selected){
   const chips=document.getElementById("homeProductCategories"),grid=document.getElementById("homeProductGrid");if(!chips||!grid)return;
-  const cats=[...new Set(products.map(p=>String(p.category||"other").toLowerCase()))];
-  chips.innerHTML=["all",...cats].map(c=>'<button type="button" class="larel-home-category-chip '+(c===selected?'active':'')+'" data-home-cat="'+safe(c)+'">'+(c==="all"?"All":safe(labels[c]||c.replace(/\b\w/g,x=>x.toUpperCase())))+'</button>').join("");
+  // Keep every storefront category visible, even when it currently has no products.
+  const standardCats=["tshirts","hoodies","jackets","bottomwear","kidswear","sweatshirts","polos"];
+  const extraCats=[...new Set(products.map(p=>String(p.category||"other").toLowerCase()))].filter(c=>!standardCats.includes(c));
+  const cats=[...standardCats,...extraCats];
+  chips.innerHTML=["all",...cats].map(c=>'<button type="button" class="larel-home-category-chip '+(c===selected?'active':'')+'" data-home-cat="'+safe(c)+'">'+(c==="all"?"All":safe(labels[c]||c.replace(/\\b\\w/g,x=>x.toUpperCase())))+'</button>').join("");
   const shown=selected==="all"?products:products.filter(p=>String(p.category||"other").toLowerCase()===selected);
   grid.innerHTML=shown.map(p=>{
    const cat=String(p.category||"other").toLowerCase(),image=p.shopImage||Object.values(p.colors||{})[0]?.images?.[0]||"",url="https://larel2306.github.io/Larel/"+(route[cat]||"Tshirt")+"?id="+encodeURIComponent(p.id);
