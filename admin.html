@@ -365,7 +365,7 @@ async function loadCoupons(){
  $("couponRows").innerHTML=error?'<tr><td colspan="8" class="empty">Database setup required: '+safe(error.message)+'</td></tr>':(data||[]).map(c=>{
   const ids=couponProductIds(c.product_id);
   const applies=ids.length?ids.map(id=>productMap.get(id)||id).join(", "):"All Products";
-  return '<tr><td>'+safe(c.code)+'</td><td>'+safe(c.discount_type==="percentage"?c.discount_value+"%":money(c.discount_value))+'</td><td>'+safe(applies)+'</td><td>'+money(c.min_order_value)+'</td><td>'+safe(c.expires_at||"No expiry")+'</td><td>'+Number(c.usage_count||0)+' / '+safe(c.usage_limit||"∞")+'</td><td><span class="pill">'+(c.is_active?"Active":"Inactive")+'</span></td><td><button class="btn secondary tiny" onclick="toggleCoupon(\\''+safe(c.id)+'\\','+(!c.is_active)+')">'+(c.is_active?"Disable":"Enable")+'</button> <button class="btn danger tiny" onclick="deleteCoupon(\\''+safe(c.id)+'\\')">Delete</button></td></tr>';
+  return '<tr><td>'+safe(c.code)+'</td><td>'+safe(c.discount_type==="percentage"?c.discount_value+"%":money(c.discount_value))+'</td><td>'+safe(applies)+'</td><td>'+money(c.min_order_value)+'</td><td>'+safe(c.expires_at||"No expiry")+'</td><td>'+Number(c.usage_count||0)+' / '+safe(c.usage_limit||"∞")+'</td><td><span class="pill">'+(c.is_active?"Active":"Inactive")+'</span></td><td><button class="btn secondary tiny" onclick="toggleCoupon(\''+safe(c.id)+'\','+(!c.is_active)+')">'+(c.is_active?"Disable":"Enable")+'</button> <button class="btn danger tiny" onclick="deleteCoupon(\''+safe(c.id)+'\')">Delete</button></td></tr>';
  }).join("")||'<tr><td colspan="8" class="empty">No coupons created yet.</td></tr>';
 }
 $("couponForm").addEventListener("submit",async e=>{
