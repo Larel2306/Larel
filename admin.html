@@ -18,7 +18,7 @@
 @media(max-width:520px){.stats{gap:9px}.stat{padding:14px}.stat strong{font-size:21px}.topbar h1{font-size:20px}.form-grid{grid-template-columns:1fr}.form-grid .wide{grid-column:auto}.login-card{padding:25px}}
 </style>
 <style id="larel-coupon-multiselect-style">#couponProduct{width:100%;min-height:148px;padding:10px;border:1px solid rgba(0,210,255,.28);border-radius:10px;background:#071522;color:#f5f8fc;font:inherit}#couponProduct option{padding:7px 9px}#couponProduct option:checked{background:#075b78 linear-gradient(0deg,#075b78 0%,#075b78 100%);color:#fff}#couponSelectionCount{color:#00d2ff}</style>
-</head>
+<style id="larel-unlimited-hero-admin">.hero-image-row input{min-width:0}.hero-image-row .file-upload{min-width:112px}@media(max-width:600px){.hero-image-row{grid-template-columns:1fr!important}.hero-image-row .hero-image-alt{grid-column:1!important}}</style></head>
 <body>
 <section id="loginScreen" class="login-wrap">
  <div class="login-card">
@@ -111,11 +111,11 @@
 <section id="contentView" class="view">
 <div class="section-head"><h2>Homepage Images</h2><span class="muted">Manage images shown on your home page</span></div>
 <div class="panel"><p class="muted">Upload images directly to LAREL Supabase Storage or paste an image URL. Add unlimited Trending Drops images.</p>
-<form id="homeImagesForm"><h3>Hero / Main banner</h3><label>Hero image URL</label><input id="homeHeroImage" type="url" placeholder="https://..."><span class="home-upload-homeHeroImage"></span>
+<form id="homeImagesForm"><h3>Hero / Main banner</h3><p class="muted" style="font-size:12px;margin:6px 0 12px">Add as many banner slides as you need. Upload an image or paste its URL.</p><div id="homeHeroFields"></div><button type="button" class="btn secondary tiny" id="addHeroImage">+ Add hero banner image</button>
 <h3 style="margin-top:22px">Shop by Category</h3><div class="form-grid">
 <div><label>T-Shirts image URL</label><input id="homeCatTshirts" type="url"><span class="home-upload-homeCatTshirts"></span></div><div><label>Hoodies image URL</label><input id="homeCatHoodies" type="url"><span class="home-upload-homeCatHoodies"></span></div>
 <div><label>Bottomwear image URL</label><input id="homeCatBottomwear" type="url"><span class="home-upload-homeCatBottomwear"></span></div><div><label>Sweatshirts image URL</label><input id="homeCatSweatshirts" type="url"><span class="home-upload-homeCatSweatshirts"></span></div><div><label>Polos image URL</label><input id="homeCatPolos" type="url"><span class="home-upload-homeCatPolos"></span></div></div>
-<h3 style="margin-top:22px">Trending Drops images</h3><div id="homeTrendingFields"></div><button type="button" class="btn secondary tiny" id="addTrendingImage">+ Add another Trending image</button>
+
 <div><button class="btn" type="submit" style="margin-top:18px">Save Homepage Images</button><span id="homeImagesMessage" class="message"></span></div></form></div>
 <div class="panel"><h3>Saved homepage image settings</h3><pre id="homeImagesPreview" class="muted" style="white-space:pre-wrap;overflow-wrap:anywhere"></pre></div></section>
  </main>
@@ -273,12 +273,33 @@ $("productForm").addEventListener("submit",async e=>{
  showMessage("productMessage","Product saved successfully.",false);await loadProducts();await loadDashboard();$("productForm").reset();$("productRowId").value="";setProductColorFields([]);
  }catch(error){showMessage("productMessage",error.message||"Could not save product.");}finally{saveButton.disabled=false;saveButton.textContent="Save product";}
 });
-function addTrendingImageField(value=""){const wrap=document.createElement("div");wrap.style.cssText="display:flex;gap:8px;margin:8px 0;align-items:center;flex-wrap:wrap";const input=document.createElement("input");input.type="url";input.className="trending-image-url";input.placeholder="Trending image URL (or upload)";input.value=value;input.style.flex="1";const upload=makeUploadButton(input,"homepage/trending");const remove=document.createElement("button");remove.type="button";remove.className="btn danger tiny";remove.textContent="Remove";remove.onclick=()=>wrap.remove();wrap.append(input,upload,remove);$("homeTrendingFields").appendChild(wrap);}
-$("addTrendingImage").onclick=()=>addTrendingImageField();
-["homeHeroImage","homeCatTshirts","homeCatHoodies","homeCatBottomwear","homeCatSweatshirts","homeCatPolos"].forEach(id=>{const input=$(id);const upload=makeUploadButton(input,"homepage");input.insertAdjacentElement("afterend",upload);});
-async function loadContent(){const {data,error}=await db.from("site_content").select("content").eq("section_key","homepage_images").maybeSingle();if(error){$("homeImagesPreview").textContent=error.message;return;}const c=data?.content||{}; $("homeHeroImage").value=c.hero||"";const cats=c.categories||{};["tshirts","hoodies","bottomwear","sweatshirts","polos"].forEach(k=>$("homeCat"+k[0].toUpperCase()+k.slice(1)).value=cats[k]||"");$("homeTrendingFields").innerHTML="";(c.trending||[""]).forEach(url=>addTrendingImageField(url));$("homeImagesPreview").textContent=JSON.stringify(c,null,2);}
-$("homeImagesForm").addEventListener("submit",async e=>{e.preventDefault();const content={hero:$("homeHeroImage").value.trim(),categories:{tshirts:$("homeCatTshirts").value.trim(),hoodies:$("homeCatHoodies").value.trim(),bottomwear:$("homeCatBottomwear").value.trim(),sweatshirts:$("homeCatSweatshirts").value.trim(),polos:$("homeCatPolos").value.trim()},trending:[...document.querySelectorAll(".trending-image-url")].map(x=>x.value.trim()).filter(Boolean)};const {error}=await db.from("site_content").upsert({section_key:"homepage_images",content,updated_at:new Date().toISOString()},{onConflict:"section_key"});showMessage("homeImagesMessage",error?error.message:"Homepage images saved successfully.",!!error);if(!error)$("homeImagesPreview").textContent=JSON.stringify(content,null,2);});
-
+function addHeroImageField(value="https://raw.githubusercontent.com/Larel2306/Larel/main/Streetwear%20Redefined_%20Bold%20Urban%20Style.png",alt="LAREL campaign image"){
+ const wrap=document.createElement("div");wrap.className="hero-image-row";wrap.style.cssText="display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center;margin:10px 0;padding:10px;border:1px solid rgba(0,210,255,.18);border-radius:12px;background:rgba(0,210,255,.035)";
+ const input=document.createElement("input");input.type="url";input.className="hero-image-url";input.placeholder="Hero image URL";input.value=value;input.required=true;
+ const upload=makeUploadButton(input,"homepage/hero");
+ const remove=document.createElement("button");remove.type="button";remove.className="btn danger tiny";remove.textContent="Remove";remove.onclick=()=>wrap.remove();
+ const altInput=document.createElement("input");altInput.type="text";altInput.className="hero-image-alt";altInput.placeholder="Image description (optional)";altInput.value=alt;altInput.style.gridColumn="1 / -1";
+ wrap.append(input,upload,remove,altInput);$("homeHeroFields").appendChild(wrap);
+}
+$("addHeroImage").onclick=()=>addHeroImageField("");
+["homeCatTshirts","homeCatHoodies","homeCatBottomwear","homeCatSweatshirts","homeCatPolos"].forEach(id=>{const input=$(id);const upload=makeUploadButton(input,"homepage/categories");input.insertAdjacentElement("afterend",upload);});
+async function loadContent(){
+ const {data,error}=await db.from("site_content").select("content").eq("section_key","homepage_images").maybeSingle();
+ if(error){$("homeImagesPreview").textContent=error.message;return;}
+ const c=data?.content||{},slides=c.heroSlides||c.hero_slides||(c.hero?[{image:c.hero,alt:"LAREL campaign"}]:[]);
+ $("homeHeroFields").innerHTML="";
+ (slides.length?slides:[{image:"https://raw.githubusercontent.com/Larel2306/Larel/main/Streetwear%20Redefined_%20Bold%20Urban%20Style.png",alt:"LAREL campaign image"}]).forEach(s=>addHeroImageField(typeof s==="string"?s:(s.image||s.url||s.src||""),typeof s==="string"?"":(s.alt||s.title||"")));
+ const cats=c.categories||{};["tshirts","hoodies","bottomwear","sweatshirts","polos"].forEach(k=>$("homeCat"+k[0].toUpperCase()+k.slice(1)).value=cats[k]||"");
+ $("homeImagesPreview").textContent=JSON.stringify(c,null,2);
+}
+$("homeImagesForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ const heroSlides=[...document.querySelectorAll(".hero-image-row")].map(row=>({image:row.querySelector(".hero-image-url").value.trim(),alt:row.querySelector(".hero-image-alt").value.trim()||"LAREL campaign"})).filter(x=>x.image);
+ if(!heroSlides.length){showMessage("homeImagesMessage","Please add at least one hero banner image.");return;}
+ const content={heroSlides,categories:{tshirts:$("homeCatTshirts").value.trim(),hoodies:$("homeCatHoodies").value.trim(),bottomwear:$("homeCatBottomwear").value.trim(),sweatshirts:$("homeCatSweatshirts").value.trim(),polos:$("homeCatPolos").value.trim()}};
+ const {error}=await db.from("site_content").upsert({section_key:"homepage_images",content,updated_at:new Date().toISOString()},{onConflict:"section_key"});
+ showMessage("homeImagesMessage",error?error.message:"Homepage settings saved successfully.",!!error);if(!error)$("homeImagesPreview").textContent=JSON.stringify(content,null,2);
+});
 async function loadOrders(){const {data,error}=await db.from("orders").select("*").order("created_at",{ascending:false});$("ordersRows").innerHTML=error?'<tr><td colspan="8" class="empty">'+safe(error.message)+'</td></tr>':(data||[]).map(o=>'<tr><td>'+safe(o.order_number||o.id)+'</td><td>'+safe(o.customer_name)+'</td><td>'+safe(o.phone)+'</td><td>'+money(o.total_amount)+'</td><td>'+safe(o.payment_method)+' / '+safe(o.payment_status)+'</td><td><select id="status-'+o.id+'"><option '+(o.order_status==="pending"?"selected":"")+' value="pending">Pending</option><option '+(o.order_status==="processing"?"selected":"")+' value="processing">Processing</option><option '+(o.order_status==="shipped"?"selected":"")+' value="shipped">Shipped</option><option '+(o.order_status==="delivered"?"selected":"")+' value="delivered">Delivered</option><option '+(o.order_status==="cancelled"?"selected":"")+' value="cancelled">Cancelled</option></select></td><td><input id="track-'+o.id+'" placeholder="Qikink / tracking ID" value="'+safe(o.tracking_id||o.qikink_order_id||"")+'"></td><td><button class="btn tiny" onclick="saveOrder('+o.id+')">Save</button></td></tr>').join("")||'<tr><td colspan="8" class="empty">No orders yet.</td></tr>';}
 window.saveOrder=async id=>{const status=$("status-"+id).value,tracking=$("track-"+id).value.trim();const {error}=await db.from("orders").update({order_status:status,tracking_id:tracking}).eq("id",id);if(error)alert(error.message);else{alert("Order updated.");loadOrders();}};
 async function loadCustomers(){
