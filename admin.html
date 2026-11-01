@@ -427,13 +427,14 @@ $("couponPickerToggle").addEventListener("click",()=>{
 });
 $("couponProductSearch").addEventListener("input",renderCouponProductOptions);
 $("couponProductResults").addEventListener("click",e=>{
- const button=e.target.closest("[data-coupon-product]");
- if(button)toggleCouponProduct(button.dataset.couponProduct);
+ e.stopPropagation();const button=e.target.closest("[data-coupon-product]");
+ if(button){toggleCouponProduct(button.dataset.couponProduct);$("couponPickerMenu").classList.remove("hidden");$("couponPickerToggle").setAttribute("aria-expanded","true");}
 });
 $("couponSelectedChips").addEventListener("click",e=>{
- const button=e.target.closest("[data-remove-coupon-product]");
- if(button)toggleCouponProduct(button.dataset.removeCouponProduct);
+ e.stopPropagation();const button=e.target.closest("[data-remove-coupon-product]");
+ if(button){toggleCouponProduct(button.dataset.removeCouponProduct);$("couponPickerMenu").classList.remove("hidden");$("couponPickerToggle").setAttribute("aria-expanded","true");}
 });
+$("couponPickerMenu").addEventListener("click",e=>e.stopPropagation());
 document.addEventListener("click",e=>{
  if(!e.target.closest(".coupon-product-picker")){
   $("couponPickerMenu").classList.add("hidden");
