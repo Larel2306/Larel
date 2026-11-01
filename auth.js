@@ -56,6 +56,8 @@
 
   $("year").textContent = new Date().getFullYear();
   const notice = $("notice");
+  const phoneNotice = $("phoneNotice");
+  let pendingPhone = "";
   let mode = "signup";
   let resetMode = new URLSearchParams(location.search).get("mode") === "reset";
 
@@ -64,11 +66,14 @@
     notice.className = "message show " + kind;
   }
   function clearMessage() { notice.className = "message"; notice.textContent = ""; }
+  function showPhoneMessage(message, kind = "error") { phoneNotice.textContent = message; phoneNotice.className = "message show " + kind; }
+  function clearPhoneMessage() { phoneNotice.className = "message"; phoneNotice.textContent = ""; }
   function setBusy(busy, label) {
     const button = $("submitBtn");
     button.disabled = busy;
     button.innerHTML = busy ? '<i class="fa-solid fa-spinner fa-spin"></i> Please wait…' : label;
     $("googleBtn").disabled = busy;
+    if ($("sendOtpBtn")) $("sendOtpBtn").disabled = busy;
   }
   function setMode(next) {
     mode = next;
@@ -200,6 +205,76 @@
     $("googleBtn").classList.remove("hidden");
     document.querySelector(".divider").classList.remove("hidden");
     setMode("login");
+  });
+
+
+  // Phone OTP: Supabase creates a new auth user on first successful verification.
+  $("phoneSendForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    clearPhoneMessage();
+    if (!client) return showPhoneMessage("Authentication is not configured. Please try again later.");
+    const name = $("phoneName").value.trim();
+    let phone = $("phoneNumber").value.replace(/[\s()-]/g, "");
+    if (phone.startsWith("0")) phone = "+91" + phone.slice(1);
+    else if (/^\d{10}$/.test(phone)) phone = "+91" + phone;
+    if (name.length < 2) return showPhoneMessage("Please enter your full name.");
+    if (!/^\+[1-9]\d{7,14}$/.test(phone)) return showPhoneMessage("Enter a valid mobile number with country code, e.g. +919876543210.");
+    const button = $("sendOtpBtn");
+    button.disabled = true;
+    button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending OTP…';
+    try {
+      const { error } = await client.auth.signInWithOtp({
+        phone,
+        options: { shouldCreateUser: true, data: { full_name: name } }
+      });
+      if (error) throw error;
+      pendingPhone = phone;
+      $("phoneSendForm").classList.add("hidden");
+      $("phoneVerifyForm").classList.remove("hidden");
+      showPhoneMessage("OTP sent to " + phone + ". Enter the 6-digit code to continue.", "success");
+      $("phoneOtp").focus();
+    } catch (error) {
+      showPhoneMessage(error.message || "Could not send OTP. Please try again.");
+    } finally {
+      button.disabled = false;
+      button.innerHTML = 'Send OTP <i class="fa-solid fa-arrow-right"></i>';
+    }
+  });
+
+  $("phoneVerifyForm").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    clearPhoneMessage();
+    if (!client || !pendingPhone) return showPhoneMessage("Please request a new OTP first.");
+    const token = $("phoneOtp").value.trim();
+    if (!/^\d{6}$/.test(token)) return showPhoneMessage("Enter the 6-digit OTP.");
+    const button = $("verifyOtpBtn");
+    button.disabled = true;
+    button.textContent = "Verifying…";
+    try {
+      const { data, error } = await client.auth.verifyOtp({ phone: pendingPhone, token, type: "sms" });
+      if (error) throw error;
+      if (!data.user) throw new Error("OTP verified, but no user account was returned. Please try again.");
+      const name = $("phoneName").value.trim();
+      if (name.length >= 2) {
+        const { error: profileError } = await client.auth.updateUser({ data: { full_name: name, name } });
+        if (profileError) throw profileError;
+        data.user.user_metadata = { ...(data.user.user_metadata || {}), full_name: name, name };
+      }
+      showAccount(data.user);
+    } catch (error) {
+      showPhoneMessage(error.message || "OTP verification failed. Check the code and try again.");
+    } finally {
+      button.disabled = false;
+      button.textContent = "Verify OTP & Continue";
+    }
+  });
+
+  $("changePhoneBtn").addEventListener("click", () => {
+    clearPhoneMessage();
+    pendingPhone = "";
+    $("phoneOtp").value = "";
+    $("phoneVerifyForm").classList.add("hidden");
+    $("phoneSendForm").classList.remove("hidden");
   });
 
   $("continueBtn").addEventListener("click", () => { location.href = "index.html"; });
