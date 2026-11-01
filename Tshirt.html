@@ -808,8 +808,7 @@ function getCategoryProductUrl(category, id) {
     tshirts: "Tshirt",
     hoodies: "Hoodies",
     jackets: "Jackets",
-    bottomwear: "Bottomwear",
-    kidswear: "Kidswear"
+    bottomwear: "Bottomwear"
   };
   const page = categoryPages[category] || "Tshirt";
   return page + "?id=" + encodeURIComponent(id);
@@ -842,7 +841,7 @@ function renderRelatedProducts() {
   grid.innerHTML = "";
 
   const relatedProducts = Object.entries(productsDatabase).filter(([id, product]) =>
-    id !== currentProductId && product.category === currentProduct.category
+    id !== currentProductId && String(product.category || "").toLowerCase() !== "kidswear" && product.category === currentProduct.category
   );
 
   if (!relatedProducts.length) {
