@@ -36,6 +36,7 @@
   <button class="nav" data-view="orders"><i class="fa-solid fa-bag-shopping"></i> Orders</button>
   <button class="nav" data-view="customers"><i class="fa-solid fa-users"></i> Customers</button>
   <button class="nav" data-view="content"><i class="fa-solid fa-images"></i> Website Content</button>
+  <button class="nav" data-view="reports"><i class="fa-solid fa-chart-line"></i> Sales Reports</button>
   <div class="side-label">ACCOUNT</div><button class="nav" id="logoutBtn"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign out</button>
   <div class="sidebar-bottom muted" style="font-size:10px;padding:10px 13px">LAREL Admin • Secure access • Tab session</div>
  </aside>
@@ -73,7 +74,19 @@
   </section>
   <section id="ordersView" class="view"><div class="section-head"><h2>All orders</h2><button class="btn secondary tiny" id="refreshOrders">Refresh</button></div><div class="panel table-wrap"><table><thead><tr><th>Order</th><th>Customer</th><th>Phone</th><th>Total</th><th>Payment</th><th>Status</th><th>Qikink / Tracking</th><th>Update</th></tr></thead><tbody id="ordersRows"><tr><td colspan="8" class="empty">Loading…</td></tr></tbody></table></div></section>
   <section id="customersView" class="view"><div class="section-head"><h2>Customer profiles</h2><button class="btn secondary tiny" id="refreshCustomers">Refresh</button></div><div class="panel table-wrap"><table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Customer since</th></tr></thead><tbody id="customersRows"><tr><td colspan="4" class="empty">Loading…</td></tr></tbody></table></div></section>
-  <section id="contentView" class="view">
+  <section id="reportsView" class="view">
+ <div class="section-head"><h2>Sales & Order Reports</h2><div class="actions"><button class="btn secondary tiny" id="refreshReports">Refresh</button><button class="btn tiny" id="exportOrdersCsv">Export CSV</button></div></div>
+ <div class="panel"><div class="form-grid">
+  <div><label>From date</label><input type="date" id="reportFrom"></div><div><label>To date</label><input type="date" id="reportTo"></div>
+  <div><label>Order status</label><select id="reportStatus"><option value="">All statuses</option><option value="pending">Pending</option><option value="processing">Processing</option><option value="shipped">Shipped</option><option value="delivered">Delivered</option><option value="cancelled">Cancelled</option></select></div>
+  <div><label>Search order / customer</label><input id="reportSearch" placeholder="Order number, name, email or phone"></div>
+ </div><div class="actions" style="margin-top:14px"><button class="btn tiny" id="applyReportFilters">Apply filters</button><button class="btn secondary tiny" id="clearReportFilters">Clear filters</button></div></div>
+ <div class="stats" style="margin-top:16px">
+  <div class="stat"><div class="stat-top">Filtered Orders</div><strong id="reportOrderCount">—</strong></div><div class="stat"><div class="stat-top">Sales (excluding cancelled)</div><strong id="reportSales">—</strong></div><div class="stat"><div class="stat-top">Average Order Value</div><strong id="reportAov">—</strong></div><div class="stat"><div class="stat-top">Delivered Orders</div><strong id="reportDelivered">—</strong></div>
+ </div><p class="muted" style="font-size:11px;margin:12px 2px">Sales are calculated from saved orders. This is not net profit; product costs, shipping, advertising and RTO costs are not deducted.</p>
+ <div class="panel table-wrap"><table><thead><tr><th>Order</th><th>Customer</th><th>Total</th><th>Payment</th><th>Status</th><th>Date</th></tr></thead><tbody id="reportRows"><tr><td colspan="6" class="empty">Loading report…</td></tr></tbody></table></div>
+</section>
+<section id="contentView" class="view">
 <div class="section-head"><h2>Homepage Images</h2><span class="muted">Manage images shown on your home page</span></div>
 <div class="panel"><p class="muted">Upload images directly to LAREL Supabase Storage or paste an image URL. Add unlimited Trending Drops images.</p>
 <form id="homeImagesForm"><h3>Hero / Main banner</h3><label>Hero image URL</label><input id="homeHeroImage" type="url" placeholder="https://..."><span class="home-upload-homeHeroImage"></span>
@@ -156,8 +169,8 @@ function showLogin(msg=""){ $("adminApp").classList.add("hidden");$("loginScreen
 $("loginForm").addEventListener("submit",async e=>{e.preventDefault();showMessage("loginMessage","Signing in…",false);const {error}=await db.auth.signInWithPassword({email:$("loginEmail").value.trim(),password:$("loginPassword").value});if(error){showMessage("loginMessage",error.message)}else{await checkAdmin()}});
 $("logoutBtn").addEventListener("click",async()=>{await db.auth.signOut();currentUser=null;showLogin("You have signed out.");});
 db.auth.onAuthStateChange((_event,session)=>{if(!session){currentUser=null;showLogin()}});
-const viewInfo={dashboard:["Dashboard","Your store at a glance."],products:["Products","Manage the LAREL product catalog."],orders:["Orders","Review orders and update fulfilment status."],customers:["Customers","Registered customer profiles."],content:["Website Content","Manage content records for future storefront sync."]};
-function openView(name){document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));$(name+"View").classList.add("active");document.querySelectorAll(".nav[data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===name));$("pageTitle").textContent=viewInfo[name][0];$("pageSubtitle").textContent=viewInfo[name][1];$("sidebar").classList.remove("open");if(name==="dashboard")loadDashboard();if(name==="products")loadProducts();if(name==="orders")loadOrders();if(name==="customers")loadCustomers();if(name==="content")loadContent();}
+const viewInfo={dashboard:["Dashboard","Your store at a glance."],products:["Products","Manage the LAREL product catalog."],orders:["Orders","Review orders and update fulfilment status."],customers:["Customers","Registered customer profiles."],content:["Website Content","Manage content records for future storefront sync."],reports:["Sales Reports","Filter, review and export your saved order data."]};
+function openView(name){document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));$(name+"View").classList.add("active");document.querySelectorAll(".nav[data-view]").forEach(b=>b.classList.toggle("active",b.dataset.view===name));$("pageTitle").textContent=viewInfo[name][0];$("pageSubtitle").textContent=viewInfo[name][1];$("sidebar").classList.remove("open");if(name==="dashboard")loadDashboard();if(name==="products")loadProducts();if(name==="orders")loadOrders();if(name==="customers")loadCustomers();if(name==="content")loadContent();if(name==="reports")loadReports();}
 document.querySelectorAll(".nav[data-view]").forEach(b=>b.addEventListener("click",()=>openView(b.dataset.view)));
 document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>openView(b.dataset.go)));
 $("menuBtn").addEventListener("click",()=>$("sidebar").classList.toggle("open"));
@@ -248,6 +261,28 @@ async function loadOrders(){const {data,error}=await db.from("orders").select("*
 window.saveOrder=async id=>{const status=$("status-"+id).value,tracking=$("track-"+id).value.trim();const {error}=await db.from("orders").update({order_status:status,tracking_id:tracking}).eq("id",id);if(error)alert(error.message);else{alert("Order updated.");loadOrders();}};
 async function loadCustomers(){const {data,error}=await db.from("profiles").select("*").order("created_at",{ascending:false});$("customersRows").innerHTML=error?'<tr><td colspan="4" class="empty">'+safe(error.message)+'</td></tr>':(data||[]).map(c=>'<tr><td>'+safe(c.full_name)+'</td><td>'+safe(c.email)+'</td><td>'+safe(c.phone)+'</td><td>'+new Date(c.created_at).toLocaleDateString("en-IN")+'</td></tr>').join("")||'<tr><td colspan="4" class="empty">No customer profiles yet.</td></tr>';}
 $("refreshOrders").onclick=loadOrders;$("refreshCustomers").onclick=loadCustomers;
+let reportOrders=[],filteredReportOrders=[];
+function renderReport(){
+ const from=$("reportFrom").value,to=$("reportTo").value,status=$("reportStatus").value,term=$("reportSearch").value.trim().toLowerCase();
+ filteredReportOrders=reportOrders.filter(o=>{
+  const d=o.created_at?new Date(o.created_at):null;
+  if(from&&(!d||d<new Date(from+"T00:00:00")))return false;
+  if(to&&(!d||d>new Date(to+"T23:59:59")))return false;
+  if(status&&String(o.order_status||"").toLowerCase()!==status)return false;
+  if(term&&![o.order_number,o.id,o.customer_name,o.email,o.phone].some(v=>String(v??"").toLowerCase().includes(term)))return false;
+  return true;
+ });
+ const valid=filteredReportOrders.filter(o=>String(o.order_status||"").toLowerCase()!=="cancelled"),sales=valid.reduce((sum,o)=>sum+Number(o.total_amount||0),0);
+ $("reportOrderCount").textContent=filteredReportOrders.length;$("reportSales").textContent=money(sales);$("reportAov").textContent=money(valid.length?sales/valid.length:0);
+ $("reportDelivered").textContent=filteredReportOrders.filter(o=>String(o.order_status||"").toLowerCase()==="delivered").length;
+ $("reportRows").innerHTML=filteredReportOrders.map(o=>'<tr><td>'+safe(o.order_number||("#"+o.id))+'</td><td>'+safe(o.customer_name||o.email||"—")+'</td><td>'+money(o.total_amount)+'</td><td>'+safe(o.payment_method||"—")+' / '+safe(o.payment_status||"—")+'</td><td><span class="pill">'+safe(o.order_status||"—")+'</span></td><td>'+(o.created_at?new Date(o.created_at).toLocaleDateString("en-IN"):"—")+'</td></tr>').join("")||'<tr><td colspan="6" class="empty">No orders match these filters.</td></tr>';
+}
+async function loadReports(){ $("reportRows").innerHTML='<tr><td colspan="6" class="empty">Loading report…</td></tr>';const {data,error}=await db.from("orders").select("*").order("created_at",{ascending:false});if(error){$("reportRows").innerHTML='<tr><td colspan="6" class="empty">'+safe(error.message)+'</td></tr>';return;}reportOrders=data||[];renderReport();}
+$("refreshReports").onclick=loadReports;$("applyReportFilters").onclick=renderReport;
+$("clearReportFilters").onclick=()=>{$("reportFrom").value="";$("reportTo").value="";$("reportStatus").value="";$("reportSearch").value="";renderReport();};
+$("reportSearch").addEventListener("input",renderReport);
+$("exportOrdersCsv").onclick=()=>{const rows=[["Order","Customer","Email","Phone","Total","Payment Method","Payment Status","Order Status","Created At"],...filteredReportOrders.map(o=>[o.order_number||o.id,o.customer_name||"",o.email||"",o.phone||"",o.total_amount||0,o.payment_method||"",o.payment_status||"",o.order_status||"",o.created_at||""])];const csv=rows.map(row=>row.map(v=>'"'+String(v??"").replace(/"/g,'""')+'"').join(",")).join("\\r\\n");const blob=new Blob(["\\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="larel-orders-report.csv";a.click();URL.revokeObjectURL(url);};
+
 checkAdmin();
 </script>
 </body>
