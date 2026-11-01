@@ -42,12 +42,17 @@
  <main class="main">
   <header class="topbar"><div style="display:flex;align-items:center;gap:12px"><button class="btn secondary mobile-menu" id="menuBtn"><i class="fa-solid fa-bars"></i></button><div><h1 id="pageTitle">Dashboard</h1><p id="pageSubtitle">Your store at a glance.</p></div></div><div class="user-chip"><span class="dot"></span><span id="adminEmail">Admin</span></div></header>
   <section id="dashboardView" class="view active">
+   <div class="section-head" style="margin-top:0"><h2>Store Overview</h2><button class="btn secondary tiny" id="refreshDashboard"><i class="fa-solid fa-rotate"></i> Refresh Data</button></div>
    <div class="stats">
     <div class="stat"><div class="stat-top">Total Orders <i class="fa-solid fa-bag-shopping stat-icon"></i></div><strong id="statOrders">—</strong><small>All orders saved in the database</small></div>
-    <div class="stat"><div class="stat-top">Total Order Value <i class="fa-solid fa-indian-rupee-sign stat-icon"></i></div><strong id="statRevenue">—</strong><small>Calculated from saved order totals</small></div>
+    <div class="stat"><div class="stat-top">Total Revenue <i class="fa-solid fa-indian-rupee-sign stat-icon"></i></div><strong id="statRevenue">—</strong><small>Excludes cancelled orders</small></div>
+    <div class="stat"><div class="stat-top">This Month's Revenue <i class="fa-solid fa-calendar stat-icon"></i></div><strong id="statMonthRevenue">—</strong><small>Current calendar month</small></div>
+    <div class="stat"><div class="stat-top">Pending Orders <i class="fa-solid fa-clock stat-icon"></i></div><strong id="statPending">—</strong><small>Awaiting processing</small></div>
+    <div class="stat"><div class="stat-top">Delivered Orders <i class="fa-solid fa-circle-check stat-icon"></i></div><strong id="statDelivered">—</strong><small>Successfully delivered</small></div>
     <div class="stat"><div class="stat-top">Products <i class="fa-solid fa-shirt stat-icon"></i></div><strong id="statProducts">—</strong><small>Products in your catalog</small></div>
-    <div class="stat"><div class="stat-top">Customers <i class="fa-solid fa-users stat-icon"></i></div><strong id="statCustomers">—</strong><small>Customer profiles saved in the database</small></div>
+    <div class="stat"><div class="stat-top">Customers <i class="fa-solid fa-users stat-icon"></i></div><strong id="statCustomers">—</strong><small>Customer profiles in the database</small></div>
    </div>
+   <p class="muted" style="font-size:11px;margin:12px 2px 0">Revenue is calculated from saved order totals, excluding cancelled orders. Revenue is not net profit and does not subtract product, shipping, advertising, or other costs.</p>
    <div class="section-head"><h2>Recent orders</h2><button class="btn secondary tiny" data-go="orders">View all</button></div>
    <div class="panel table-wrap"><table><thead><tr><th>Order</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead><tbody id="recentOrders"><tr><td colspan="5" class="empty">Loading orders…</td></tr></tbody></table></div>
   </section>
@@ -156,12 +161,20 @@ function openView(name){document.querySelectorAll(".view").forEach(v=>v.classLis
 document.querySelectorAll(".nav[data-view]").forEach(b=>b.addEventListener("click",()=>openView(b.dataset.view)));
 document.querySelectorAll("[data-go]").forEach(b=>b.addEventListener("click",()=>openView(b.dataset.go)));
 $("menuBtn").addEventListener("click",()=>$("sidebar").classList.toggle("open"));
+$("refreshDashboard").addEventListener("click",loadDashboard);
 async function loadDashboard(){
  const [o,p,c]=await Promise.all([db.from("orders").select("id,total_amount,order_status,order_number,customer_name,created_at").order("created_at",{ascending:false}),db.from("products").select("id",{count:"exact",head:true}),db.from("profiles").select("id",{count:"exact",head:true})]);
- $("statOrders").textContent=o.error?"—":(o.data||[]).length;
- $("statRevenue").textContent=o.error?"—":money((o.data||[]).reduce((s,x)=>s+Number(x.total_amount||0),0));
+ const orders=o.data||[];
+ const validOrders=orders.filter(x=>String(x.order_status||"").toLowerCase()!=="cancelled");
+ const now=new Date();
+ const monthOrders=validOrders.filter(x=>{const d=new Date(x.created_at);return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();});
+ $("statOrders").textContent=o.error?"—":orders.length;
+ $("statRevenue").textContent=o.error?"—":money(validOrders.reduce((s,x)=>s+Number(x.total_amount||0),0));
+ $("statMonthRevenue").textContent=o.error?"—":money(monthOrders.reduce((s,x)=>s+Number(x.total_amount||0),0));
+ $("statPending").textContent=o.error?"—":orders.filter(x=>String(x.order_status||"").toLowerCase()==="pending").length;
+ $("statDelivered").textContent=o.error?"—":orders.filter(x=>String(x.order_status||"").toLowerCase()==="delivered").length;
  $("statProducts").textContent=p.error?"—":(p.count??0);$("statCustomers").textContent=c.error?"—":(c.count??0);
- $("recentOrders").innerHTML=o.error?'<tr><td colspan="5" class="empty">Could not load orders. Check table permissions.</td></tr>':(o.data||[]).slice(0,6).map(x=>'<tr><td>'+safe(x.order_number||("#"+x.id))+'</td><td>'+safe(x.customer_name)+'</td><td>'+money(x.total_amount)+'</td><td><span class="pill">'+safe(x.order_status)+'</span></td><td>'+new Date(x.created_at).toLocaleDateString("en-IN")+'</td></tr>').join("")||'<tr><td colspan="5" class="empty">No orders yet.</td></tr>';
+ $("recentOrders").innerHTML=o.error?'<tr><td colspan="5" class="empty">Could not load orders. Check table permissions.</td></tr>':orders.slice(0,6).map(x=>'<tr><td>'+safe(x.order_number||("#"+x.id))+'</td><td>'+safe(x.customer_name)+'</td><td>'+money(x.total_amount)+'</td><td><span class="pill">'+safe(x.order_status)+'</span></td><td>'+new Date(x.created_at).toLocaleDateString("en-IN")+'</td></tr>').join("")||'<tr><td colspan="5" class="empty">No orders yet.</td></tr>';
 }
 async function loadProducts(){
  const {data,error}=await db.from("products").select("*").order("created_at",{ascending:false});
