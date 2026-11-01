@@ -6,8 +6,8 @@
 */
 (() => {
   "use strict";
-  const SUPABASE_URL = "https://uqpzwpfucqcnyyplqbam.supabase.co";
-  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_miTEn6-4xX0Vi1-twerxjA_CNk3kG99";
+  const SUPABASE_URL = "https://gghpenzosdqudtqhpekp.supabase.co";
+  const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_LgOR6E51qGFLRcIecWqA3w_kHHoGtVa";
   const configured = /^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(SUPABASE_URL) &&
     !SUPABASE_URL.includes("YOUR_") && !SUPABASE_PUBLISHABLE_KEY.includes("YOUR_");
 
@@ -202,7 +202,7 @@
     setMode("login");
   });
 
-  $("continueBtn").addEventListener("click", () => { location.href = "Home.html"; });
+  $("continueBtn").addEventListener("click", () => { location.href = "index.html"; });
   $("logoutBtn").addEventListener("click", async () => {
     if (client) await client.auth.signOut();
     $("accountPanel").classList.add("hidden");
