@@ -1087,25 +1087,8 @@ function toggleMenu() {
     overlay.classList.toggle("active");
 }
 
-// Auto Banner Slider Script
-let currentSlide = 0;
-const totalSlides = 5;
-const track = document.getElementById("sliderTrack");
-const dots = document.querySelectorAll(".dot");
+// Hero carousel is initialized from the homepage_images content below.
 
-function autoSlide() {
-    currentSlide = (currentSlide + 1) % totalSlides;
-    track.style.transform = `translateX(-${currentSlide * 20}%)`;
-    
-    dots.forEach((dot, index) => {
-        if(index === currentSlide) {
-            dot.classList.add("active");
-        } else {
-            dot.classList.remove("active");
-        }
-    });
-}
-setInterval(autoSlide, 3500);
 </script>
 <script>
 (function(){
