@@ -27,7 +27,7 @@
   };
 
   const customerName = user => user?.user_metadata?.full_name ||
-    user?.user_metadata?.name || "LAREL Member";
+    user?.user_metadata?.name || "Customer";
   const customerPhone = user => user?.user_metadata?.mobile_number || "";
 
   async function updateAccountLink() {
