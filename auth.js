@@ -32,12 +32,18 @@
 
   async function updateAccountLink() {
     const link = document.querySelector("[data-larel-account]");
-    if (!link) return;
     let user = null;
     if (client) {
       const { data } = await client.auth.getSession();
       user = data?.session?.user || null;
     }
+    window.larelCustomerProfile = user ? {
+      id: user.id,
+      name: customerName(user),
+      phone: customerPhone(user)
+    } : null;
+    window.dispatchEvent(new CustomEvent("larel:profile", { detail: window.larelCustomerProfile }));
+    if (!link) return;
     link.href = user ? "Account.html" : "auth.html";
     link.title = user ? "My Account" : "Create Account";
     link.setAttribute("aria-label", user ? "My Account" : "Create Account");
@@ -162,6 +168,15 @@
           }
         });
         if (updateError) throw updateError;
+        try {
+          await client.from("profiles").upsert({
+            id: (updated?.user || data.user).id,
+            full_name: pendingName,
+            phone: pendingPhone
+          }, { onConflict: "id" });
+        } catch (profileError) {
+          console.warn("LAREL profile sync skipped:", profileError.message);
+        }
         pendingCode = "";
         showAccount(updated?.user || data.user);
         notify("Welcome to LAREL, " + pendingName + "! Your account has been created.", "success");
@@ -224,7 +239,7 @@
     $("profilePhone").textContent = customerPhone(user) || "Not added";
     $("profileMethod").textContent = user.user_metadata?.signup_method === "in_app_code" ? "Mobile number signup" : "LAREL account";
     try {
-      const { data: orders, error: ordersError } = await client.from("orders").select("*").eq("phone", customerPhone(user));
+      const { data: orders, error: ordersError } = await client.from("orders").select("*").eq("phone", customerPhone(user).replace(/\D/g, "").slice(-10));
       if (ordersError) throw ordersError;
       const list = $("ordersList");
       if (!orders || !orders.length) {
