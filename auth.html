@@ -18,7 +18,7 @@ main{flex:1;display:grid;place-items:center;padding:36px 16px}.auth-shell{width:
 .card{background:linear-gradient(145deg,rgba(19,26,42,.97),rgba(12,16,28,.98));border:1px solid var(--line);border-radius:24px;padding:clamp(22px,5vw,32px);box-shadow:0 24px 80px #0005}
 .field{display:block;margin-bottom:15px}.field span{display:block;font-size:12px;color:#dbe5f2;font-weight:700;margin-bottom:8px}.field input{width:100%;height:49px;border:1px solid #293346;background:#090e19;color:#fff;border-radius:11px;padding:0 13px;outline:none;font-size:14px}.field input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #00d2ff18}.field input::placeholder{color:#657185}
 .primary,.google{width:100%;height:49px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:10px;font-size:13px;font-weight:800;cursor:pointer;transition:.2s}.primary{background:var(--cyan);border:1px solid var(--cyan);color:#041019}.primary:hover{filter:brightness(1.08);transform:translateY(-1px)}.primary:disabled{opacity:.6;cursor:wait;transform:none}.google{background:#fff;color:#1a1d24;border:1px solid #fff}.google:hover{background:#eaf8ff}
-.divider{display:flex;align-items:center;gap:12px;color:#778398;font-size:10px;margin:20px 0}.divider:before,.divider:after{content:"";height:1px;background:var(--line);flex:1}.message{display:none;margin-bottom:16px;padding:12px;border-radius:10px;font-size:12px;line-height:1.6}.message.show{display:block}.message.error{background:#ff4d5d14;border:1px solid #ff4d5d55;color:#ffb5bd}.message.success{background:#00d2ff12;border:1px solid #00d2ff44;color:#a5f0ff}.hidden{display:none!important}.fineprint{text-align:center;font-size:10px;line-height:1.7;color:#788498;margin-top:18px}.account{text-align:center}.avatar{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:#00d2ff18;border:1px solid #00d2ff55;color:var(--cyan);font-size:25px;margin:0 auto 16px}.account p{color:var(--muted);font-size:13px;line-height:1.7;margin:12px 0 22px}
+.message{display:none;margin-bottom:16px;padding:12px;border-radius:10px;font-size:12px;line-height:1.6}.message.show{display:block}.message.error{background:#ff4d5d14;border:1px solid #ff4d5d55;color:#ffb5bd}.message.success{background:#00d2ff12;border:1px solid #00d2ff44;color:#a5f0ff}.hidden{display:none!important}.fineprint{text-align:center;font-size:10px;line-height:1.7;color:#788498;margin-top:18px}.account{text-align:center}.avatar{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:#00d2ff18;border:1px solid #00d2ff55;color:var(--cyan);font-size:25px;margin:0 auto 16px}.account p{color:var(--muted);font-size:13px;line-height:1.7;margin:12px 0 22px}
 .larel-site-footer{margin-top:55px;padding:28px 6%;text-align:center;border-top:1px solid rgba(34,211,238,.18);color:#75869c;font-size:11px;background:#04070e}
 @media(max-width:420px){.topbar{height:65px;padding:0 18px}.logo{font-size:21px}.back{font-size:12px}.card{border-radius:19px}}
 </style>
@@ -28,23 +28,22 @@ main{flex:1;display:grid;place-items:center;padding:36px 16px}.auth-shell{width:
 <main><section class="auth-shell">
 <div class="eyebrow">LAREL MEMBERS CLUB</div>
 <h1 class="heading" id="pageHeading">Create your account</h1>
-<p class="subheading" id="pageSubheading">Create your LAREL account using your mobile number.</p>
+<p class="subheading" id="pageSubheading">Enter your name and mobile number to create your LAREL account.</p>
 <div class="card">
 <div id="authPanel">
 <div id="notice" class="message" role="status" aria-live="polite"></div>
 <form id="phoneSignupForm">
-<label class="field"><span>Mobile number</span><input id="phoneNumber" type="tel" autocomplete="tel" inputmode="tel" placeholder="+91 98765 43210" required></label>
+<label class="field"><span>Name</span><input id="customerName" type="text" autocomplete="name" placeholder="Enter your name" maxlength="70" required></label>
+<label class="field"><span>Mobile No.</span><input id="phoneNumber" type="tel" autocomplete="tel" inputmode="tel" placeholder="+91 98765 43210" required></label>
 <button class="primary" id="sendOtpBtn" type="submit">Send OTP <i class="fa-solid fa-arrow-right"></i></button>
 </form>
 <form id="phoneVerifyForm" class="hidden" style="margin-top:17px">
-<label class="field"><span id="verifyPhoneLabel">Enter your in-app OTP</span><input id="phoneOtp" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder="6-digit code" maxlength="6" pattern="[0-9]{6}" required></label>
+<label class="field"><span id="verifyPhoneLabel">Enter your in-app confirmation code</span><input id="phoneOtp" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder="6-digit code" maxlength="6" pattern="[0-9]{6}" required></label>
 <button class="primary" id="verifyOtpBtn" type="submit">Verify &amp; Create Account</button>
 <button class="google" id="resendOtpBtn" type="button" style="margin-top:10px">Resend OTP</button>
-<button class="google" id="changePhoneBtn" type="button" style="margin-top:10px">Change mobile number</button>
+<button class="google" id="changePhoneBtn" type="button" style="margin-top:10px">Change details</button>
 </form>
-<div class="divider">OR</div>
-<button class="google" id="googleBtn" type="button"><i class="fa-brands fa-google"></i> Continue with Google</button>
-<p class="fineprint">Your one-time code will appear in an in-app notification. No SMS is sent. This code does not verify ownership of the mobile number.</p>
+<p class="fineprint">Your in-app confirmation code appears as a LAREL notification. No SMS is sent. This code does not verify ownership of the mobile number.</p>
 </div>
 <div id="accountPanel" class="account hidden">
 <div class="avatar"><i class="fa-regular fa-user"></i></div>
