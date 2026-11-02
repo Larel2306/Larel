@@ -1,8 +1,6 @@
-/*
- LAREL customer authentication — Supabase JS v2
- SETUP: Replace the two placeholder values below with your project's Project URL
- and publishable/anon key from Supabase Dashboard -> Project Settings -> API Keys.
- NEVER put a service_role/secret key in browser code.
+/* LAREL customer signup — Supabase anonymous session + in-app confirmation code.
+   The in-app code is NOT phone ownership verification. No SMS is sent.
+   Enable Anonymous Sign-Ins in Supabase Auth settings before using mobile signup.
 */
 (() => {
   "use strict";
@@ -10,8 +8,7 @@
   const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_LgOR6E51qGFLRcIecWqA3w_kHHoGtVa";
   const configured = /^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(SUPABASE_URL) &&
     !SUPABASE_URL.includes("YOUR_") && !SUPABASE_PUBLISHABLE_KEY.includes("YOUR_");
-
-  const $ = (id) => document.getElementById(id);
+  const $ = id => document.getElementById(id);
   const authPage = !!$("authForm");
   let client = null;
   if (configured && window.supabase?.createClient) {
@@ -19,26 +16,27 @@
       auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
     });
   }
-
-  // Add a consistent account entry to existing LAREL headers without redesigning them.
+  const notify = (message, type="success") => {
+    if (typeof window.larelNotify === "function") window.larelNotify(message, type);
+    else {
+      const node = $("notice");
+      if (node) { node.textContent = message; node.className = "message show " + type; }
+    }
+  };
   function injectHeaderAccount() {
     if (authPage) return;
     const actions = document.querySelector(".nav-actions");
-    const fallbackHeader = document.querySelector(".store-header");
-    const target = actions || fallbackHeader;
+    const target = actions || document.querySelector(".store-header");
     if (!target || target.querySelector("[data-larel-account]")) return;
     const link = document.createElement("a");
     link.href = "auth.html";
     link.className = actions ? "nav-icon-btn" : "back-to-account";
-    link.setAttribute("data-larel-account", "");
-    link.title = "Login / My Account";
-    link.setAttribute("aria-label", "Login or My Account");
-    link.innerHTML = '<i class="fa-regular fa-user" aria-hidden="true"></i><span class="btn-text"> Login / Sign Up</span>';
+    link.dataset.larelAccount = "";
+    link.title = "Sign Up / My Account";
+    link.setAttribute("aria-label", "Sign Up or My Account");
+    link.innerHTML = '<i class="fa-regular fa-user" aria-hidden="true"></i><span class="btn-text"> Sign Up</span>';
     if (actions) target.insertBefore(link, target.firstChild);
-    else {
-      link.style.cssText = "display:inline-flex;align-items:center;gap:8px;margin-left:16px;padding:9px 13px;border:1px solid rgba(45,212,191,.35);border-radius:22px;color:#fff;font-size:12px;text-decoration:none;background:rgba(45,212,191,.08)";
-      target.appendChild(link);
-    }
+    else { link.style.cssText = "display:inline-flex;align-items:center;gap:8px;margin-left:16px;padding:9px 13px;border:1px solid rgba(45,212,191,.35);border-radius:22px;color:#fff;font-size:12px;text-decoration:none;background:rgba(45,212,191,.08)"; target.appendChild(link); }
     if (client) client.auth.getSession().then(({data}) => {
       if (data?.session) {
         link.title = "My Account";
@@ -47,261 +45,133 @@
       }
     });
   }
-
   if (!authPage) {
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", injectHeaderAccount);
     else injectHeaderAccount();
     return;
   }
 
-  $("year").textContent = new Date().getFullYear();
-  const notice = $("notice");
-  const phoneNotice = $("phoneNotice");
+  $("year") && ($("year").textContent = new Date().getFullYear());
+  const phoneForm = $("phoneSignupForm");
+  const verifyForm = $("phoneVerifyForm");
   let pendingPhone = "";
-  let mode = "signup";
-  let resetMode = new URLSearchParams(location.search).get("mode") === "reset";
+  let pendingCode = "";
+  let codeExpiresAt = 0;
 
-  function showMessage(message, kind = "error") {
-    notice.textContent = message;
-    notice.className = "message show " + kind;
-  }
-  function clearMessage() { notice.className = "message"; notice.textContent = ""; }
-  function showPhoneMessage(message, kind = "error") { phoneNotice.textContent = message; phoneNotice.className = "message show " + kind; }
-  function clearPhoneMessage() { phoneNotice.className = "message"; phoneNotice.textContent = ""; }
-  function setBusy(busy, label) {
-    const button = $("submitBtn");
-    button.disabled = busy;
-    button.innerHTML = busy ? '<i class="fa-solid fa-spinner fa-spin"></i> Please wait…' : label;
-    $("googleBtn").disabled = busy;
-    if ($("sendOtpBtn")) $("sendOtpBtn").disabled = busy;
-  }
-  function setMode(next) {
-    mode = next;
-    resetMode = false;
-    clearMessage();
-    $("authPanel").classList.remove("hidden");
-    $("resetPanel").classList.add("hidden");
-    $("signupTab").classList.toggle("active", mode === "signup");
-    $("loginTab").classList.toggle("active", mode === "login");
-    $("nameField").classList.toggle("hidden", mode !== "signup");
-    $("confirmField").classList.toggle("hidden", mode !== "signup");
-    $("termsRow").classList.toggle("hidden", mode !== "signup");
-    $("loginExtras").classList.toggle("hidden", mode !== "login");
-    $("confirmPassword").required = mode === "signup";
-    $("fullName").required = mode === "signup";
-    $("terms").required = mode === "signup";
-    $("password").autocomplete = mode === "signup" ? "new-password" : "current-password";
-    $("pageHeading").textContent = mode === "signup" ? "Create your account" : "Welcome back";
-    $("pageSubheading").textContent = mode === "signup" ? "Join LAREL for a smoother checkout and a place to keep your orders together." : "Log in to continue shopping and access your account.";
-    $("submitBtn").innerHTML = mode === "signup" ? 'Create account <i class="fa-solid fa-arrow-right"></i>' : 'Log in <i class="fa-solid fa-arrow-right"></i>';
-    $("googleBtn").classList.remove("hidden");
-    $("authForm").classList.remove("hidden");
-    document.querySelector(".divider").classList.remove("hidden");
-  }
-  function showReset() {
-    resetMode = true;
-    clearMessage();
-    $("signupTab").classList.remove("active");
-    $("loginTab").classList.add("active");
-    $("nameField").classList.add("hidden");
-    $("confirmField").classList.add("hidden");
-    $("termsRow").classList.add("hidden");
-    $("loginExtras").classList.add("hidden");
-    $("authForm").classList.add("hidden");
-    $("googleBtn").classList.add("hidden");
-    document.querySelector(".divider").classList.add("hidden");
-    $("resetPanel").classList.remove("hidden");
-    $("pageHeading").textContent = "Choose a new password";
-    $("pageSubheading").textContent = "Set a new password for your LAREL account.";
-  }
   function showAccount(user) {
     $("authPanel").classList.add("hidden");
     $("accountPanel").classList.remove("hidden");
     $("pageHeading").textContent = "Welcome to LAREL";
-    $("pageSubheading").textContent = "You're signed in and ready to shop.";
-    $("accountName").textContent = user.user_metadata?.full_name || user.user_metadata?.name || "You're signed in";
-    $("accountEmail").textContent = user.email || "";
+    $("pageSubheading").textContent = "Your account is ready. Happy shopping!";
+    const phone = user.user_metadata?.mobile_number || "";
+    $("accountIdentity").textContent = user.email || phone || "LAREL member";
   }
-  function showConfigError() {
-    showMessage("Setup needed: open auth.js in your GitHub repository and add your Supabase Project URL and publishable (or anon) key. Then configure the Supabase redirect URLs. See the setup guide.", "error");
+  function configError() {
+    notify("Authentication is not configured. Please contact LAREL support.", "error");
+    $("sendOtpBtn").disabled = true;
     $("googleBtn").disabled = true;
-    $("submitBtn").disabled = true;
   }
-
-  $("signupTab").addEventListener("click", () => setMode("signup"));
-  $("loginTab").addEventListener("click", () => setMode("login"));
-  $("forgotLink").addEventListener("click", async (event) => {
+  function createCode() {
+    const values = new Uint32Array(1);
+    crypto.getRandomValues(values);
+    return String(values[0] % 1000000).padStart(6, "0");
+  }
+  phoneForm.addEventListener("submit", async event => {
     event.preventDefault();
-    clearMessage();
-    if (!client) return showConfigError();
-    const email = $("email").value.trim();
-    if (!email) return showMessage("Enter your email address first, then select Forgot password.");
-    const { error } = await client.auth.resetPasswordForEmail(email, {
-      redirectTo: location.origin + location.pathname + "?mode=reset"
-    });
-    if (error) return showMessage(error.message);
-    showMessage("If an account exists for that email, a password reset link has been sent. Check your inbox.", "success");
-  });
-
-  $("authForm").addEventListener("submit", async (event) => {
-    event.preventDefault();
-    clearMessage();
-    if (!client) return showConfigError();
-    const email = $("email").value.trim();
-    const password = $("password").value;
-    setBusy(true, "");
-    try {
-      if (mode === "signup") {
-        if ($("fullName").value.trim().length < 2) return showMessage("Please enter your name (at least 2 characters).");
-        if (password !== $("confirmPassword").value) return showMessage("Passwords do not match.");
-        if (!$("terms").checked) return showMessage("Please agree to the Terms and Privacy Policy.");
-        const { data, error } = await client.auth.signUp({
-          email, password,
-          options: {
-            data: { full_name: $("fullName").value.trim() },
-            emailRedirectTo: location.origin + location.pathname
-          }
-        });
-        if (error) return showMessage(error.message);
-        if (data.session && data.user) {
-          showAccount(data.user);
-        } else {
-          setMode("login");
-          showMessage("Account created. Check your email and click the confirmation link before logging in.", "success");
-        }
-      } else {
-        const { data, error } = await client.auth.signInWithPassword({ email, password });
-        if (error) return showMessage(error.message);
-        if (data.user) showAccount(data.user);
-      }
-    } catch (error) {
-      showMessage(error.message || "Something went wrong. Please try again.");
-    } finally {
-      setBusy(false, mode === "signup" ? 'Create account <i class="fa-solid fa-arrow-right"></i>' : 'Log in <i class="fa-solid fa-arrow-right"></i>');
-    }
-  });
-
-  $("googleBtn").addEventListener("click", async () => {
-    clearMessage();
-    if (!client) return showConfigError();
-    const { error } = await client.auth.signInWithOAuth({
-      provider: "google",
-      options: { redirectTo: location.origin + location.pathname }
-    });
-    if (error) showMessage(error.message);
-  });
-
-  $("resetForm").addEventListener("submit", async (event) => {
-    event.preventDefault();
-    clearMessage();
-    if (!client) return showConfigError();
-    const password = $("newPassword").value;
-    if (password.length < 8) return showMessage("Use at least 8 characters for your password.");
-    const { error } = await client.auth.updateUser({ password });
-    if (error) return showMessage(error.message);
-    showMessage("Password updated successfully. You can now continue shopping.", "success");
-    $("resetPanel").classList.add("hidden");
-    $("authForm").classList.remove("hidden");
-    $("googleBtn").classList.remove("hidden");
-    document.querySelector(".divider").classList.remove("hidden");
-    setMode("login");
-  });
-
-
-  // Phone OTP: Supabase creates a new auth user on first successful verification.
-  $("phoneSendForm").addEventListener("submit", async (event) => {
-    event.preventDefault();
-    clearPhoneMessage();
-    if (!client) return showPhoneMessage("Authentication is not configured. Please try again later.");
-    const name = $("phoneName").value.trim();
+    if (!client) return configError();
     let phone = $("phoneNumber").value.replace(/[\s()-]/g, "");
-    if (phone.startsWith("0")) phone = "+91" + phone.slice(1);
+    if (/^0\d{10}$/.test(phone)) phone = "+91" + phone.slice(1);
     else if (/^\d{10}$/.test(phone)) phone = "+91" + phone;
-    if (name.length < 2) return showPhoneMessage("Please enter your full name.");
-    if (!/^\+[1-9]\d{7,14}$/.test(phone)) return showPhoneMessage("Enter a valid mobile number with country code, e.g. +919876543210.");
-    const button = $("sendOtpBtn");
-    button.disabled = true;
-    button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending OTP…';
-    try {
-      const { error } = await client.auth.signInWithOtp({
-        phone,
-        options: { shouldCreateUser: true, data: { full_name: name } }
-      });
-      if (error) throw error;
-      pendingPhone = phone;
-      $("phoneSendForm").classList.add("hidden");
-      $("phoneVerifyForm").classList.remove("hidden");
-      showPhoneMessage("OTP sent to " + phone + ". Enter the 6-digit code to continue.", "success");
-      $("phoneOtp").focus();
-    } catch (error) {
-      showPhoneMessage(error.message || "Could not send OTP. Please try again.");
-    } finally {
-      button.disabled = false;
-      button.innerHTML = 'Send OTP <i class="fa-solid fa-arrow-right"></i>';
-    }
+    if (!/^\+[1-9]\d{7,14}$/.test(phone)) return notify("Enter a valid mobile number, e.g. +91 98765 43210.", "error");
+
+    pendingPhone = phone;
+    pendingCode = createCode();
+    codeExpiresAt = Date.now() + 5 * 60 * 1000;
+    phoneForm.classList.add("hidden");
+    verifyForm.classList.remove("hidden");
+    $("verifyPhoneLabel").textContent = "Confirmation code for " + phone;
+    $("phoneOtp").value = "";
+    $("phoneOtp").focus();
+    notify("Your LAREL in-app OTP is " + pendingCode + ". It expires in 5 minutes. No SMS was sent.", "success");
   });
 
-  $("phoneVerifyForm").addEventListener("submit", async (event) => {
+  verifyForm.addEventListener("submit", async event => {
     event.preventDefault();
-    clearPhoneMessage();
-    if (!client || !pendingPhone) return showPhoneMessage("Please request a new OTP first.");
-    const token = $("phoneOtp").value.trim();
-    if (!/^\d{6}$/.test(token)) return showPhoneMessage("Enter the 6-digit OTP.");
+    if (!client || !pendingCode) return notify("Please request a new code first.", "error");
+    const entered = $("phoneOtp").value.trim();
+    if (Date.now() > codeExpiresAt) {
+      pendingCode = "";
+      verifyForm.classList.add("hidden");
+      phoneForm.classList.remove("hidden");
+      return notify("This code has expired. Please generate a new one.", "error");
+    }
+    if (entered !== pendingCode) return notify("Incorrect code. Please check the in-app notification and try again.", "error");
+
     const button = $("verifyOtpBtn");
     button.disabled = true;
-    button.textContent = "Verifying…";
+    button.textContent = "Creating account…";
     try {
-      const { data, error } = await client.auth.verifyOtp({ phone: pendingPhone, token, type: "sms" });
+      // Anonymous Supabase Auth provides a persistent authenticated session without collecting email/password.
+      const { data, error } = await client.auth.signInAnonymously();
       if (error) throw error;
-      if (!data.user) throw new Error("OTP verified, but no user account was returned. Please try again.");
-      const name = $("phoneName").value.trim();
-      if (name.length >= 2) {
-        const { error: profileError } = await client.auth.updateUser({ data: { full_name: name, name } });
-        if (profileError) throw profileError;
-        data.user.user_metadata = { ...(data.user.user_metadata || {}), full_name: name, name };
-      }
-      showAccount(data.user);
+      const { data: updated, error: updateError } = await client.auth.updateUser({
+        data: { mobile_number: pendingPhone, phone_verified: false, signup_method: "in_app_code" }
+      });
+      if (updateError) throw updateError;
+      pendingCode = "";
+      showAccount(updated?.user || data.user);
+      notify("Your LAREL account has been created successfully!", "success");
     } catch (error) {
-      showPhoneMessage(error.message || "OTP verification failed. Check the code and try again.");
+      const message = /anonymous|disabled/i.test(error.message || "")
+        ? "Mobile signup setup needed: enable Anonymous Sign-Ins in Supabase Dashboard → Authentication → Sign In / Providers → Anonymous."
+        : (error.message || "Could not create your account. Please try again.");
+      notify(message, "error");
     } finally {
       button.disabled = false;
-      button.textContent = "Verify OTP & Continue";
+      button.textContent = "Verify & Create Account";
     }
   });
 
   $("changePhoneBtn").addEventListener("click", () => {
-    clearPhoneMessage();
+    pendingCode = "";
     pendingPhone = "";
+    verifyForm.classList.add("hidden");
+    phoneForm.classList.remove("hidden");
+  });
+  $("resendOtpBtn").addEventListener("click", () => {
+    if (!pendingPhone) return;
+    pendingCode = createCode();
+    codeExpiresAt = Date.now() + 5 * 60 * 1000;
     $("phoneOtp").value = "";
-    $("phoneVerifyForm").classList.add("hidden");
-    $("phoneSendForm").classList.remove("hidden");
+    notify("Your new LAREL in-app OTP is " + pendingCode + ". It expires in 5 minutes. No SMS was sent.", "success");
   });
 
+  $("googleBtn").addEventListener("click", async () => {
+    if (!client) return configError();
+    const { error } = await client.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: location.origin + location.pathname }
+    });
+    if (error) notify(error.message, "error");
+  });
   $("continueBtn").addEventListener("click", () => { location.href = "index.html"; });
   $("logoutBtn").addEventListener("click", async () => {
     if (client) await client.auth.signOut();
     $("accountPanel").classList.add("hidden");
     $("authPanel").classList.remove("hidden");
-    setMode("login");
-    showMessage("You have been logged out.", "success");
+    phoneForm.classList.remove("hidden");
+    verifyForm.classList.add("hidden");
+    notify("You have been logged out.", "success");
   });
 
-  if (!client) {
-    setMode("signup");
-    showConfigError();
-  } else if (resetMode) {
-    showReset();
-  } else {
-    setMode("signup");
+  if (!client) configError();
+  else {
     client.auth.getSession().then(({data, error}) => {
-      if (error) showMessage(error.message);
+      if (error) notify(error.message, "error");
       if (data?.session?.user) showAccount(data.session.user);
     });
     client.auth.onAuthStateChange((event, session) => {
-      if (session?.user && (event === "SIGNED_IN" || event === "INITIAL_SESSION" || event === "PASSWORD_RECOVERY")) {
-        if (event === "PASSWORD_RECOVERY" || resetMode) showReset();
-        else showAccount(session.user);
-      }
+      if (session?.user && (event === "SIGNED_IN" || event === "INITIAL_SESSION")) showAccount(session.user);
     });
   }
 })();
