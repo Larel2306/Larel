@@ -238,6 +238,11 @@
     $("profileName").textContent = name;
     $("profilePhone").textContent = customerPhone(user) || "Not added";
     $("profileMethod").textContent = user.user_metadata?.signup_method === "in_app_code" ? "Mobile number signup" : "LAREL account";
+    if ($("sidebarCustomerName")) $("sidebarCustomerName").textContent = name;
+    if ($("sidebarCustomerPhone")) $("sidebarCustomerPhone").textContent = customerPhone(user) || "Mobile number not added";
+    if ($("overviewName")) $("overviewName").textContent = name;
+    if ($("overviewPhone")) $("overviewPhone").textContent = customerPhone(user) || "Not added";
+    if ($("memberSince")) $("memberSince").textContent = user.created_at ? new Date(user.created_at).toLocaleDateString("en-IN", {month:"short",year:"numeric"}) : "LAREL Member";
     try {
       const { data: orders, error: ordersError } = await client.from("orders").select("*").eq("phone", customerPhone(user).replace(/\D/g, "").slice(-10));
       if (ordersError) throw ordersError;
