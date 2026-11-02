@@ -19,8 +19,12 @@
 </style>
 <style id="larel-coupon-multiselect-style">
 .coupon-product-picker{position:relative;width:100%}.coupon-picker-trigger{display:flex;align-items:center;gap:10px;width:100%;min-height:44px;padding:10px 13px;border:1px solid rgba(0,210,255,.28);border-radius:11px;background:linear-gradient(135deg,#091a2a,#071522);color:#f5f8fc;text-align:left;cursor:pointer}.coupon-picker-trigger:focus,.coupon-picker-trigger:hover{border-color:#00c8f0;box-shadow:0 0 0 3px rgba(0,210,255,.08)}.coupon-picker-trigger .picker-summary{flex:1;color:#b9cbd8;font-size:13px}.coupon-picker-trigger .picker-arrow{color:#00d2ff}.coupon-picker-menu{position:absolute;z-index:30;top:calc(100% + 7px);left:0;right:0;padding:10px;border:1px solid rgba(0,210,255,.25);border-radius:13px;background:#071522;box-shadow:0 16px 38px rgba(0,0,0,.42)}.coupon-picker-menu.hidden{display:none}.coupon-picker-search{width:100%;margin-bottom:8px!important;background:#0b2032!important}.coupon-picker-results{max-height:220px;overflow:auto;display:grid;gap:5px}.coupon-product-option{display:flex;align-items:center;gap:9px;width:100%;padding:9px 10px;border:1px solid transparent;border-radius:9px;background:transparent;color:#eaf5fb;text-align:left;cursor:pointer;font:inherit}.coupon-product-option:hover{background:rgba(0,210,255,.08)}.coupon-product-option.selected{border-color:rgba(0,195,255,.45);background:rgba(0,145,205,.22);color:#fff}.coupon-product-option .picker-check{width:17px;height:17px;display:grid;place-items:center;border:1px solid #527084;border-radius:5px;color:transparent;font-size:11px;flex:none}.coupon-product-option.selected .picker-check{background:#00aee0;border-color:#00d2ff;color:#00131e}.coupon-selected-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.coupon-selected-chip{display:inline-flex;align-items:center;gap:7px;padding:5px 9px;border:1px solid rgba(0,210,255,.25);border-radius:999px;background:rgba(0,145,205,.13);color:#dff8ff;font-size:11px}.coupon-selected-chip button{border:0;background:none;color:#00d2ff;cursor:pointer;font-size:14px;padding:0}.coupon-picker-note{font-size:11px;color:#8da8b9;margin-top:6px}.coupon-native-select{display:none!important}
+.coupon-profit-filter{padding:7px 2px 10px;border-bottom:1px solid rgba(0,210,255,.14);margin-bottom:7px}.coupon-profit-filter label{display:block;font-size:11px;color:#9fb6c9;margin:0 0 6px}.coupon-profit-filter input{padding:9px 11px}.coupon-product-option{display:grid;grid-template-columns:17px 48px minmax(0,1fr) auto;align-items:center;gap:10px}.coupon-product-option img{width:48px;height:58px;object-fit:cover;border-radius:7px;background:#172234}.coupon-product-option .coupon-product-name{font-size:12px;font-weight:700;line-height:1.35}.coupon-product-option .coupon-product-id{display:block;color:#7f95aa;font-size:10px;margin-top:3px}.coupon-product-option .coupon-product-profit{white-space:nowrap;text-align:right;color:#35d49a;font-size:12px;font-weight:800}.coupon-selected-chip{gap:6px}.coupon-selected-chip img{width:22px;height:26px;object-fit:cover;border-radius:4px}.coupon-selected-chip strong{color:#35d49a;font-size:10px}.price-profit-note{color:#35d49a;font-weight:800}
 </style>
 <style id="larel-unlimited-hero-admin">.hero-image-row input{min-width:0}.hero-image-row .file-upload{min-width:112px}@media(max-width:600px){.hero-image-row{grid-template-columns:1fr!important}.hero-image-row .hero-image-alt{grid-column:1!important}}</style>
+<style id="larel-price-profit-picker-style">
+.coupon-profit-filter{padding:7px 2px 10px;border-bottom:1px solid rgba(0,210,255,.14);margin-bottom:7px}.coupon-profit-filter label{display:block;font-size:11px;color:#9fb6c9;margin:0 0 6px}.coupon-profit-filter input{padding:9px 11px}.coupon-product-option{display:grid;grid-template-columns:17px 48px minmax(0,1fr) auto;align-items:center;gap:10px}.coupon-product-option img{width:48px;height:58px;object-fit:cover;border-radius:7px;background:#172234}.coupon-product-option .coupon-product-name{font-size:12px;font-weight:700;line-height:1.35}.coupon-product-option .coupon-product-id{display:block;color:#7f95aa;font-size:10px;margin-top:3px}.coupon-product-option .coupon-product-profit{white-space:nowrap;text-align:right;color:#35d49a;font-size:12px;font-weight:800}
+</style>
 <style id="larel-unified-footer-style">
 .larel-site-footer{position:relative;isolation:isolate;overflow:hidden;margin-top:72px;padding:58px max(5%,calc((100% - 1240px)/2)) 22px;background:linear-gradient(135deg,#050912 0%,#080f1d 52%,#071522 100%);border-top:1px solid rgba(34,211,238,.24);color:#dbe7f5;font-family:inherit}
 .larel-site-footer:before{content:"";position:absolute;z-index:-1;width:380px;height:220px;right:-100px;top:-140px;border-radius:50%;background:rgba(0,190,255,.12);filter:blur(55px);pointer-events:none}
@@ -88,13 +92,16 @@
   </section>
   <section id="productsView" class="view">
    <div class="section-head"><h2>Product catalog</h2><button class="btn" id="newProductBtn"><i class="fa-solid fa-plus"></i> Add product</button></div>
-   <div class="panel table-wrap"><table><thead><tr><th>Product</th><th>ID</th><th>Category</th><th>Price</th><th>Visibility</th><th>Actions</th></tr></thead><tbody id="productsRows"><tr><td colspan="6" class="empty">Loading…</td></tr></tbody></table></div>
+   <div class="panel table-wrap"><table><thead><tr><th>Product</th><th>ID</th><th>Category</th><th>Selling Price</th><th>Profit</th><th>Visibility</th><th>Actions</th></tr></thead><tbody id="productsRows"><tr><td colspan="6" class="empty">Loading…</td></tr></tbody></table></div>
    <div id="productEditor" class="panel hidden"><div class="section-head" style="margin-top:0"><h2 id="productFormTitle">Add product</h2><button class="btn secondary tiny" id="closeProductForm">Close</button></div>
     <form id="productForm"><input type="hidden" id="productRowId"><div class="form-grid">
      <div><label>Product ID (e.g. tshirt3)</label><input id="pId" required></div><div><label>Product title</label><input id="pTitle" required></div>
      <div><label>Category</label><select id="pCategory"><option value="tshirts">T-shirts</option><option value="hoodies">Hoodies</option><option value="sweatshirts">Sweatshirts</option><option value="polos">Polos</option><option value="other">Other</option></select></div>
-     <div><label>Price (₹)</label><input id="pPrice" type="number" min="0" step="0.01" required></div>
-     <div><label>Old price (₹)</label><input id="pOldPrice" type="number" min="0" step="0.01"></div><div class="wide"><label>Colour-wise product images</label><p class="muted">Add separate images for each colour. When a customer selects a colour, the product page will display that colour’s image gallery. Upload image files or paste image URLs.</p><div id="productColorFields"></div><button type="button" class="btn secondary tiny" id="addProductColor">+ Add another colour</button></div>
+     <div><label>Original Price / Product Cost (₹)</label><input id="pCostPrice" type="number" min="0" step="0.01" required placeholder="Enter Qikink base cost"></div>
+     <div><label>Selling Price (₹) — editable</label><input id="pPrice" type="number" min="0" step="0.01" required></div>
+     <div><label>MRP / Compare-at Price (₹)</label><input id="pOldPrice" type="number" min="0" step="0.01"></div>
+     <div><label>Estimated Profit per Product</label><input id="pProfitPreview" type="text" readonly value="₹0" style="color:#35d49a;font-weight:800"></div>
+     <div class="wide"><p class="muted" style="font-size:11px;margin:0">Suggested selling price = product cost × 1.8, rounded up to the next ₹10. You can edit it anytime. Profit shown here is before shipping, ads, payment fees and taxes.</p></div><div class="wide"><label>Colour-wise product images</label><p class="muted">Add separate images for each colour. When a customer selects a colour, the product page will display that colour’s image gallery. Upload image files or paste image URLs.</p><div id="productColorFields"></div><button type="button" class="btn secondary tiny" id="addProductColor">+ Add another colour</button></div>
      <div class="wide"><label>Description</label><textarea id="pDescription" rows="3"></textarea></div>
      <div><label>Sizes (comma separated)</label><input id="pSizes" placeholder="S, M, L, XL, XXL"></div>
      <div><label>Active on store?</label><select id="pActive"><option value="true">Yes</option><option value="false">No</option></select></div>
@@ -112,7 +119,7 @@
   </section>
   <section id="couponsView" class="view">
    <div class="section-head"><h2>Coupon Management</h2><button class="btn secondary tiny" id="refreshCoupons">Refresh</button></div>
-   <div class="panel"><form id="couponForm" class="form-grid"><div><label>Coupon Code</label><input id="couponCode" required placeholder="LAREL10"></div><div><label>Discount Type</label><select id="couponType"><option value="percentage">Percentage (%)</option><option value="fixed">Fixed amount (₹)</option></select></div><div><label>Discount Value</label><input id="couponValue" type="number" min="0.01" step="0.01" required></div><div class="wide"><label for="couponProductSearch">Apply To Products</label><div class="coupon-product-picker"><button type="button" class="coupon-picker-trigger" id="couponPickerToggle" aria-expanded="false"><i class="fa-solid fa-magnifying-glass" style="color:#00d2ff"></i><span class="picker-summary" id="couponSelectionCount">All products (store-wide)</span><i class="fa-solid fa-chevron-down picker-arrow"></i></button><div class="coupon-picker-menu hidden" id="couponPickerMenu"><input id="couponProductSearch" class="coupon-picker-search" type="search" placeholder="Search any product..." autocomplete="off"><div class="coupon-picker-results" id="couponProductResults"></div></div><div class="coupon-selected-chips" id="couponSelectedChips"></div></div><select id="couponProduct" class="coupon-native-select" multiple aria-hidden="true" tabindex="-1"></select><div class="coupon-picker-note">Search and tap products to select multiple. Selected products turn blue. Leave empty to apply to all products.</div></div><div><label>Minimum Order Value (₹)</label><input id="couponMin" type="number" min="0" step="0.01" value="0"></div><div><label>Maximum Discount (₹, optional)</label><input id="couponMax" type="number" min="0" step="0.01"></div><div><label>Usage Limit (optional)</label><input id="couponLimit" type="number" min="1" step="1"></div><div><label>Expiry Date (optional)</label><input id="couponExpiry" type="date"></div><div><label>Active?</label><select id="couponActive"><option value="true">Yes</option><option value="false">No</option></select></div><div class="wide"><button class="btn" type="submit">Create Coupon</button><span id="couponMessage" class="message"></span></div></form></div>
+   <div class="panel"><form id="couponForm" class="form-grid"><div><label>Coupon Code</label><input id="couponCode" required placeholder="LAREL10"></div><div><label>Discount Type</label><select id="couponType"><option value="percentage">Percentage (%)</option><option value="fixed">Fixed amount (₹)</option></select></div><div><label>Discount Value</label><input id="couponValue" type="number" min="0.01" step="0.01" required></div><div class="wide"><label for="couponProductSearch">Apply To Products</label><div class="coupon-product-picker"><button type="button" class="coupon-picker-trigger" id="couponPickerToggle" aria-expanded="false"><i class="fa-solid fa-magnifying-glass" style="color:#00d2ff"></i><span class="picker-summary" id="couponSelectionCount">All products (store-wide)</span><i class="fa-solid fa-chevron-down picker-arrow"></i></button><div class="coupon-picker-menu hidden" id="couponPickerMenu"><input id="couponProductSearch" class="coupon-picker-search" type="search" placeholder="Search products by name..." autocomplete="off"><div class="coupon-profit-filter"><label for="couponMinProfit">Minimum profit per product (₹)</label><input id="couponMinProfit" type="number" min="0" step="1" value="0" placeholder="e.g. 200"></div><div class="coupon-picker-results" id="couponProductResults"></div></div><div class="coupon-selected-chips" id="couponSelectedChips"></div></div><select id="couponProduct" class="coupon-native-select" multiple aria-hidden="true" tabindex="-1"></select><div class="coupon-picker-note">Each result shows its product image, name and estimated profit on the right. Set a minimum profit to filter the products. Leave empty to apply to all products.</div></div><div><label>Minimum Order Value (₹)</label><input id="couponMin" type="number" min="0" step="0.01" value="0"></div><div><label>Maximum Discount (₹, optional)</label><input id="couponMax" type="number" min="0" step="0.01"></div><div><label>Usage Limit (optional)</label><input id="couponLimit" type="number" min="1" step="1"></div><div><label>Expiry Date (optional)</label><input id="couponExpiry" type="date"></div><div><label>Active?</label><select id="couponActive"><option value="true">Yes</option><option value="false">No</option></select></div><div class="wide"><button class="btn" type="submit">Create Coupon</button><span id="couponMessage" class="message"></span></div></form></div>
    <div class="panel table-wrap"><table><thead><tr><th>Code</th><th>Discount</th><th>Applies To</th><th>Minimum Order</th><th>Expiry</th><th>Usage</th><th>Status</th><th>Action</th></tr></thead><tbody id="couponRows"><tr><td colspan="8" class="empty">Loading…</td></tr></tbody></table></div>
    <p class="muted" style="font-size:11px">A coupon set to All Products is store-wide. A coupon assigned to a product is restricted to that product. Checkout validation and redemption still need to be connected to the storefront before customers can use coupons.</p>
   </section>
@@ -135,13 +142,19 @@
 </section>
 <section id="contentView" class="view">
 <div class="section-head"><h2>Homepage Images</h2><span class="muted">Manage images shown on your home page</span></div>
-<div class="panel"><p class="muted">Upload images directly to LAREL Supabase Storage or paste an image URL. Add unlimited Trending Drops images.</p>
+<div class="panel"><p class="muted">Control the homepage hero, all category images, Trending Drops and editorial / lower homepage images. Upload images directly to LAREL Supabase Storage or paste an image URL.</p>
 <form id="homeImagesForm"><h3>Hero / Main banner</h3><p class="muted" style="font-size:12px;margin:6px 0 12px">Add as many banner slides as you need. Upload an image or paste its URL.</p><div id="homeHeroFields"></div><button type="button" class="btn secondary tiny" id="addHeroImage">+ Add hero banner image</button>
 <h3 style="margin-top:22px">Shop by Category</h3><div class="form-grid">
 <div><label>T-Shirts image URL</label><input id="homeCatTshirts" type="url"><span class="home-upload-homeCatTshirts"></span></div><div><label>Hoodies image URL</label><input id="homeCatHoodies" type="url"><span class="home-upload-homeCatHoodies"></span></div>
 <div><label>Bottomwear image URL</label><input id="homeCatBottomwear" type="url"><span class="home-upload-homeCatBottomwear"></span></div><div><label>Sweatshirts image URL</label><input id="homeCatSweatshirts" type="url"><span class="home-upload-homeCatSweatshirts"></span></div><div><label>Polos image URL</label><input id="homeCatPolos" type="url"><span class="home-upload-homeCatPolos"></span></div></div>
 
-<div><button class="btn" type="submit" style="margin-top:18px">Save Homepage Images</button><span id="homeImagesMessage" class="message"></span></div></form></div>
+<h3 style="margin-top:24px">Trending Drops Images</h3><p class="muted" style="font-size:12px;margin:6px 0 12px">Manage the scrolling image cards on the homepage.</p><div id="homeTrendingFields"></div><button type="button" class="btn secondary tiny" id="addTrendingImage">+ Add Trending image</button>
+<h3 style="margin-top:24px">Editorial / Lower Homepage Images</h3><p class="muted" style="font-size:12px;margin:6px 0 12px">Control the three editorial images further down the homepage.</p><div class="form-grid">
+<div><label>Editorial image 1</label><input id="homeEditorial1" type="url" placeholder="Image URL"><span class="home-upload-homeEditorial1"></span></div>
+<div><label>Editorial image 2</label><input id="homeEditorial2" type="url" placeholder="Image URL"><span class="home-upload-homeEditorial2"></span></div>
+<div><label>Editorial image 3</label><input id="homeEditorial3" type="url" placeholder="Image URL"><span class="home-upload-homeEditorial3"></span></div>
+</div>
+<div><button class="btn" type="submit" style="margin-top:18px">Save All Homepage Images</button><span id="homeImagesMessage" class="message"></span></div></form></div>
 <div class="panel"><h3>Saved homepage image settings</h3><pre id="homeImagesPreview" class="muted" style="white-space:pre-wrap;overflow-wrap:anywhere"></pre></div></section>
  </main>
 </div>
@@ -278,9 +291,23 @@ async function loadDashboard(){
  $("statProducts").textContent=p.error?"—":(p.count??0);$("statCustomers").textContent=c.error?"—":(c.count??0);
  $("recentOrders").innerHTML=o.error?'<tr><td colspan="5" class="empty">Could not load orders. Check table permissions.</td></tr>':orders.slice(0,6).map(x=>'<tr><td>'+safe(x.order_number||("#"+x.id))+'</td><td>'+safe(x.customer_name)+'</td><td>'+money(x.total_amount)+'</td><td><span class="pill">'+safe(x.order_status)+'</span></td><td>'+new Date(x.created_at).toLocaleDateString("en-IN")+'</td></tr>').join("")||'<tr><td colspan="5" class="empty">No orders yet.</td></tr>';
 }
+function suggestedSellingPrice(cost){const raw=Math.max(0,Number(cost||0))*1.8;return Math.ceil(raw/10)*10;}
+function updateProductProfitPreview(){
+ const cost=Number($("pCostPrice").value||0),price=Number($("pPrice").value||0);
+ $("pProfitPreview").value=money(price-cost);
+ $("pProfitPreview").style.color=price>=cost?"#35d49a":"#ff647c";
+}
+$("pCostPrice").addEventListener("input",()=>{
+ const cost=Number($("pCostPrice").value||0);
+ if(!$("pPrice").dataset.manualPrice && cost>0)$("pPrice").value=suggestedSellingPrice(cost);
+ updateProductProfitPreview();
+});
+$("pPrice").addEventListener("input",()=>{$("pPrice").dataset.manualPrice="true";updateProductProfitPreview();});
+$("pOldPrice").addEventListener("input",()=>{});
+
 async function loadProducts(){
  const {data,error}=await db.from("products").select("*").order("created_at",{ascending:false});
- $("productsRows").innerHTML=error?'<tr><td colspan="6" class="empty">'+safe(error.message)+'</td></tr>':(data||[]).map(p=>'<tr><td><div style="display:flex;align-items:center;gap:10px">'+(p.images?.[0]?'<img class="product-thumb" src="'+safe(p.images[0])+'" alt="">':'')+'<span>'+safe(p.title)+'</span></div></td><td>'+safe(p.product_id)+'</td><td>'+safe(p.category)+'</td><td>'+money(p.price)+'</td><td><span class="pill">'+(p.is_active?"Active":"Hidden")+'</span></td><td><div class="actions"><button class="btn secondary tiny" onclick="editProduct('+p.id+')">Edit</button><button class="btn danger tiny" onclick="deleteProduct('+p.id+')">Delete</button></div></td></tr>').join("")||'<tr><td colspan="6" class="empty">No products yet. Add your first product.</td></tr>';
+ $("productsRows").innerHTML=error?'<tr><td colspan="6" class="empty">'+safe(error.message)+'</td></tr>':(data||[]).map(p=>'<tr><td><div style="display:flex;align-items:center;gap:10px">'+(p.images?.[0]?'<img class="product-thumb" src="'+safe(p.images[0])+'" alt="">':'')+'<span>'+safe(p.title)+'</span></div></td><td>'+safe(p.product_id)+'</td><td>'+safe(p.category)+'</td><td>'+money(p.price)+'</td><td><strong class="price-profit-note">'+money(Number(p.price||0)-Number(p.cost_price||0))+'</strong></td><td><span class="pill">'+(p.is_active?"Active":"Hidden")+'</span></td><td><div class="actions"><button class="btn secondary tiny" onclick="editProduct('+p.id+')">Edit</button><button class="btn danger tiny" onclick="deleteProduct('+p.id+')">Delete</button></div></td></tr>').join("")||'<tr><td colspan="7" class="empty">No products yet. Add your first product.</td></tr>';
 }
 
 function addColorImageField(container,value=""){
@@ -316,11 +343,11 @@ function defaultColorCode(name){
 $("addProductColor").onclick=()=>addProductColorField();
 window.editProduct=async id=>{
  const {data,error}=await db.from("products").select("*").eq("id",id).single();if(error)return alert(error.message);
- $("productEditor").classList.remove("hidden");$("productFormTitle").textContent="Edit product";$("productRowId").value=data.id;$("pId").value=data.product_id;$("pTitle").value=data.title;$("pCategory").value=data.category;$("pPrice").value=data.price;$("pOldPrice").value=data.old_price||"";
+ $("productEditor").classList.remove("hidden");$("productFormTitle").textContent="Edit product";$("productRowId").value=data.id;$("pId").value=data.product_id;$("pTitle").value=data.title;$("pCategory").value=data.category;$("pCostPrice").value=data.cost_price??"";$("pPrice").value=data.price;$("pPrice").dataset.manualPrice="true";$("pOldPrice").value=data.old_price||"";updateProductProfitPreview();
  setProductColorFields(data.colors||[]);$("pDescription").value=data.description||"";$("pSizes").value=(data.sizes||[]).join(", ");$("pActive").value=String(data.is_active);$("productEditor").scrollIntoView({behavior:"smooth"});
 };
 window.deleteProduct=async id=>{if(!confirm("Delete this product?"))return;const {error}=await db.from("products").delete().eq("id",id);if(error)alert(error.message);else{await loadProducts();await loadDashboard();}};
-$("newProductBtn").onclick=()=>{$("productForm").reset();$("productRowId").value="";setProductColorFields([]);$("productFormTitle").textContent="Add product";$("productMessage").textContent="";$("productEditor").classList.remove("hidden");};
+$("newProductBtn").onclick=()=>{$("productForm").reset();$("productRowId").value="";$("pPrice").dataset.manualPrice="";$("pProfitPreview").value="₹0";setProductColorFields([]);$("productFormTitle").textContent="Add product";$("productMessage").textContent="";$("productEditor").classList.remove("hidden");};
 $("closeProductForm").onclick=()=>$("productEditor").classList.add("hidden");
 setProductColorFields([]);
 $("productForm").addEventListener("submit",async e=>{
@@ -333,7 +360,9 @@ $("productForm").addEventListener("submit",async e=>{
  if(!colors.length){showMessage("productMessage","Please add at least one colour.");return;}
  if(colors.some(c=>!c.images.length)){showMessage("productMessage","Please upload or add at least one image for every colour.");return;}
  const images=colors.flatMap(c=>c.images);
- const payload={product_id:productId,title:$("pTitle").value.trim(),category:$("pCategory").value,price:Number($("pPrice").value),old_price:$("pOldPrice").value?Number($("pOldPrice").value):null,images,description:$("pDescription").value,sizes:$("pSizes").value.split(",").map(x=>x.trim()).filter(Boolean),colors,is_active:$("pActive").value==="true",updated_at:new Date().toISOString()};
+ const costPrice=Number($("pCostPrice").value),sellingPrice=Number($("pPrice").value);
+ if(!Number.isFinite(costPrice)||costPrice<0||!Number.isFinite(sellingPrice)||sellingPrice<=0){showMessage("productMessage","Enter a valid product cost and selling price.");return;}
+ const payload={product_id:productId,title:$("pTitle").value.trim(),category:$("pCategory").value,cost_price:costPrice,price:sellingPrice,old_price:$("pOldPrice").value?Number($("pOldPrice").value):null,images,description:$("pDescription").value,sizes:$("pSizes").value.split(",").map(x=>x.trim()).filter(Boolean),colors,is_active:$("pActive").value==="true",updated_at:new Date().toISOString()};
  const saveButton=$("productForm").querySelector('button[type="submit"]');saveButton.disabled=true;saveButton.textContent="Saving…";
  try{if(!rowId){const {data:existing,error:checkError}=await db.from("products").select("id").eq("product_id",productId).maybeSingle();if(checkError)throw checkError;if(existing)throw new Error("This Product ID already exists. Please use a different Product ID, or edit the existing product.");}
  const q=rowId?db.from("products").update(payload).eq("id",rowId):db.from("products").insert(payload);const {error}=await q;if(error){if(error.code==="23505")throw new Error("This Product ID already exists. Please use a different Product ID, or edit the existing product.");throw error;}
@@ -350,6 +379,17 @@ function addHeroImageField(value="https://raw.githubusercontent.com/Larel2306/La
 }
 $("addHeroImage").onclick=()=>addHeroImageField("");
 ["homeCatTshirts","homeCatHoodies","homeCatBottomwear","homeCatSweatshirts","homeCatPolos"].forEach(id=>{const input=$(id);const upload=makeUploadButton(input,"homepage/categories");input.insertAdjacentElement("afterend",upload);});
+function addTrendingImageField(value="",title="",subtitle=""){
+ const row=document.createElement("div");row.className="hero-image-row";row.style.cssText="display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center;margin:10px 0;padding:10px;border:1px solid rgba(0,210,255,.18);border-radius:12px";
+ const input=document.createElement("input");input.type="url";input.className="trending-image-url";input.placeholder="Trending image URL";input.value=value;input.required=true;
+ const upload=makeUploadButton(input,"homepage/trending");
+ const remove=document.createElement("button");remove.type="button";remove.className="btn danger tiny";remove.textContent="Remove";remove.onclick=()=>row.remove();
+ const titleInput=document.createElement("input");titleInput.className="trending-image-title";titleInput.placeholder="Card title";titleInput.value=title;titleInput.style.gridColumn="1 / -1";
+ const subInput=document.createElement("input");subInput.className="trending-image-subtitle";subInput.placeholder="Card subtitle";subInput.value=subtitle;subInput.style.gridColumn="1 / -1";
+ row.append(input,upload,remove,titleInput,subInput);$("homeTrendingFields").appendChild(row);
+}
+$("addTrendingImage").onclick=()=>addTrendingImageField();
+["homeEditorial1","homeEditorial2","homeEditorial3"].forEach(id=>{const input=$(id);const upload=makeUploadButton(input,"homepage/editorial");input.insertAdjacentElement("afterend",upload);});
 async function loadContent(){
  const {data,error}=await db.from("site_content").select("content").eq("section_key","homepage_images").maybeSingle();
  if(error){$("homeImagesPreview").textContent=error.message;return;}
@@ -357,13 +397,17 @@ async function loadContent(){
  $("homeHeroFields").innerHTML="";
  (slides.length?slides:[{image:"https://raw.githubusercontent.com/Larel2306/Larel/main/Streetwear%20Redefined_%20Bold%20Urban%20Style.png",alt:"LAREL campaign image"}]).forEach(s=>addHeroImageField(typeof s==="string"?s:(s.image||s.url||s.src||""),typeof s==="string"?"":(s.alt||s.title||"")));
  const cats=c.categories||{};["tshirts","hoodies","bottomwear","sweatshirts","polos"].forEach(k=>$("homeCat"+k[0].toUpperCase()+k.slice(1)).value=cats[k]||"");
+ $("homeTrendingFields").innerHTML="";(c.trending||[]).forEach(item=>{const v=typeof item==="string"?{image:item}:item;addTrendingImageField(v.image||v.url||"",v.title||"",v.subtitle||"");});
+ const editorial=c.editorial||[];["homeEditorial1","homeEditorial2","homeEditorial3"].forEach((id,i)=>$(id).value=editorial[i]||"");
  $("homeImagesPreview").textContent=JSON.stringify(c,null,2);
 }
 $("homeImagesForm").addEventListener("submit",async e=>{
  e.preventDefault();
  const heroSlides=[...document.querySelectorAll(".hero-image-row")].map(row=>({image:row.querySelector(".hero-image-url").value.trim(),alt:row.querySelector(".hero-image-alt").value.trim()||"LAREL campaign"})).filter(x=>x.image);
  if(!heroSlides.length){showMessage("homeImagesMessage","Please add at least one hero banner image.");return;}
- const content={heroSlides,categories:{tshirts:$("homeCatTshirts").value.trim(),hoodies:$("homeCatHoodies").value.trim(),bottomwear:$("homeCatBottomwear").value.trim(),sweatshirts:$("homeCatSweatshirts").value.trim(),polos:$("homeCatPolos").value.trim()}};
+ const trending=[...document.querySelectorAll("#homeTrendingFields .hero-image-row")].map(row=>({image:row.querySelector(".trending-image-url").value.trim(),title:row.querySelector(".trending-image-title").value.trim(),subtitle:row.querySelector(".trending-image-subtitle").value.trim()})).filter(x=>x.image);
+ const editorial=["homeEditorial1","homeEditorial2","homeEditorial3"].map(id=>$(id).value.trim());
+ const content={heroSlides,categories:{tshirts:$("homeCatTshirts").value.trim(),hoodies:$("homeCatHoodies").value.trim(),bottomwear:$("homeCatBottomwear").value.trim(),sweatshirts:$("homeCatSweatshirts").value.trim(),polos:$("homeCatPolos").value.trim()},trending,editorial};
  const {error}=await db.from("site_content").upsert({section_key:"homepage_images",content,updated_at:new Date().toISOString()},{onConflict:"section_key"});
  showMessage("homeImagesMessage",error?error.message:"Homepage settings saved successfully.",!!error);if(!error)$("homeImagesPreview").textContent=JSON.stringify(content,null,2);
 });
@@ -424,17 +468,25 @@ function couponProductIds(value){
  try{const parsed=JSON.parse(raw);if(Array.isArray(parsed))return parsed.map(String);if(typeof parsed==="string")return [parsed];}catch(_){}
  return [raw];
 }
+let couponProductsCache=[];
 function selectedCouponProducts(){return [...$("couponProduct").selectedOptions];}
+function couponProductProfit(p){return Number(p.price||0)-Number(p.cost_price||0);}
+function couponProfitAfterDiscount(p){
+ const base=couponProductProfit(p),type=$("couponType").value,value=Number($("couponValue").value||0);
+ const discount=type==="percentage"?Number(p.price||0)*Math.min(100,value)/100:Math.min(Number(p.price||0),value);
+ const capped=$("couponMax").value?Math.min(discount,Number($("couponMax").value)):discount;
+ return base-capped;
+}
 function updateCouponSelectionCount(){
  const selected=selectedCouponProducts();
  $("couponSelectionCount").textContent=selected.length?selected.length+" product"+(selected.length===1?"":"s")+" selected":"All products (store-wide)";
- $("couponSelectedChips").innerHTML=selected.map(o=>'<span class="coupon-selected-chip">'+safe(o.textContent)+'<button type="button" data-remove-coupon-product="'+safe(o.value)+'" aria-label="Remove '+safe(o.textContent)+'">×</button></span>').join("");
+ $("couponSelectedChips").innerHTML=selected.map(o=>{const p=couponProductsCache.find(x=>String(x.product_id)===o.value)||{};return '<span class="coupon-selected-chip">'+(p.images?.[0]?'<img src="'+safe(p.images[0])+'" alt="">':'')+safe(p.title||o.textContent)+' <strong>'+money(couponProductProfit(p))+'</strong><button type="button" data-remove-coupon-product="'+safe(o.value)+'" aria-label="Remove '+safe(p.title||o.textContent)+'">×</button></span>';}).join("");
  renderCouponProductOptions();
 }
 function renderCouponProductOptions(){
- const term=$("couponProductSearch").value.trim().toLowerCase();
- const options=[...$("couponProduct").options].filter(o=>o.textContent.toLowerCase().includes(term));
- $("couponProductResults").innerHTML=options.map(o=>'<button type="button" class="coupon-product-option '+(o.selected?"selected":"")+'" data-coupon-product="'+safe(o.value)+'"><span class="picker-check"><i class="fa-solid fa-check"></i></span><span>'+safe(o.textContent)+'</span></button>').join("")||'<div class="coupon-picker-note" style="padding:10px">No matching products found.</div>';
+ const term=$("couponProductSearch").value.trim().toLowerCase(),minimum=Number($("couponMinProfit").value||0);
+ const options=[...$("couponProduct").options].filter(o=>{const p=couponProductsCache.find(x=>String(x.product_id)===o.value)||{};return o.textContent.toLowerCase().includes(term)&&couponProductProfit(p)>=minimum;});
+ $("couponProductResults").innerHTML=options.map(o=>{const p=couponProductsCache.find(x=>String(x.product_id)===o.value)||{},profit=couponProductProfit(p),after=couponProfitAfterDiscount(p),img=p.images?.[0]||"";return '<button type="button" class="coupon-product-option '+(o.selected?"selected":"")+'" data-coupon-product="'+safe(o.value)+'"><span class="picker-check"><i class="fa-solid fa-check"></i></span>'+(img?'<img src="'+safe(img)+'" alt="">':'<span></span>')+'<span><span class="coupon-product-name">'+safe(p.title||o.textContent)+'</span><small class="coupon-product-id">'+safe(p.product_id||"")+' · Selling '+money(p.price)+'</small></span><span class="coupon-product-profit" title="Estimated profit before coupon">Profit<br>'+money(profit)+'</span></button>';}).join("")||'<div class="coupon-picker-note" style="padding:10px">No products match this profit filter.</div>';
 }
 function toggleCouponProduct(id){
  const option=[...$("couponProduct").options].find(o=>o.value===id);
@@ -449,6 +501,8 @@ $("couponPickerToggle").addEventListener("click",()=>{
  if(opening){$("couponProductSearch").focus();renderCouponProductOptions();}
 });
 $("couponProductSearch").addEventListener("input",renderCouponProductOptions);
+$("couponMinProfit").addEventListener("input",renderCouponProductOptions);
+["couponType","couponValue","couponMax"].forEach(id=>$(id).addEventListener("input",renderCouponProductOptions));
 $("couponProductResults").addEventListener("click",e=>{
  e.stopPropagation();const button=e.target.closest("[data-coupon-product]");
  if(button){toggleCouponProduct(button.dataset.couponProduct);$("couponPickerMenu").classList.remove("hidden");$("couponPickerToggle").setAttribute("aria-expanded","true");}
@@ -467,13 +521,14 @@ document.addEventListener("click",e=>{
 async function loadCoupons(){
  const [couponResult,productResult]=await Promise.all([
   db.from("coupons").select("*").order("created_at",{ascending:false}),
-  db.from("products").select("product_id,title").order("title")
+  db.from("products").select("product_id,title,price,cost_price,images").order("title")
  ]);
  const products=productResult.data||[];
+ couponProductsCache=products;
  const productMap=new Map(products.map(p=>[String(p.product_id),p.title]));
  const selector=$("couponProduct");
  const previous=[...selector.selectedOptions].map(o=>o.value);
- selector.innerHTML=products.map(p=>'<option value="'+safe(p.product_id)+'">'+safe(p.title)+' ('+safe(p.product_id)+')</option>').join("");
+ selector.innerHTML=products.map(p=>'<option value="'+safe(p.product_id)+'">'+safe(p.title)+' ('+safe(p.product_id)+') — Profit '+money(Number(p.price||0)-Number(p.cost_price||0))+'</option>').join("");
  previous.forEach(id=>{const option=[...selector.options].find(o=>o.value===id);if(option)option.selected=true;});
  updateCouponSelectionCount();
  const {data,error}=couponResult;
@@ -493,7 +548,7 @@ $("couponForm").addEventListener("submit",async e=>{
  const {error}=await db.from("coupons").insert(payload);
  if(error){showMessage("couponMessage",error.message);return;}
  showMessage("couponMessage","Coupon created successfully.",false);
- $("couponForm").reset();$("couponMin").value="0";updateCouponSelectionCount();loadCoupons();
+ $("couponForm").reset();$("couponMin").value="0";$("couponMinProfit").value="0";updateCouponSelectionCount();loadCoupons();
 });
 window.toggleCoupon=async(id,active)=>{const {error}=await db.from("coupons").update({is_active:active}).eq("id",id);if(error)alert(error.message);else loadCoupons();};
 window.deleteCoupon=async id=>{if(!confirm("Delete this coupon?"))return;const {error}=await db.from("coupons").delete().eq("id",id);if(error)alert(error.message);else loadCoupons();};
