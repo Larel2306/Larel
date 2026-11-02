@@ -137,7 +137,7 @@
       $("verifyPhoneLabel").textContent = "In-app confirmation code for " + phone;
       $("phoneOtp").value = "";
       $("phoneOtp").focus();
-      notify("Your LAREL in-app OTP is " + pendingCode + ". It expires in 5 minutes. No SMS was sent.", "success");
+      notify("Your LAREL in-app OTP is " + pendingCode + ". It expires in 5 minutes.", "success");
     });
 
     verifyForm.addEventListener("submit", async event => {
@@ -201,7 +201,7 @@
       pendingCode = createCode();
       codeExpiresAt = Date.now() + 5 * 60 * 1000;
       $("phoneOtp").value = "";
-      notify("Your new LAREL in-app OTP is " + pendingCode + ". It expires in 5 minutes. No SMS was sent.", "success");
+      notify("Your new LAREL in-app OTP is " + pendingCode + ". It expires in 5 minutes.", "success");
     });
     $("continueBtn").addEventListener("click", () => { location.href = "index.html"; });
     $("logoutBtn").addEventListener("click", async () => {
