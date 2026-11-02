@@ -308,7 +308,7 @@ $("pOldPrice").addEventListener("input",()=>{});
 
 async function loadProducts(){
  const {data,error}=await db.from("products").select("*").order("created_at",{ascending:false});
- $("productsRows").innerHTML=error?'<tr><td colspan="6" class="empty">'+safe(error.message)+'</td></tr>':(data||[]).map(p=>'<tr><td><div style="display:flex;align-items:center;gap:10px">'+(p.images?.[0]?'<img class="product-thumb" src="'+safe(p.images[0])+'" alt="">':'')+'<span>'+safe(p.title)+'</span></div></td><td>'+safe(p.product_id)+'</td><td>'+safe(p.category)+'</td><td>'+money(p.price)+'</td><td><strong class="price-profit-note">'+money(Number(p.price||0)-Number(p.cost_price||0))+'</strong></td><td><span class="pill">'+(p.is_active?"Active":"Hidden")+'</span></td><td><div class="actions"><button class="btn secondary tiny" onclick="editProduct('+p.id+')">Edit</button><button class="btn danger tiny" onclick="deleteProduct('+p.id+')">Delete</button></div></td></tr>').join("")||'<tr><td colspan="7" class="empty">No products yet. Add your first product.</td></tr>';
+ $("productsRows").innerHTML=error?'<tr><td colspan="7" class="empty">'+safe(error.message)+'</td></tr>':(data||[]).map(p=>'<tr><td><div style="display:flex;align-items:center;gap:10px">'+(p.images?.[0]?'<img class="product-thumb" src="'+safe(p.images[0])+'" alt="">':'')+'<span>'+safe(p.title)+'</span></div></td><td>'+safe(p.product_id)+'</td><td>'+safe(p.category)+'</td><td>'+money(p.price)+'</td><td><strong class="price-profit-note">'+money(Number(p.price||0)-Number(p.cost_price||0))+'</strong></td><td><span class="pill">'+(p.is_active?"Active":"Hidden")+'</span></td><td><div class="actions"><button class="btn secondary tiny" onclick="editProduct('+p.id+')">Edit</button><button class="btn danger tiny" onclick="deleteProduct('+p.id+')">Delete</button></div></td></tr>').join("")||'<tr><td colspan="7" class="empty">No products yet. Add your first product.</td></tr>';
 }
 
 function addColorImageField(container,value=""){
@@ -367,7 +367,7 @@ $("productForm").addEventListener("submit",async e=>{
  const saveButton=$("productForm").querySelector('button[type="submit"]');saveButton.disabled=true;saveButton.textContent="Saving…";
  try{if(!rowId){const {data:existing,error:checkError}=await db.from("products").select("id").eq("product_id",productId).maybeSingle();if(checkError)throw checkError;if(existing)throw new Error("This Product ID already exists. Please use a different Product ID, or edit the existing product.");}
  const q=rowId?db.from("products").update(payload).eq("id",rowId):db.from("products").insert(payload);const {error}=await q;if(error){if(error.code==="23505")throw new Error("This Product ID already exists. Please use a different Product ID, or edit the existing product.");throw error;}
- showMessage("productMessage","Product saved successfully.",false);await loadProducts();await loadDashboard();$("productForm").reset();$("productRowId").value="";setProductColorFields([]);
+ showMessage("productMessage","Product saved successfully.",false);await loadProducts();await loadDashboard();$("productForm").reset();$("productRowId").value="";$("pPrice").dataset.manualPrice="";$("pProfitPreview").value="₹0";setProductColorFields([]);
  }catch(error){showMessage("productMessage",error.message||"Could not save product.");}finally{saveButton.disabled=false;saveButton.textContent="Save product";}
 });
 function addHeroImageField(value="https://raw.githubusercontent.com/Larel2306/Larel/main/Streetwear%20Redefined_%20Bold%20Urban%20Style.png",alt="LAREL campaign image"){
