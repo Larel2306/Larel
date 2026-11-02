@@ -28,23 +28,23 @@ main{flex:1;display:grid;place-items:center;padding:36px 16px}.auth-shell{width:
 <main><section class="auth-shell">
 <div class="eyebrow">LAREL MEMBERS CLUB</div>
 <h1 class="heading" id="pageHeading">Create your account</h1>
-<p class="subheading" id="pageSubheading">Sign up with your mobile number or Google and start exploring LAREL.</p>
+<p class="subheading" id="pageSubheading">Create your LAREL account using your mobile number.</p>
 <div class="card">
 <div id="authPanel">
 <div id="notice" class="message" role="status" aria-live="polite"></div>
 <form id="phoneSignupForm">
 <label class="field"><span>Mobile number</span><input id="phoneNumber" type="tel" autocomplete="tel" inputmode="tel" placeholder="+91 98765 43210" required></label>
-<button class="primary" id="sendOtpBtn" type="submit">Continue with mobile number <i class="fa-solid fa-arrow-right"></i></button>
+<button class="primary" id="sendOtpBtn" type="submit">Send OTP <i class="fa-solid fa-arrow-right"></i></button>
 </form>
 <form id="phoneVerifyForm" class="hidden" style="margin-top:17px">
 <label class="field"><span id="verifyPhoneLabel">Enter your in-app OTP</span><input id="phoneOtp" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder="6-digit code" maxlength="6" pattern="[0-9]{6}" required></label>
 <button class="primary" id="verifyOtpBtn" type="submit">Verify &amp; Create Account</button>
-<button class="google" id="resendOtpBtn" type="button" style="margin-top:10px">Send a new in-app code</button>
+<button class="google" id="resendOtpBtn" type="button" style="margin-top:10px">Resend OTP</button>
 <button class="google" id="changePhoneBtn" type="button" style="margin-top:10px">Change mobile number</button>
 </form>
 <div class="divider">OR</div>
 <button class="google" id="googleBtn" type="button"><i class="fa-brands fa-google"></i> Continue with Google</button>
-<p class="fineprint">A one-time confirmation code will appear inside LAREL. No SMS is sent. This code does not verify ownership of the mobile number.</p>
+<p class="fineprint">Your one-time code will appear in an in-app notification. No SMS is sent. This code does not verify ownership of the mobile number.</p>
 </div>
 <div id="accountPanel" class="account hidden">
 <div class="avatar"><i class="fa-regular fa-user"></i></div>
