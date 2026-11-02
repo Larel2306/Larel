@@ -1014,6 +1014,61 @@ body { background:#020b12; color:#fff; }
 @media(max-width:850px){.larel-home-product-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}}
 @media(max-width:560px){.larel-home-product-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.larel-home-product-info{padding:9px 2px}.larel-home-product-info h3{font-size:11.5px;min-height:32px}.larel-home-price-row strong{font-size:14px}.larel-home-product-tag{font-size:9px;top:8px;left:8px}}
 </style>
+
+<style id="larel-responsive-hero-fix">
+/* Full-width hero: preserve the artwork's original proportions on every screen. */
+.hero.editorial-hero{
+  display:block;
+  position:relative;
+  width:100%;
+  max-width:none;
+  height:min(88svh,900px);
+  min-height:520px;
+  aspect-ratio:auto;
+  margin:0;
+  padding:0;
+  overflow:hidden;
+  background:#020b12;
+}
+.hero.editorial-hero .hero-carousel{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+}
+.hero.editorial-hero .hero-carousel-track,
+.hero.editorial-hero .hero-carousel-slide{
+  width:100%;
+  height:100%;
+}
+.hero.editorial-hero .hero-carousel-slide{
+  flex:0 0 100%;
+  overflow:hidden;
+  background:#020b12;
+}
+.hero.editorial-hero .hero-carousel-slide img{
+  display:block;
+  width:100%;
+  height:100%;
+  max-width:100%;
+  object-fit:contain;
+  object-position:center;
+  background:#020b12;
+}
+@media(max-width:760px){
+  .hero.editorial-hero{
+    width:100%;
+    height:min(72svh,620px);
+    min-height:320px;
+    aspect-ratio:auto;
+  }
+  .hero.editorial-hero .hero-carousel-dots{bottom:10px;}
+}
+@media(prefers-reduced-motion:reduce){
+  .hero.editorial-hero .hero-carousel-track{transition:none;}
+}
+</style>
 </head>
 
 <body>
@@ -1064,7 +1119,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <h1>LAREL – Independent Print-on-Demand Streetwear</h1>
     <p>LAREL is a locally run independent clothing label offering print-on-demand streetwear, oversized T-shirts, hoodies, sweatshirts, polos and bottomwear. Browse the collection and shop online.</p>
   </div>
-  <div class="hero-carousel" id="larelHeroCarousel" aria-label="LAREL campaign banners"><div class="hero-carousel-track" id="larelHeroTrack"><div class="hero-carousel-slide"><img src="https://images.unsplash.com/photo-1523398002811-999ca8dec234?auto=format&fit=crop&w=1800&q=85" alt="Urban streetwear campaign"></div></div><div class="hero-carousel-dots" id="larelHeroDots" aria-label="Choose banner"></div></div>
+  <div class="hero-carousel" id="larelHeroCarousel" aria-label="LAREL campaign banners"><div class="hero-carousel-track" id="larelHeroTrack"></div><div class="hero-carousel-dots" id="larelHeroDots" aria-label="Choose banner"></div></div>
 </section>
 
 <!-- Apparel Categories -->
@@ -1172,12 +1227,92 @@ function toggleMenu() {
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="products.js"></script><script>
 (async function(){
- const DEFAULT_SLIDES=[{image:"https://images.unsplash.com/photo-1523398002811-999ca8dec234?auto=format&fit=crop&w=1800&q=85",alt:"Urban streetwear essentials"},{image:"https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&fit=crop&w=1800&q=85",alt:"Contemporary fashion editorial"},{image:"https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=1800&q=85",alt:"Modern everyday fashion"},{image:"https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?auto=format&fit=crop&w=1800&q=85",alt:"Minimal streetwear look"}];let active=0,timer=null;
- function render(raw){const arr=Array.isArray(raw)?raw:(raw?[raw]:[]);const list=arr.map(v=>typeof v==="string"?{image:v}:v).filter(v=>v&&(v.image||v.url||v.src));const slides=list.length?list:[{image:FALLBACK,alt:"LAREL Streetwear campaign"}];const track=document.getElementById("larelHeroTrack"),dots=document.getElementById("larelHeroDots");if(!track||!dots)return;track.innerHTML=slides.map((s,i)=>{const img=s.image||s.url||s.src;const alt=s.alt||s.title||"LAREL campaign";return '<div class="hero-carousel-slide"><img src="'+String(img).replace(/&/g,"&amp;").replace(/"/g,"&quot;")+'" alt="'+String(alt).replace(/&/g,"&amp;").replace(/"/g,"&quot;")+'" loading="'+(i?"lazy":"eager")+'"></div>'}).join("");dots.innerHTML=slides.length>1?slides.map((_,i)=>'<button type="button" class="hero-carousel-dot'+(!i?' active':'')+'" aria-label="Show banner '+(i+1)+'" data-index="'+i+'"></button>').join(""):"";dots.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>go(Number(b.dataset.index),true)));active=0;track.style.transform="translateX(0)";clearInterval(timer);if(slides.length>1)timer=setInterval(()=>go(active+1,false),4500);}
- function go(n,manual){const track=document.getElementById("larelHeroTrack"),dots=document.getElementById("larelHeroDots"),count=track?.children.length||0;if(!count)return;active=(n+count)%count;track.style.transform="translateX(-"+active*100+"%)";dots.querySelectorAll("button").forEach((d,i)=>d.classList.toggle("active",i===active));if(manual){clearInterval(timer);timer=setInterval(()=>go(active+1,false),4500);}}
- render(DEFAULT_SLIDES);
- try{const client=window.supabase.createClient("https://gghpenzosdqudtqhpekp.supabase.co","sb_publishable_LgOR6E51qGFLRcIecWqA3w_kHHoGtVa");const {data,error}=await client.from("site_content").select("content").eq("section_key","homepage_images").maybeSingle();if(error||!data?.content)return;const c=data.content;/* Keep the local four-slide campaign as the hero source; sync category/trending images below. */Object.entries(c.categories||{}).forEach(([k,v])=>{const el=document.querySelector('[data-home-image="cat-'+k+'"]');if(el&&v)el.src=v;});const trending=Array.isArray(c.trending)?c.trending:[];const track=document.querySelector(".horizontal-scroll"),old=[...document.querySelectorAll("[data-home-trending]")];old.forEach((img,i)=>{const card=img.closest(".scroll-card");if(card)card.style.display=i<trending.length?"":"none";if(trending[i])img.src=typeof trending[i]==="string"?trending[i]:(trending[i].image||trending[i].url||"");});if(track){for(let i=old.length;i<trending.length;i++){const item=typeof trending[i]==="string"?{image:trending[i]}:trending[i];const card=document.createElement("a");card.className="scroll-card";card.href="https://larel2306.github.io/Larel/Shop";const img=document.createElement("img");img.alt=item.title||"LAREL Trending Drop";img.src=item.image||item.url||"";const overlay=document.createElement("div");overlay.className="card-overlay";const h=document.createElement("h3");h.textContent=item.title||"New Trending Drop";const sub=document.createElement("span");sub.textContent=item.subtitle||"Explore collection";overlay.append(h,sub);card.append(img,overlay);track.append(card);}}}catch(e){console.error("Homepage image sync:",e);}
-})();
+ let active=0,timer=null;
+ const track=document.getElementById("larelHeroTrack");
+ const dots=document.getElementById("larelHeroDots");
+
+ function go(n,manual){
+  const count=track?.children.length||0;
+  if(!count)return;
+  active=(n+count)%count;
+  track.style.transform="translateX(-"+active*100+"%)";
+  dots.querySelectorAll("button").forEach((dot,i)=>dot.classList.toggle("active",i===active));
+  if(manual){clearInterval(timer);timer=setInterval(()=>go(active+1,false),4500);}
+ }
+
+ function render(raw){
+  const arr=Array.isArray(raw)?raw:(raw?[raw]:[]);
+  const slides=arr.map(item=>typeof item==="string"?{image:item}:item)
+   .filter(item=>item&&(item.image||item.url||item.src));
+  clearInterval(timer);
+  if(!track||!dots)return;
+  if(!slides.length){
+   track.innerHTML="";
+   dots.innerHTML="";
+   return;
+  }
+  track.innerHTML=slides.map((slide,i)=>{
+   const src=slide.image||slide.url||slide.src;
+   const alt=slide.alt||slide.title||"LAREL campaign";
+   const safeSrc=String(src).replace(/&/g,"&amp;").replace(/"/g,"&quot;");
+   const safeAlt=String(alt).replace(/&/g,"&amp;").replace(/"/g,"&quot;");
+   return '<div class="hero-carousel-slide"><img src="'+safeSrc+'" alt="'+safeAlt+'" loading="'+(i?"lazy":"eager")+'"></div>';
+  }).join("");
+  dots.innerHTML=slides.length>1?slides.map((_,i)=>
+   '<button type="button" class="hero-carousel-dot'+(!i?' active':'')+'" aria-label="Show banner '+(i+1)+'" data-index="'+i+'"></button>'
+  ).join(""):"";
+  dots.querySelectorAll("button").forEach(button=>
+   button.addEventListener("click",()=>go(Number(button.dataset.index),true))
+  );
+  active=0;
+  track.style.transform="translateX(0)";
+  if(slides.length>1)timer=setInterval(()=>go(active+1,false),4500);
+ }
+
+ try{
+  const client=window.supabase.createClient("https://gghpenzosdqudtqhpekp.supabase.co","sb_publishable_LgOR6E51qGFLRcIecWqA3w_kHHoGtVa");
+  const {data,error}=await client.from("site_content").select("content").eq("section_key","homepage_images").maybeSingle();
+  if(error)throw error;
+  const c=data?.content||{};
+  // Hero artwork is managed through homepage_images in Supabase; no image URLs are hardcoded here.
+  render(c.hero||c.heroImages||c.banners||c.slides||[]);
+  Object.entries(c.categories||{}).forEach(([key,value])=>{
+   const image=document.querySelector('[data-home-image="cat-'+key+'"]');
+   if(image&&value)image.src=value;
+  });
+  const trending=Array.isArray(c.trending)?c.trending:[];
+  const old=[...document.querySelectorAll("[data-home-trending]")];
+  old.forEach((img,i)=>{
+   const card=img.closest(".scroll-card");
+   if(card)card.style.display=i<trending.length?"":"none";
+   if(trending[i])img.src=typeof trending[i]==="string"?trending[i]:(trending[i].image||trending[i].url||"");
+  });
+  const horizontalTrack=document.querySelector(".horizontal-scroll");
+  if(horizontalTrack){
+   for(let i=old.length;i<trending.length;i++){
+    const item=typeof trending[i]==="string"?{image:trending[i]}:trending[i];
+    const card=document.createElement("a");
+    card.className="scroll-card";
+    card.href="https://larel2306.github.io/Larel/Shop";
+    const img=document.createElement("img");
+    img.alt=item.title||"LAREL Trending Drop";
+    img.src=item.image||item.url||"";
+    const overlay=document.createElement("div");
+    overlay.className="card-overlay";
+    const heading=document.createElement("h3");
+    heading.textContent=item.title||"New Trending Drop";
+    const subtitle=document.createElement("span");
+    subtitle.textContent=item.subtitle||"Explore collection";
+    overlay.append(heading,subtitle);
+    card.append(img,overlay);
+    horizontalTrack.append(card);
+   }
+  }
+ }catch(error){
+  console.error("Homepage image sync:",error);
+  render([]);
+ }
+})();;
 </script><script>
 (async function(){try{const client=window.supabase.createClient("https://gghpenzosdqudtqhpekp.supabase.co","sb_publishable_LgOR6E51qGFLRcIecWqA3w_kHHoGtVa");const {data,error}=await client.from("site_content").select("content").eq("section_key","homepage_images").maybeSingle();if(error||!data?.content)return;const c=data.content;const set=(sel,url)=>{if(url){const el=document.querySelector(sel);if(el)el.src=url;}};set('[data-home-image="hero"]',c.hero);Object.entries(c.categories||{}).forEach(([k,v])=>set('[data-home-image="cat-'+k+'"]',v));set('.larel-wide-edit img',c.promoImage);document.querySelectorAll('.journal-card img').forEach((el,i)=>{if(c.editorial&&c.editorial[i])el.src=c.editorial[i];});const trending=c.trending||[];const track=document.querySelector(".horizontal-scroll");const existing=[...document.querySelectorAll("[data-home-trending]")];existing.forEach((img,i)=>{const card=img.closest(".scroll-card");if(card)card.style.display=i<trending.length?"":"none";if(trending[i])img.src=trending[i];});if(track){for(let i=existing.length;i<trending.length;i++){const card=document.createElement("a");card.className="scroll-card";card.href="https://larel2306.github.io/Larel/Shop.html";card.innerHTML='<img alt="LAREL Trending Drop"><div class="card-overlay"><h3>New Trending Drop</h3><span>Explore collection</span></div>';card.querySelector("img").src=trending[i];card.dataset.homeTrendingExtra=String(i);track.appendChild(card);}}}catch(e){console.error("Homepage image sync:",e);}})();</script>
 <script>
