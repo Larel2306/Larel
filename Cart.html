@@ -407,7 +407,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             renderCart();
         }
 
+        function applyLarelCustomerDetails() {
+            const profile = window.larelCustomerProfile;
+            if (!profile) return;
+            const nameField = document.getElementById("custName");
+            const phoneField = document.getElementById("custPhone");
+            if (nameField && profile.name && !nameField.dataset.customerEdited) nameField.value = profile.name;
+            if (phoneField && profile.phone && !phoneField.dataset.customerEdited) phoneField.value = profile.phone.replace(/\D/g, "").slice(-10);
+        }
+        document.getElementById("custName")?.addEventListener("input", function(){ this.dataset.customerEdited = "true"; });
+        document.getElementById("custPhone")?.addEventListener("input", function(){ this.dataset.customerEdited = "true"; });
+        window.addEventListener("larel:profile", applyLarelCustomerDetails);
+
         function openFullscreenCheckout() {
+            applyLarelCustomerDetails();
             let cart = getCart();
             if(!cart || cart.length === 0) return;
 
