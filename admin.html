@@ -148,6 +148,7 @@
 <div><label>T-Shirts image URL</label><input id="homeCatTshirts" type="url"><span class="home-upload-homeCatTshirts"></span></div><div><label>Hoodies image URL</label><input id="homeCatHoodies" type="url"><span class="home-upload-homeCatHoodies"></span></div>
 <div><label>Bottomwear image URL</label><input id="homeCatBottomwear" type="url"><span class="home-upload-homeCatBottomwear"></span></div><div><label>Sweatshirts image URL</label><input id="homeCatSweatshirts" type="url"><span class="home-upload-homeCatSweatshirts"></span></div><div><label>Polos image URL</label><input id="homeCatPolos" type="url"><span class="home-upload-homeCatPolos"></span></div></div>
 
+<h3 style="margin-top:24px">Full-width Editorial Banner</h3><label>Banner image URL</label><input id="homePromoImage" type="url" placeholder="Image URL"><span class="home-upload-homePromoImage"></span>
 <h3 style="margin-top:24px">Trending Drops Images</h3><p class="muted" style="font-size:12px;margin:6px 0 12px">Manage the scrolling image cards on the homepage.</p><div id="homeTrendingFields"></div><button type="button" class="btn secondary tiny" id="addTrendingImage">+ Add Trending image</button>
 <h3 style="margin-top:24px">Editorial / Lower Homepage Images</h3><p class="muted" style="font-size:12px;margin:6px 0 12px">Control the three editorial images further down the homepage.</p><div class="form-grid">
 <div><label>Editorial image 1</label><input id="homeEditorial1" type="url" placeholder="Image URL"><span class="home-upload-homeEditorial1"></span></div>
@@ -390,6 +391,7 @@ function addTrendingImageField(value="",title="",subtitle=""){
 }
 $("addTrendingImage").onclick=()=>addTrendingImageField();
 ["homeEditorial1","homeEditorial2","homeEditorial3"].forEach(id=>{const input=$(id);const upload=makeUploadButton(input,"homepage/editorial");input.insertAdjacentElement("afterend",upload);});
+const promoInput=$("homePromoImage");promoInput.insertAdjacentElement("afterend",makeUploadButton(promoInput,"homepage/editorial"));
 async function loadContent(){
  const {data,error}=await db.from("site_content").select("content").eq("section_key","homepage_images").maybeSingle();
  if(error){$("homeImagesPreview").textContent=error.message;return;}
@@ -399,6 +401,7 @@ async function loadContent(){
  const cats=c.categories||{};["tshirts","hoodies","bottomwear","sweatshirts","polos"].forEach(k=>$("homeCat"+k[0].toUpperCase()+k.slice(1)).value=cats[k]||"");
  $("homeTrendingFields").innerHTML="";(c.trending||[]).forEach(item=>{const v=typeof item==="string"?{image:item}:item;addTrendingImageField(v.image||v.url||"",v.title||"",v.subtitle||"");});
  const editorial=c.editorial||[];["homeEditorial1","homeEditorial2","homeEditorial3"].forEach((id,i)=>$(id).value=editorial[i]||"");
+ $("homePromoImage").value=c.promoImage||"";
  $("homeImagesPreview").textContent=JSON.stringify(c,null,2);
 }
 $("homeImagesForm").addEventListener("submit",async e=>{
@@ -407,7 +410,7 @@ $("homeImagesForm").addEventListener("submit",async e=>{
  if(!heroSlides.length){showMessage("homeImagesMessage","Please add at least one hero banner image.");return;}
  const trending=[...document.querySelectorAll("#homeTrendingFields .hero-image-row")].map(row=>({image:row.querySelector(".trending-image-url").value.trim(),title:row.querySelector(".trending-image-title").value.trim(),subtitle:row.querySelector(".trending-image-subtitle").value.trim()})).filter(x=>x.image);
  const editorial=["homeEditorial1","homeEditorial2","homeEditorial3"].map(id=>$(id).value.trim());
- const content={heroSlides,categories:{tshirts:$("homeCatTshirts").value.trim(),hoodies:$("homeCatHoodies").value.trim(),bottomwear:$("homeCatBottomwear").value.trim(),sweatshirts:$("homeCatSweatshirts").value.trim(),polos:$("homeCatPolos").value.trim()},trending,editorial};
+ const content={heroSlides,categories:{tshirts:$("homeCatTshirts").value.trim(),hoodies:$("homeCatHoodies").value.trim(),bottomwear:$("homeCatBottomwear").value.trim(),sweatshirts:$("homeCatSweatshirts").value.trim(),polos:$("homeCatPolos").value.trim()},promoImage:$("homePromoImage").value.trim(),trending,editorial};
  const {error}=await db.from("site_content").upsert({section_key:"homepage_images",content,updated_at:new Date().toISOString()},{onConflict:"section_key"});
  showMessage("homeImagesMessage",error?error.message:"Homepage settings saved successfully.",!!error);if(!error)$("homeImagesPreview").textContent=JSON.stringify(content,null,2);
 });
