@@ -9,7 +9,7 @@
   const configured = /^https:\/\/[a-z0-9-]+\.supabase\.co$/i.test(SUPABASE_URL) &&
     !SUPABASE_URL.includes("YOUR_") && !SUPABASE_PUBLISHABLE_KEY.includes("YOUR_");
   const $ = id => document.getElementById(id);
-  const authPage = !!$("authForm");
+  const authPage = !!$("phoneSignupForm") || !!$("authForm");
   let client = null;
   if (configured && window.supabase?.createClient) {
     client = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
@@ -69,7 +69,7 @@
   function configError() {
     notify("Authentication is not configured. Please contact LAREL support.", "error");
     $("sendOtpBtn").disabled = true;
-    $("googleBtn").disabled = true;
+
   }
   function createCode() {
     const values = new Uint32Array(1);
