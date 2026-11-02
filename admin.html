@@ -99,9 +99,8 @@
      <div><label>Category</label><select id="pCategory"><option value="tshirts">T-shirts</option><option value="hoodies">Hoodies</option><option value="sweatshirts">Sweatshirts</option><option value="polos">Polos</option><option value="other">Other</option></select></div>
      <div><label>Original Price / Product Cost (₹)</label><input id="pCostPrice" type="number" min="0" step="0.01" required placeholder="Enter Qikink base cost"></div>
      <div><label>Selling Price (₹) — editable</label><input id="pPrice" type="number" min="0" step="0.01" required></div>
-     <div><label>MRP / Compare-at Price (₹)</label><input id="pOldPrice" type="number" min="0" step="0.01"></div>
      <div><label>Estimated Profit per Product</label><input id="pProfitPreview" type="text" readonly value="₹0" style="color:#35d49a;font-weight:800"></div>
-     <div class="wide"><p class="muted" style="font-size:11px;margin:0">Suggested selling price = product cost × 1.8, rounded up to the next ₹10. You can edit it anytime. Profit shown here is before shipping, ads, payment fees and taxes.</p></div><div class="wide"><label>Colour-wise product images</label><p class="muted">Add separate images for each colour. When a customer selects a colour, the product page will display that colour’s image gallery. Upload image files or paste image URLs.</p><div id="productColorFields"></div><button type="button" class="btn secondary tiny" id="addProductColor">+ Add another colour</button></div>
+     <div class="wide"><p class="muted" style="font-size:11px;margin:0">Enter only the original product cost. LAREL automatically suggests a selling price at 1.8× cost, rounded up to the next ₹10. You can manually edit the selling price whenever needed. Estimated profit excludes shipping, ads, payment fees and taxes.</p></div><div class="wide"><label>Colour-wise product images</label><p class="muted">Add separate images for each colour. When a customer selects a colour, the product page will display that colour’s image gallery. Upload image files or paste image URLs.</p><div id="productColorFields"></div><button type="button" class="btn secondary tiny" id="addProductColor">+ Add another colour</button></div>
      <div class="wide"><label>Description</label><textarea id="pDescription" rows="3"></textarea></div>
      <div><label>Sizes (comma separated)</label><input id="pSizes" placeholder="S, M, L, XL, XXL"></div>
      <div><label>Active on store?</label><select id="pActive"><option value="true">Yes</option><option value="false">No</option></select></div>
@@ -304,7 +303,7 @@ $("pCostPrice").addEventListener("input",()=>{
  updateProductProfitPreview();
 });
 $("pPrice").addEventListener("input",()=>{$("pPrice").dataset.manualPrice="true";updateProductProfitPreview();});
-$("pOldPrice").addEventListener("input",()=>{});
+
 
 async function loadProducts(){
  const {data,error}=await db.from("products").select("*").order("created_at",{ascending:false});
@@ -344,7 +343,7 @@ function defaultColorCode(name){
 $("addProductColor").onclick=()=>addProductColorField();
 window.editProduct=async id=>{
  const {data,error}=await db.from("products").select("*").eq("id",id).single();if(error)return alert(error.message);
- $("productEditor").classList.remove("hidden");$("productFormTitle").textContent="Edit product";$("productRowId").value=data.id;$("pId").value=data.product_id;$("pTitle").value=data.title;$("pCategory").value=data.category;$("pCostPrice").value=data.cost_price??"";$("pPrice").value=data.price;$("pPrice").dataset.manualPrice="true";$("pOldPrice").value=data.old_price||"";updateProductProfitPreview();
+ $("productEditor").classList.remove("hidden");$("productFormTitle").textContent="Edit product";$("productRowId").value=data.id;$("pId").value=data.product_id;$("pTitle").value=data.title;$("pCategory").value=data.category;$("pCostPrice").value=data.cost_price??"";$("pPrice").value=data.price;$("pPrice").dataset.manualPrice="";updateProductProfitPreview();
  setProductColorFields(data.colors||[]);$("pDescription").value=data.description||"";$("pSizes").value=(data.sizes||[]).join(", ");$("pActive").value=String(data.is_active);$("productEditor").scrollIntoView({behavior:"smooth"});
 };
 window.deleteProduct=async id=>{if(!confirm("Delete this product?"))return;const {error}=await db.from("products").delete().eq("id",id);if(error)alert(error.message);else{await loadProducts();await loadDashboard();}};
@@ -363,7 +362,7 @@ $("productForm").addEventListener("submit",async e=>{
  const images=colors.flatMap(c=>c.images);
  const costPrice=Number($("pCostPrice").value),sellingPrice=Number($("pPrice").value);
  if(!Number.isFinite(costPrice)||costPrice<0||!Number.isFinite(sellingPrice)||sellingPrice<=0){showMessage("productMessage","Enter a valid product cost and selling price.");return;}
- const payload={product_id:productId,title:$("pTitle").value.trim(),category:$("pCategory").value,cost_price:costPrice,price:sellingPrice,old_price:$("pOldPrice").value?Number($("pOldPrice").value):null,images,description:$("pDescription").value,sizes:$("pSizes").value.split(",").map(x=>x.trim()).filter(Boolean),colors,is_active:$("pActive").value==="true",updated_at:new Date().toISOString()};
+ const payload={product_id:productId,title:$("pTitle").value.trim(),category:$("pCategory").value,cost_price:costPrice,price:sellingPrice,images,description:$("pDescription").value,sizes:$("pSizes").value.split(",").map(x=>x.trim()).filter(Boolean),colors,is_active:$("pActive").value==="true",updated_at:new Date().toISOString()};
  const saveButton=$("productForm").querySelector('button[type="submit"]');saveButton.disabled=true;saveButton.textContent="Saving…";
  try{if(!rowId){const {data:existing,error:checkError}=await db.from("products").select("id").eq("product_id",productId).maybeSingle();if(checkError)throw checkError;if(existing)throw new Error("This Product ID already exists. Please use a different Product ID, or edit the existing product.");}
  const q=rowId?db.from("products").update(payload).eq("id",rowId):db.from("products").insert(payload);const {error}=await q;if(error){if(error.code==="23505")throw new Error("This Product ID already exists. Please use a different Product ID, or edit the existing product.");throw error;}
