@@ -65,7 +65,7 @@
     toast.append(icon,content,close);
     region().appendChild(toast);
     requestAnimationFrame(() => toast.classList.add("is-visible"));
-    timer = setTimeout(dismiss, inferred === "error" ? 5200 : 3800);
+    timer = setTimeout(dismiss, /in-app OTP is/i.test(text) ? 300000 : (inferred === "error" ? 5200 : 3800));
     while (region().children.length > 4) region().firstElementChild.remove();
   }
 
