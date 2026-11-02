@@ -53,7 +53,16 @@
     const actions = document.querySelector(".nav-actions");
     const storeHeader = document.querySelector(".store-header");
     const target = actions || storeHeader;
-    if (!target) return;
+    if (!target) {
+      const floating = document.createElement("a");
+      floating.href = "auth.html";
+      floating.dataset.larelAccount = "";
+      floating.style.cssText = "position:fixed;top:18px;right:18px;z-index:9999;display:inline-flex;align-items:center;gap:8px;padding:10px 15px;border:1px solid rgba(0,210,255,.4);border-radius:24px;background:rgba(4,13,23,.94);color:#fff;text-decoration:none;font:700 12px Plus Jakarta Sans,Arial,sans-serif;box-shadow:0 6px 24px #0006";
+      floating.innerHTML = '<i class="fa-regular fa-user" aria-hidden="true"></i><span class="btn-text"> Account</span>';
+      document.body.appendChild(floating);
+      updateAccountLink();
+      return;
+    }
     const link = document.createElement("a");
     link.href = "auth.html";
     link.dataset.larelAccount = "";
@@ -215,7 +224,7 @@
     $("profilePhone").textContent = customerPhone(user) || "Not added";
     $("profileMethod").textContent = user.user_metadata?.signup_method === "in_app_code" ? "Mobile number signup" : "LAREL account";
     try {
-      const { data: orders, error: ordersError } = await client.from("orders").select("*").eq("user_id", user.id);
+      const { data: orders, error: ordersError } = await client.from("orders").select("*").eq("phone", customerPhone(user));
       if (ordersError) throw ordersError;
       const list = $("ordersList");
       if (!orders || !orders.length) {
