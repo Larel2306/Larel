@@ -242,7 +242,7 @@
     if ($("sidebarCustomerPhone")) $("sidebarCustomerPhone").textContent = customerPhone(user) || "Mobile number not added";
     if ($("overviewName")) $("overviewName").textContent = name;
     if ($("overviewPhone")) $("overviewPhone").textContent = customerPhone(user) || "Not added";
-    if ($("memberSince")) $("memberSince").textContent = user.created_at ? new Date(user.created_at).toLocaleDateString("en-IN", {month:"short",year:"numeric"}) : "LAREL Member";
+    if ($("memberSince")) $("memberSince").textContent = user.created_at ? new Date(user.created_at).toLocaleDateString("en-IN", {month:"short",year:"numeric"}) : "—";
     try {
       const { data: orders, error: ordersError } = await client.from("orders").select("*").eq("phone", customerPhone(user).replace(/\D/g, "").slice(-10));
       if (ordersError) throw ordersError;
