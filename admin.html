@@ -100,7 +100,7 @@
      <div><label>Original Price / Product Cost (₹)</label><input id="pCostPrice" type="number" min="0" step="0.01" required placeholder="Enter Qikink base cost"></div>
      <div><label>Selling Price (₹) — editable</label><input id="pPrice" type="number" min="0" step="0.01" required></div>
      <div><label>Estimated Profit per Product</label><input id="pProfitPreview" type="text" readonly value="₹0" style="color:#35d49a;font-weight:800"></div>
-     <div class="wide"><p class="muted" style="font-size:11px;margin:0">Enter only the original product cost. LAREL automatically suggests a selling price at 1.8× cost, rounded up to the next ₹10. You can manually edit the selling price whenever needed. Estimated profit excludes shipping, ads, payment fees and taxes.</p></div><div class="wide"><label>Colour-wise product images</label><p class="muted">Add separate images for each colour. When a customer selects a colour, the product page will display that colour’s image gallery. Upload image files or paste image URLs.</p><div id="productColorFields"></div><button type="button" class="btn secondary tiny" id="addProductColor">+ Add another colour</button></div>
+     <div class="wide"><p class="muted" style="font-size:11px;margin:0">Enter only the original product cost. LAREL automatically suggests a customer-friendly selling price with approximately 20% markup on product cost, rounded up to the next ₹10. You can manually edit the selling price whenever needed. Estimated profit excludes shipping, ads, payment fees and taxes.</p></div><div class="wide"><label>Colour-wise product images</label><p class="muted">Add separate images for each colour. When a customer selects a colour, the product page will display that colour’s image gallery. Upload image files or paste image URLs.</p><div id="productColorFields"></div><button type="button" class="btn secondary tiny" id="addProductColor">+ Add another colour</button></div>
      <div class="wide"><label>Description</label><textarea id="pDescription" rows="3"></textarea></div>
      <div><label>Sizes (comma separated)</label><input id="pSizes" placeholder="S, M, L, XL, XXL"></div>
      <div><label>Active on store?</label><select id="pActive"><option value="true">Yes</option><option value="false">No</option></select></div>
@@ -291,7 +291,7 @@ async function loadDashboard(){
  $("statProducts").textContent=p.error?"—":(p.count??0);$("statCustomers").textContent=c.error?"—":(c.count??0);
  $("recentOrders").innerHTML=o.error?'<tr><td colspan="5" class="empty">Could not load orders. Check table permissions.</td></tr>':orders.slice(0,6).map(x=>'<tr><td>'+safe(x.order_number||("#"+x.id))+'</td><td>'+safe(x.customer_name)+'</td><td>'+money(x.total_amount)+'</td><td><span class="pill">'+safe(x.order_status)+'</span></td><td>'+new Date(x.created_at).toLocaleDateString("en-IN")+'</td></tr>').join("")||'<tr><td colspan="5" class="empty">No orders yet.</td></tr>';
 }
-function suggestedSellingPrice(cost){const raw=Math.max(0,Number(cost||0))*1.8;return Math.ceil(raw/10)*10;}
+function suggestedSellingPrice(cost){const base=Math.max(0,Number(cost||0));return Math.ceil((base*1.20)/10)*10;}
 function updateProductProfitPreview(){
  const cost=Number($("pCostPrice").value||0),price=Number($("pPrice").value||0);
  $("pProfitPreview").value=money(price-cost);
