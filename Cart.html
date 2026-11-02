@@ -23,8 +23,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         body { background-color: #0b0b0e; color: #f3f3f6; padding: 20px 10px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         .store-header { width: 100%; max-width: 800px; display: flex; justify-content: space-between; align-items: center; background: rgba(22, 22, 29, 0.85); border: 1px solid rgba(255,255,255,0.08); padding: 18px 20px; border-radius: 20px; margin-bottom: 20px; }
         .cart-header-link{display:inline-flex;align-items:center;gap:9px;position:relative;padding:9px 13px;border-radius:25px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:#fff;text-decoration:none;font-size:13px;font-weight:700}.cart-header-count{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 5px;border-radius:50px;background:#2dd4bf;color:#000;font-size:11px;font-weight:800}
-        .logo { font-size: 22px; font-weight: 700; letter-spacing: 2.5px; text-transform: uppercase; color: #ffffff; }
-        .logo span { color: #2dd4bf; }
+        .logo { display:flex; align-items:center; text-decoration:none; } .logo img { width:64px; height:48px; object-fit:contain; display:block; }
+        
         .cart-container { width: 100%; max-width: 800px; }
 
         #emptyCartView { display: none; flex-direction: column; align-items: center; justify-content: center; padding: 32px 20px; margin: 30px auto; max-width: 280px; width: 85%; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 36px; text-align: center; }
@@ -131,7 +131,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
     <div class="store-header">
-        <div class="logo">LA<span>REL</span></div>
+        <a class="logo" href="index.html" aria-label="LAREL Home"><img src="Larel.png" alt="LAREL logo"></a>
         <a href="https://larel2306.github.io/Larel/Cart.html" class="cart-header-link" aria-label="Cart"><i class="fa-solid fa-bag-shopping"></i> Cart <span id="cartCount" class="cart-header-count">0</span></a>
     </div>
 
