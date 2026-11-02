@@ -4,130 +4,58 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#070a14">
-<title>Login / Sign Up - LAREL</title>
+<title>Sign Up - LAREL</title>
 <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/Larel2306/Larel/main/Larel.png">
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-:root{--bg:#070a14;--panel:#101522;--line:rgba(255,255,255,.11);--muted:#9ca8ba;--cyan:#00d2ff;--white:#f7fbff}
+:root{--bg:#070a14;--line:rgba(255,255,255,.11);--muted:#9ca8ba;--cyan:#00d2ff;--white:#f7fbff}
 *{box-sizing:border-box;margin:0;padding:0;font-family:'Plus Jakarta Sans',sans-serif}
 body{min-height:100vh;background:radial-gradient(ellipse at 50% 0%,rgba(0,210,255,.14),transparent 48%),var(--bg);color:var(--white);display:flex;flex-direction:column}
 a{color:inherit;text-decoration:none}.topbar{height:76px;padding:0 6%;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(0,210,255,.12);background:rgba(7,10,20,.72);backdrop-filter:blur(16px)}
 .logo{font-size:24px;font-weight:800;letter-spacing:2px}.logo span{color:var(--cyan)}.back{color:#c2ccda;font-size:13px}.back:hover{color:var(--cyan)}
 main{flex:1;display:grid;place-items:center;padding:36px 16px}.auth-shell{width:min(100%,460px)}.eyebrow{text-align:center;color:var(--cyan);font-size:11px;font-weight:800;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px}.heading{text-align:center;font-size:clamp(27px,5vw,36px);letter-spacing:-1.2px;margin-bottom:9px}.subheading{text-align:center;color:var(--muted);font-size:13px;line-height:1.7;margin:0 auto 25px;max-width:340px}
 .card{background:linear-gradient(145deg,rgba(19,26,42,.97),rgba(12,16,28,.98));border:1px solid var(--line);border-radius:24px;padding:clamp(22px,5vw,32px);box-shadow:0 24px 80px #0005}
-.tabs{display:grid;grid-template-columns:1fr 1fr;padding:5px;background:#080d18;border:1px solid var(--line);border-radius:13px;margin-bottom:22px;gap:5px}.tab{border:0;border-radius:9px;background:transparent;color:#98a4b7;padding:11px;font-size:13px;font-weight:800;cursor:pointer}.tab.active{background:var(--cyan);color:#041019}
-.field{display:block;margin-bottom:15px}.field span{display:block;font-size:12px;color:#dbe5f2;font-weight:700;margin-bottom:8px}.field input{width:100%;height:47px;border:1px solid #293346;background:#090e19;color:#fff;border-radius:11px;padding:0 13px;outline:none;font-size:13px}.field input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #00d2ff18}.field input::placeholder{color:#657185}
-.row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:2px 0 17px;font-size:11px;color:var(--muted)}.check{display:flex;align-items:flex-start;gap:8px;line-height:1.6}.check input{accent-color:var(--cyan);margin-top:3px}.link{color:var(--cyan);cursor:pointer}.primary,.google{width:100%;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:10px;font-size:13px;font-weight:800;cursor:pointer;transition:.2s}.primary{background:var(--cyan);border:1px solid var(--cyan);color:#041019}.primary:hover{filter:brightness(1.08);transform:translateY(-1px)}.primary:disabled{opacity:.6;cursor:wait;transform:none}.google{background:#fff;color:#1a1d24;border:1px solid #fff}.google:hover{background:#eaf8ff}.phone-auth{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}.phone-title{font-size:12px;color:#dbe5f2;font-weight:800;margin-bottom:12px}.phone-grid{display:grid;gap:10px}.phone-grid .field{margin:0}.phone-grid .primary{margin-top:2px}.phone-note{font-size:10px;line-height:1.6;color:#8794a8;margin-top:9px}.divider{display:flex;align-items:center;gap:12px;color:#778398;font-size:10px;margin:18px 0}.divider:before,.divider:after{content:"";height:1px;background:var(--line);flex:1}.message{display:none;margin-bottom:16px;padding:12px;border-radius:10px;font-size:12px;line-height:1.6}.message.show{display:block}.message.error{background:#ff4d5d14;border:1px solid #ff4d5d55;color:#ffb5bd}.message.success{background:#00d2ff12;border:1px solid #00d2ff44;color:#a5f0ff}.fineprint{text-align:center;font-size:10px;line-height:1.7;color:#788498;margin-top:18px}.fineprint a{color:#c6d4e6;text-decoration:underline}.hidden{display:none!important}.account{text-align:center}.avatar{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:#00d2ff18;border:1px solid #00d2ff55;color:var(--cyan);font-size:25px;margin:0 auto 16px}.account p{color:var(--muted);font-size:13px;line-height:1.7;margin:12px 0 22px}.footer{text-align:center;color:#6f7c90;font-size:10px;padding:18px}
+.field{display:block;margin-bottom:15px}.field span{display:block;font-size:12px;color:#dbe5f2;font-weight:700;margin-bottom:8px}.field input{width:100%;height:49px;border:1px solid #293346;background:#090e19;color:#fff;border-radius:11px;padding:0 13px;outline:none;font-size:14px}.field input:focus{border-color:var(--cyan);box-shadow:0 0 0 3px #00d2ff18}.field input::placeholder{color:#657185}
+.primary,.google{width:100%;height:49px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:10px;font-size:13px;font-weight:800;cursor:pointer;transition:.2s}.primary{background:var(--cyan);border:1px solid var(--cyan);color:#041019}.primary:hover{filter:brightness(1.08);transform:translateY(-1px)}.primary:disabled{opacity:.6;cursor:wait;transform:none}.google{background:#fff;color:#1a1d24;border:1px solid #fff}.google:hover{background:#eaf8ff}
+.divider{display:flex;align-items:center;gap:12px;color:#778398;font-size:10px;margin:20px 0}.divider:before,.divider:after{content:"";height:1px;background:var(--line);flex:1}.message{display:none;margin-bottom:16px;padding:12px;border-radius:10px;font-size:12px;line-height:1.6}.message.show{display:block}.message.error{background:#ff4d5d14;border:1px solid #ff4d5d55;color:#ffb5bd}.message.success{background:#00d2ff12;border:1px solid #00d2ff44;color:#a5f0ff}.hidden{display:none!important}.fineprint{text-align:center;font-size:10px;line-height:1.7;color:#788498;margin-top:18px}.account{text-align:center}.avatar{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:#00d2ff18;border:1px solid #00d2ff55;color:var(--cyan);font-size:25px;margin:0 auto 16px}.account p{color:var(--muted);font-size:13px;line-height:1.7;margin:12px 0 22px}
+.larel-site-footer{margin-top:55px;padding:28px 6%;text-align:center;border-top:1px solid rgba(34,211,238,.18);color:#75869c;font-size:11px;background:#04070e}
 @media(max-width:420px){.topbar{height:65px;padding:0 18px}.logo{font-size:21px}.back{font-size:12px}.card{border-radius:19px}}
-</style>
-
-<style id="larel-unified-footer-style">
-.larel-site-footer{position:relative;isolation:isolate;overflow:hidden;margin-top:72px;padding:58px max(5%,calc((100% - 1240px)/2)) 22px;background:linear-gradient(135deg,#050912 0%,#080f1d 52%,#071522 100%);border-top:1px solid rgba(34,211,238,.24);color:#dbe7f5;font-family:inherit}
-.larel-site-footer:before{content:"";position:absolute;z-index:-1;width:380px;height:220px;right:-100px;top:-140px;border-radius:50%;background:rgba(0,190,255,.12);filter:blur(55px);pointer-events:none}
-.larel-footer-grid{display:grid;grid-template-columns:1.55fr 1fr 1fr 1fr;gap:34px;max-width:1240px;margin:0 auto 42px}
-.larel-footer-brand{max-width:330px}
-.larel-footer-logo{display:inline-block;margin:0 0 15px;color:#fff;text-decoration:none;font-size:27px;font-weight:900;letter-spacing:3px}
-.larel-footer-logo span{color:#22d3ee}
-.larel-footer-tagline{margin:0 0 17px;color:#a7b7ca;font-size:13px;line-height:1.85}
-.larel-footer-kicker{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid rgba(34,211,238,.22);border-radius:30px;background:rgba(34,211,238,.07);color:#a5f3fc;font-size:10px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase}
-.larel-footer-kicker:before{content:"";width:6px;height:6px;border-radius:50%;background:#22d3ee;box-shadow:0 0 12px #22d3ee}
-.larel-footer-heading{margin:7px 0 17px;color:#f7fbff;font-size:11px;font-weight:800;letter-spacing:1.7px;text-transform:uppercase}
-.larel-footer-links{display:grid;gap:12px;list-style:none;margin:0;padding:0}
-.larel-footer-links a{display:inline-block;color:#9fb0c4;text-decoration:none;font-size:12px;line-height:1.5;transition:color .2s,transform .2s}
-.larel-footer-links a:hover{color:#67e8f9;transform:translateX(3px)}
-.larel-footer-bottom{display:flex;align-items:center;justify-content:space-between;gap:18px;max-width:1240px;margin:0 auto;padding-top:19px;border-top:1px solid rgba(255,255,255,.09)}
-.larel-footer-bottom p{margin:0;color:#75869c;font-size:11px;line-height:1.7}
-.larel-footer-bottom strong{color:#b8c8da;font-weight:700}
-.larel-footer-toplink{color:#a5f3fc;text-decoration:none;font-size:11px;font-weight:800;letter-spacing:1px;white-space:nowrap}
-.larel-footer-toplink:hover{color:#fff}
-@media(max-width:800px){.larel-site-footer{margin-top:52px;padding:44px 6% 20px}.larel-footer-grid{grid-template-columns:1fr 1fr;gap:30px 22px}.larel-footer-brand{grid-column:1/-1;max-width:460px}}
-@media(max-width:480px){.larel-site-footer{padding:38px 6% 18px}.larel-footer-grid{gap:25px 15px}.larel-footer-heading{font-size:10px}.larel-footer-links{gap:10px}.larel-footer-links a{font-size:11px}.larel-footer-bottom{align-items:flex-start;flex-direction:column;gap:10px}}
 </style>
 </head>
 <body>
-<header class="topbar"><a class="logo" href="Home.html">LAREL<span>.</span></a><a class="back" href="Home.html"><i class="fa-solid fa-arrow-left"></i> Back to store</a></header>
+<header class="topbar"><a class="logo" href="index.html">LAREL<span>.</span></a><a class="back" href="index.html"><i class="fa-solid fa-arrow-left"></i> Back to store</a></header>
 <main><section class="auth-shell">
 <div class="eyebrow">LAREL MEMBERS CLUB</div>
 <h1 class="heading" id="pageHeading">Create your account</h1>
-<p class="subheading" id="pageSubheading">Join LAREL for a smoother checkout and a place to keep your orders together.</p>
+<p class="subheading" id="pageSubheading">Sign up with your mobile number or Google and start exploring LAREL.</p>
 <div class="card">
 <div id="authPanel">
-<div class="tabs" role="tablist" aria-label="Account options"><button class="tab active" id="signupTab" type="button">Create account</button><button class="tab" id="loginTab" type="button">Log in</button></div>
 <div id="notice" class="message" role="status" aria-live="polite"></div>
-<form id="authForm">
-<label class="field" id="nameField"><span>Full name</span><input id="fullName" name="name" type="text" autocomplete="name" placeholder="Your name" minlength="2"></label>
-<label class="field"><span>Email address</span><input id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required></label>
-<label class="field"><span>Password</span><input id="password" name="password" type="password" autocomplete="new-password" placeholder="At least 8 characters" minlength="8" required></label>
-<label class="field" id="confirmField"><span>Confirm password</span><input id="confirmPassword" type="password" autocomplete="new-password" placeholder="Enter password again" minlength="8"></label>
-<div class="row" id="loginExtras"><label class="check"><input id="remember" type="checkbox" checked><span>Keep me signed in on this device</span></label><a class="link" href="#" id="forgotLink">Forgot password?</a></div>
-<label class="check" id="termsRow" style="font-size:11px;color:#aab5c6;margin:4px 0 18px"><input id="terms" type="checkbox"><span>I agree to the <a class="link" href="Terms.html">Terms</a> and <a class="link" href="Privacy.html">Privacy Policy</a>.</span></label>
-<button class="primary" id="submitBtn" type="submit">Create account <i class="fa-solid fa-arrow-right"></i></button>
+<form id="phoneSignupForm">
+<label class="field"><span>Mobile number</span><input id="phoneNumber" type="tel" autocomplete="tel" inputmode="tel" placeholder="+91 98765 43210" required></label>
+<button class="primary" id="sendOtpBtn" type="submit">Continue with mobile number <i class="fa-solid fa-arrow-right"></i></button>
 </form>
-<div class="divider">OR CONTINUE WITH</div>
+<form id="phoneVerifyForm" class="hidden" style="margin-top:17px">
+<label class="field"><span id="verifyPhoneLabel">Enter your in-app OTP</span><input id="phoneOtp" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder="6-digit code" maxlength="6" pattern="[0-9]{6}" required></label>
+<button class="primary" id="verifyOtpBtn" type="submit">Verify &amp; Create Account</button>
+<button class="google" id="resendOtpBtn" type="button" style="margin-top:10px">Send a new in-app code</button>
+<button class="google" id="changePhoneBtn" type="button" style="margin-top:10px">Change mobile number</button>
+</form>
+<div class="divider">OR</div>
 <button class="google" id="googleBtn" type="button"><i class="fa-brands fa-google"></i> Continue with Google</button>
-<div class="phone-auth" id="phoneAuth">
-  <div class="phone-title"><i class="fa-solid fa-mobile-screen-button"></i> Continue with mobile number</div>
-  <div id="phoneNotice" class="message" role="status" aria-live="polite"></div>
-  <form id="phoneSendForm" class="phone-grid">
-    <label class="field"><span>Your name</span><input id="phoneName" type="text" autocomplete="name" placeholder="Enter your full name" minlength="2" required></label>
-    <label class="field"><span>Mobile number</span><input id="phoneNumber" type="tel" autocomplete="tel" inputmode="tel" placeholder="+91 98765 43210" required></label>
-    <button class="primary" id="sendOtpBtn" type="submit">Send OTP <i class="fa-solid fa-arrow-right"></i></button>
-  </form>
-  <form id="phoneVerifyForm" class="phone-grid hidden">
-    <label class="field"><span>Enter 6-digit OTP</span><input id="phoneOtp" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder="123456" maxlength="6" pattern="[0-9]{6}" required></label>
-    <button class="primary" id="verifyOtpBtn" type="submit">Verify OTP &amp; Continue</button>
-    <button class="google" id="changePhoneBtn" type="button">Change mobile number</button>
-  </form>
-  <p class="phone-note">Enter your number with country code (for India, start with +91). By continuing, you agree to receive a one-time verification SMS.</p>
+<p class="fineprint">A one-time confirmation code will appear inside LAREL. No SMS is sent. This code does not verify ownership of the mobile number.</p>
 </div>
-<div id="resetPanel" class="hidden">
-<form id="resetForm"><label class="field"><span>New password</span><input id="newPassword" type="password" minlength="8" autocomplete="new-password" required placeholder="At least 8 characters"></label><button class="primary" type="submit">Update password</button></form>
+<div id="accountPanel" class="account hidden">
+<div class="avatar"><i class="fa-regular fa-user"></i></div>
+<h2>You're signed up!</h2><p id="accountIdentity"></p>
+<button class="primary" id="continueBtn" type="button">Continue shopping <i class="fa-solid fa-arrow-right"></i></button>
+<button class="google" id="logoutBtn" type="button" style="margin-top:10px">Log out</button>
 </div>
 </div>
-<div id="accountPanel" class="account hidden"><div class="avatar"><i class="fa-regular fa-user"></i></div><h2 id="accountName">You're signed in</h2><p id="accountEmail"></p><button class="primary" id="continueBtn" type="button">Continue shopping <i class="fa-solid fa-arrow-right"></i></button><button class="google" id="logoutBtn" type="button" style="margin-top:10px">Log out</button></div>
-</div>
-<p class="fineprint">Your account is protected by Supabase Authentication. Never share your password or verification links.</p>
 </section></main>
-<footer class="larel-site-footer" aria-label="LAREL website footer">
-  <div class="larel-footer-grid">
-    <div class="larel-footer-brand">
-      <a class="larel-footer-logo" href="https://larel2306.github.io/Larel/">LAREL<span>.</span></a>
-      <p class="larel-footer-tagline">Everyday streetwear. Thoughtful details. Made to be part of your style, wherever the day takes you.</p>
-      <span class="larel-footer-kicker">Own your everyday look</span>
-    </div>
-    <nav aria-label="Explore LAREL">
-      <h2 class="larel-footer-heading">Explore</h2>
-      <ul class="larel-footer-links">
-        <li><a href="https://larel2306.github.io/Larel/">Home</a></li>
-        <li><a href="https://larel2306.github.io/Larel/Shop">Shop All</a></li>
-        <li><a href="https://larel2306.github.io/Larel/Cart">Your Cart</a></li>
-        <li><a href="https://larel2306.github.io/Larel/auth.html">My Account</a></li>
-      </ul>
-    </nav>
-    <nav aria-label="Customer care">
-      <h2 class="larel-footer-heading">Customer Care</h2>
-      <ul class="larel-footer-links">
-        <li><a href="https://larel2306.github.io/Larel/shipping-policy.html">Shipping Information</a></li>
-        <li><a href="https://larel2306.github.io/Larel/refund-policy.html">Returns &amp; Refunds</a></li>
-        <li><a href="https://larel2306.github.io/Larel/terms-and-conditions.html">Terms &amp; Conditions</a></li>
-      </ul>
-    </nav>
-    <nav aria-label="About and policies">
-      <h2 class="larel-footer-heading">Information</h2>
-      <ul class="larel-footer-links">
-        <li><a href="https://larel2306.github.io/Larel/privacy-policy.html">Privacy Policy</a></li>
-        <li><a href="https://larel2306.github.io/Larel/shipping-policy.html">Delivery Details</a></li>
-        <li><a href="https://larel2306.github.io/Larel/refund-policy.html">Refund Policy</a></li>
-      </ul>
-    </nav>
-  </div>
-  <div class="larel-footer-bottom">
-    <p>© 2026 <strong>LAREL Apparel</strong>. All rights reserved.</p>
-    <a class="larel-footer-toplink" href="#top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">BACK TO TOP ↑</a>
-  </div>
-</footer>
+<footer class="larel-site-footer">© 2026 LAREL Apparel. All rights reserved.</footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="auth.js"></script>
 <script src="notifications.js"></script>
+<script src="auth.js"></script>
 </body></html>
