@@ -6,7 +6,7 @@
 
   const style = document.createElement("style");
   style.textContent = `
-    #larel-notification-region{position:fixed;right:22px;bottom:22px;z-index:2147483000;display:flex;flex-direction:column;gap:10px;width:min(390px,calc(100vw - 28px));pointer-events:none}
+    #larel-notification-region{position:fixed;top:18px;left:50%;right:auto;bottom:auto;transform:translateX(-50%);z-index:2147483000;display:flex;flex-direction:column;align-items:center;gap:10px;width:min(440px,calc(100vw - 28px));pointer-events:none}
     .larel-notification{display:grid;grid-template-columns:38px minmax(0,1fr) 28px;align-items:center;gap:11px;padding:13px 14px;border:1px solid rgba(0,210,255,.28);border-radius:16px;background:linear-gradient(135deg,rgba(8,20,31,.97),rgba(5,11,20,.97));color:#f8fafc;box-shadow:0 18px 50px rgba(0,0,0,.48),0 0 24px rgba(0,210,255,.08);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);font:600 13px/1.5 'Plus Jakarta Sans',Arial,sans-serif;opacity:0;transform:translate3d(0,14px,0) scale(.98);transition:opacity .24s ease,transform .24s ease;pointer-events:auto;overflow:hidden}
     .larel-notification::before{content:"";position:absolute;left:0;top:12px;bottom:12px;width:3px;border-radius:0 4px 4px 0;background:#00d2ff}
     .larel-notification.is-visible{opacity:1;transform:translate3d(0,0,0) scale(1)}
@@ -20,7 +20,7 @@
     .larel-notification.error::before,.larel-notification.error .larel-notification-icon{background:rgba(251,113,133,.13);color:#fb7185}
     .larel-notification.warning{border-color:rgba(250,204,21,.35)}
     .larel-notification.warning::before,.larel-notification.warning .larel-notification-icon{background:rgba(250,204,21,.13);color:#facc15}
-    @media(max-width:600px){#larel-notification-region{right:14px;bottom:14px;width:calc(100vw - 28px)}.larel-notification{padding:12px;font-size:12px}}
+    @media(max-width:600px){#larel-notification-region{top:12px;left:50%;right:auto;bottom:auto;width:calc(100vw - 24px)}.larel-notification{padding:12px;font-size:12px}}
     @media(prefers-reduced-motion:reduce){.larel-notification{transition:none}}
   `;
   document.head.appendChild(style);
