@@ -132,43 +132,15 @@ body {
   visibility: visible;
 }
 
-/* CATEGORIES */
-.category-container {
-  display: flex;
-  justify-content: center;
-  padding: 20px 18px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
+/* SHOP BACK NAVIGATION */
 
-.category-container::-webkit-scrollbar {
-  display: none;
-}
+.shop-back-row { display:flex; align-items:center; justify-content:flex-start; padding:16px 5% 18px; }
 
-.category-menu {
-  display: flex;
-  gap: 7px;
-  background: #16161de0;
-  padding: 6px;
-  border-radius: 40px;
-  border: 1px solid #ffffff1a;
-}
+.shop-back-button { display:inline-flex; align-items:center; justify-content:center; width:42px; height:42px; border:1px solid rgba(255,255,255,.16); border-radius:50%; background:rgba(255,255,255,.07); color:#fff; font-size:17px; cursor:pointer; transition:background .2s ease,border-color .2s ease,color .2s ease,transform .2s ease; }
 
-.category-item {
-  color: #a0a0ab;
-  font-size: 13px;
-  font-weight: 700;
-  padding: 10px 19px;
-  border-radius: 30px;
-  cursor: pointer;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
+.shop-back-button:hover { background:rgba(0,210,255,.14); border-color:#00d2ff; color:#00d2ff; transform:translateX(-2px); }
 
-.category-item.active {
-  color: #000;
-  background: #fff;
-}
+.shop-back-button:focus-visible { outline:2px solid #00d2ff; outline-offset:3px; }
 
 /* PRODUCTS */
 .tab-content {
@@ -444,9 +416,8 @@ body {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .category-container {
-    justify-content: flex-start;
-    padding: 12px 8px;
+  .shop-back-row {
+    padding: 12px 4% 16px;
   }
 
   .nav-icon-btn {
@@ -486,10 +457,6 @@ body {
     padding: 4px 7px;
   }
 
-  .category-item {
-    padding: 8px 14px;
-    font-size: 12px;
-  }
 }
 </style>
 
@@ -568,9 +535,11 @@ body {
   </div>
 </header>
 
-<!-- CATEGORY MENU -->
-<div class="category-container">
-  <div class="category-menu" id="categoryMenu"></div>
+<!-- BACK ARROW -->
+<div class="shop-back-row">
+  <button class="shop-back-button" type="button" onclick="goBackFromShop()" aria-label="Go back" title="Go back">
+    <i class="fa-solid fa-arrow-left"></i>
+  </button>
 </div>
 
 <!-- PRODUCT SECTIONS -->
@@ -597,7 +566,7 @@ let PRODUCTS = [];
 
 function buildShopProducts() {
   PRODUCTS = Object.entries(window.LAREL_PRODUCTS || {}).filter(([id, product]) => String(product.category || "").toLowerCase() !== "kidswear").map(([id, product]) => ({
-    cat: product.category,
+    cat: normalizeCategory(product.category),
     id,
     name: product.title,
     price: product.price,
@@ -609,11 +578,26 @@ function buildShopProducts() {
   }));
 }
 
+function normalizeCategory(value) {
+  const key = String(value || "").toLowerCase().replace(/[\\s_-]+/g, "");
+  const aliases = {
+    tshirt: "tshirts", tshirts: "tshirts",
+    hoodie: "hoodies", hoodies: "hoodies",
+    jacket: "jackets", jackets: "jackets",
+    bottom: "bottomwear", bottomwear: "bottomwear",
+    sweatshirt: "sweatshirt", sweatshirts: "sweatshirt",
+    polo: "polos", polos: "polos"
+  };
+  return aliases[key] || key;
+}
+
 const CATEGORIES = [
   { id: "tshirts", label: "T-Shirts" },
   { id: "hoodies", label: "Hoodies" },
   { id: "jackets", label: "Jackets" },
-  { id: "bottomwear", label: "Bottomwear" }
+  { id: "bottomwear", label: "Bottomwear" },
+  { id: "sweatshirt", label: "Sweatshirts" },
+  { id: "polos", label: "Polos" }
 ];
 
 /* CART */
@@ -690,17 +674,6 @@ function openProductDetail(productId) {
 
 /* RENDER PRODUCTS */
 function renderShop() {
-  document.getElementById("categoryMenu").innerHTML =
-    CATEGORIES.map(function(c) {
-      return `
-        <span class="category-item"
-              data-cat="${c.id}"
-              onclick="openTab('${c.id}')">
-          ${safeText(c.label)}
-        </span>
-      `;
-    }).join("");
-
   document.getElementById("shopContent").innerHTML =
     CATEGORIES.map(function(c) {
       const items = PRODUCTS.filter(p => p.cat === c.id);
@@ -761,17 +734,30 @@ function renderShop() {
   updateCartCount();
 }
 
-/* CATEGORY TABS */
+/* SHOW THE REQUESTED CATEGORY */
 function openTab(name) {
+  const category = normalizeCategory(name);
   document.querySelectorAll(".tab-content").forEach(function(el) {
-    el.classList.toggle("active", el.id === name);
-  });
-
-  document.querySelectorAll(".category-item").forEach(function(el) {
-    el.classList.toggle("active", el.dataset.cat === name);
+    el.classList.toggle("active", el.id === category);
   });
 }
 
+/* RETURN TO THE PAGE THE CUSTOMER CAME FROM */
+function goBackFromShop() {
+  const fallback = "https://larel2306.github.io/Larel/";
+  if (document.referrer) {
+    try {
+      const previousUrl = new URL(document.referrer);
+      if (previousUrl.origin === window.location.origin) {
+        window.history.back();
+        return;
+      }
+    } catch (error) {
+      // Fall back to the homepage if the previous URL cannot be read.
+    }
+  }
+  window.location.href = fallback;
+}
 /* ADD TO CART */
 function quickAddToCart(event, productId) {
   event.preventDefault();
@@ -921,7 +907,7 @@ navbar.querySelectorAll("a").forEach(function(link) {
   await window.LAREL_PRODUCTS_READY;
   buildShopProducts();
   renderShop();
-  const requestedCategory = new URLSearchParams(window.location.search).get("category");
+  const requestedCategory = normalizeCategory(new URLSearchParams(window.location.search).get("category"));
   const validCategories = CATEGORIES.map(c => c.id);
   const availableCategory = validCategories.includes(requestedCategory) ? requestedCategory :
     (PRODUCTS.length ? PRODUCTS[0].cat : "tshirts");
