@@ -370,20 +370,23 @@ $("productForm").addEventListener("submit",async e=>{
  }catch(error){showMessage("productMessage",error.message||"Could not save product.");}finally{saveButton.disabled=false;saveButton.textContent="Save product";}
 });
 function addHeroImageField(desktopValue="",mobileValue="",alt="LAREL campaign image"){
- const wrap=document.createElement("div");wrap.className="hero-image-row";wrap.style.cssText="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;margin:10px 0;padding:12px;border:1px solid rgba(0,210,255,.18);border-radius:12px;background:rgba(0,210,255,.035)";
+ const wrap=document.createElement("div");wrap.className="hero-image-row";wrap.style.cssText="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:start;margin:10px 0;padding:12px;border:1px solid rgba(0,210,255,.18);border-radius:12px;background:rgba(0,210,255,.035)";
  const makeHeroField=(labelText,className,value,folder,required=false)=>{
   const group=document.createElement("div");group.style.cssText="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;min-width:0";
   const input=document.createElement("input");input.type="url";input.className=className;input.placeholder=labelText+" image URL";input.value=value||"";input.required=required;input.setAttribute("aria-label",labelText+" image URL");
   group.append(input,makeUploadButton(input,folder));return group;
  };
- const desktopBox=document.createElement("div"),mobileBox=document.createElement("div");desktopBox.style.minWidth="0";mobileBox.style.minWidth="0";
- const desktopLabel=document.createElement("label");desktopLabel.textContent="Desktop / Laptop banner";desktopLabel.style.cssText="font-size:12px;color:#9fb4c8";
- const mobileLabel=document.createElement("label");mobileLabel.textContent="Mobile banner (optional — desktop image used if empty)";mobileLabel.style.cssText="font-size:12px;color:#9fb4c8";
- desktopBox.append(desktopLabel,makeHeroField("Desktop / Laptop","hero-image-desktop",desktopValue,"homepage/hero/desktop",true));
+ const fields=document.createElement("div");fields.style.cssText="display:grid;grid-template-columns:minmax(0,1fr);gap:8px;min-width:0";
+ const mobileBox=document.createElement("div"),desktopBox=document.createElement("div");mobileBox.style.minWidth="0";desktopBox.style.minWidth="0";
+ const mobileLabel=document.createElement("label");mobileLabel.textContent="Mobile banner";mobileLabel.style.cssText="font-size:12px;color:#9fb4c8;margin:0 0 7px";
+ const desktopLabel=document.createElement("label");desktopLabel.textContent="Desktop / Laptop banner (optional)";desktopLabel.style.cssText="font-size:12px;color:#9fb4c8;margin:0 0 7px";
  mobileBox.append(mobileLabel,makeHeroField("Mobile","hero-image-mobile",mobileValue,"homepage/hero/mobile",false));
+ desktopBox.append(desktopLabel,makeHeroField("Desktop / Laptop","hero-image-desktop",desktopValue,"homepage/hero/desktop",false));
+ fields.append(mobileBox,desktopBox);
+ const side=document.createElement("div");side.style.cssText="display:flex;flex-direction:column;align-items:flex-end;gap:8px";
+ const remove=document.createElement("button");remove.type="button";remove.className="btn danger tiny";remove.textContent="×";remove.title="Remove slide";remove.setAttribute("aria-label","Remove slide");remove.style.cssText="padding:5px 9px;min-width:30px;font-size:13px;line-height:1";remove.onclick=()=>wrap.remove();
  const altInput=document.createElement("input");altInput.type="text";altInput.className="hero-image-alt";altInput.placeholder="Image description (optional)";altInput.value=alt;altInput.style.gridColumn="1 / -1";
- const remove=document.createElement("button");remove.type="button";remove.className="btn danger tiny";remove.textContent="Remove slide";remove.style.gridColumn="1 / -1";remove.onclick=()=>wrap.remove();
- wrap.append(desktopBox,mobileBox,altInput,remove);$("homeHeroFields").appendChild(wrap);
+ fields.append(altInput);wrap.append(fields,side);side.append(remove);$("homeHeroFields").appendChild(wrap);
 }
 $("addHeroImage").onclick=()=>addHeroImageField("");
 ["homeCatTshirts","homeCatHoodies","homeCatBottomwear","homeCatSweatshirts","homeCatPolos"].forEach(id=>{const input=$(id);const upload=makeUploadButton(input,"homepage/categories");input.insertAdjacentElement("afterend",upload);});
@@ -416,9 +419,9 @@ $("homeImagesForm").addEventListener("submit",async e=>{
  const heroSlides=[...document.querySelectorAll("#homeHeroFields .hero-image-row")].map(row=>{
   const desktopImage=row.querySelector(".hero-image-desktop")?.value.trim()||"";
   const mobileImage=row.querySelector(".hero-image-mobile")?.value.trim()||"";
-  return {image:desktopImage,desktopImage,mobileImage,alt:row.querySelector(".hero-image-alt")?.value.trim()||"LAREL campaign"};
- }).filter(x=>x.desktopImage);
- if(!heroSlides.length){showMessage("homeImagesMessage","Please add at least one desktop / laptop hero banner image.");return;}
+  return {image:desktopImage||mobileImage,desktopImage,mobileImage,alt:row.querySelector(".hero-image-alt")?.value.trim()||"LAREL campaign"};
+ }).filter(x=>x.desktopImage||x.mobileImage);
+ if(!heroSlides.length){showMessage("homeImagesMessage","Please add at least one mobile or desktop / laptop hero banner image.");return;}
  const trending=[...document.querySelectorAll("#homeTrendingFields .hero-image-row")].map(row=>({image:row.querySelector(".trending-image-url").value.trim(),title:row.querySelector(".trending-image-title").value.trim(),subtitle:row.querySelector(".trending-image-subtitle").value.trim()})).filter(x=>x.image);
  const editorial=["homeEditorial1","homeEditorial2","homeEditorial3"].map(id=>$(id).value.trim());
  const content={heroSlides,categories:{tshirts:$("homeCatTshirts").value.trim(),hoodies:$("homeCatHoodies").value.trim(),bottomwear:$("homeCatBottomwear").value.trim(),sweatshirts:$("homeCatSweatshirts").value.trim(),polos:$("homeCatPolos").value.trim()},promoImage:$("homePromoImage").value.trim(),trending,editorial};
