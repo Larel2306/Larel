@@ -1367,12 +1367,14 @@ function toggleMenu() {
   if(!track||!dots)return;
   originalCount=slides.length;
   const slideMarkup=slides.map((slide,i)=>{
-   const src=slide.image||slide.url||slide.src;
-   const alt=slide.alt||slide.title||"LAREL campaign";
-   const safeSrc=String(src).replace(/&/g,"&amp;").replace(/"/g,"&quot;");
-   const safeAlt=String(alt).replace(/&/g,"&amp;").replace(/"/g,"&quot;");
-   return '<div class="hero-carousel-slide"><img src="'+safeSrc+'" alt="'+safeAlt+'" loading="'+(i?"lazy":"eager")+'"></div>';
-  }).join("");
+   const desktopSrc=slide.desktopImage||slide.desktop_image||slide.image||slide.url||slide.src;
+    const mobileSrc=slide.mobileImage||slide.mobile_image||desktopSrc;
+    const alt=slide.alt||slide.title||"LAREL campaign";
+    const safeDesktop=String(desktopSrc).replace(/&/g,"&amp;").replace(/"/g,"&quot;");
+    const safeMobile=String(mobileSrc).replace(/&/g,"&amp;").replace(/"/g,"&quot;");
+    const safeAlt=String(alt).replace(/&/g,"&amp;").replace(/"/g,"&quot;");
+    return '<div class="hero-carousel-slide"><picture>'+(mobileSrc!==desktopSrc?'<source media="(max-width: 760px)" srcset="'+safeMobile+'">':'')+'<img src="'+safeDesktop+'" alt="'+safeAlt+'" loading="'+(i?"lazy":"eager")+'"></picture></div>';
+   }).join("");
   track.innerHTML=slideMarkup;
   // Rebuild only the first slide as a clone for a seamless last-to-first transition.
   if(slides.length>1){
