@@ -1279,9 +1279,6 @@ function toggleMenu() {
    .filter(item=>item&&(item.image||item.url||item.src));
   clearInterval(timer);
   if(!track||!dots)return;
-  if(!slides.length){
-   slides.push({image:"assets/larel-streetwear-hero.png",alt:"LAREL streetwear campaign"});
-  }
   track.innerHTML=slides.map((slide,i)=>{
    const src=slide.image||slide.url||slide.src;
    const alt=slide.alt||slide.title||"LAREL campaign";
