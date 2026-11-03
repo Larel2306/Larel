@@ -1106,6 +1106,24 @@ body { background:#020b12; color:#fff; }
 @media(prefers-reduced-motion:reduce){
   .hero.editorial-hero .hero-carousel-track{transition:none;}
 }
+
+/* LAREL full-screen, smooth infinite campaign slider */
+.hero.editorial-hero{
+  position:relative!important;width:100%!important;max-width:none!important;
+  height:100vh!important;height:100svh!important;min-height:100vh!important;min-height:100svh!important;
+  aspect-ratio:auto!important;margin:0!important;padding:0!important;overflow:hidden!important;
+  border-radius:0!important;background:#020b12!important;
+}
+.hero.editorial-hero .hero-carousel{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;}
+.hero-carousel-track{display:flex!important;width:100%!important;height:100%!important;transition:transform 1.6s cubic-bezier(.22,.75,.18,1)!important;will-change:transform;}
+.hero-carousel-slide{flex:0 0 100%!important;width:100%!important;height:100%!important;min-width:100%!important;}
+.hero-carousel-slide img{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center center!important;}
+.hero-carousel-dots{bottom:max(18px,env(safe-area-inset-bottom))!important;}
+@media(max-width:760px){
+ .hero.editorial-hero{height:100vh!important;height:100svh!important;min-height:100vh!important;min-height:100svh!important;}
+ .hero-carousel-slide img{object-fit:cover!important;object-position:center center!important;}
+}
+@media(prefers-reduced-motion:reduce){.hero-carousel-track{transition-duration:.01ms!important;}}
 </style>
 </head>
 
@@ -1265,49 +1283,87 @@ function toggleMenu() {
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="products.js"></script><script>
 (async function(){
- let active=0,timer=null;
+ let active=0,position=0,timer=null,originalCount=0;
  const track=document.getElementById("larelHeroTrack");
  const dots=document.getElementById("larelHeroDots");
+ const DELAY=6500;
 
- function go(n,manual){
-  const count=track?.children.length||0;
-  if(!count)return;
-  active=(n+count)%count;
-  track.style.transform="translateX(-"+active*100+"%)";
-  dots.querySelectorAll("button").forEach((dot,i)=>dot.classList.toggle("active",i===active));
-  if(manual){clearInterval(timer);timer=setInterval(()=>go(active+1,false),4500);}
+ function setActiveDot(index){
+  if(!dots)return;
+  dots.querySelectorAll("button").forEach((dot,i)=>dot.classList.toggle("active",i===index));
  }
-
+ function moveTo(index,animate=true){
+  if(!track)return;
+  if(!animate)track.style.transition="none";
+  else track.style.removeProperty("transition");
+  position=index;
+  track.style.transform="translate3d(-"+(position*100)+"%,0,0)";
+  if(!animate){
+   track.offsetHeight;
+   track.style.removeProperty("transition");
+  }
+ }
+ function restartTimer(){
+  clearInterval(timer);
+  if(originalCount>1)timer=setInterval(()=>nextSlide(),DELAY);
+ }
+ function nextSlide(){
+  if(originalCount<2)return;
+  active=(active+1)%originalCount;
+  setActiveDot(active);
+  if(position===originalCount-1){
+   moveTo(originalCount,true); // move onto the first-slide clone
+  }else{
+   moveTo(position+1,true);
+  }
+ }
  function render(raw){
   const arr=Array.isArray(raw)?raw:(raw?[raw]:[]);
   const slides=arr.map(item=>typeof item==="string"?{image:item}:item)
    .filter(item=>item&&(item.image||item.url||item.src));
   clearInterval(timer);
   if(!track||!dots)return;
-  track.innerHTML=slides.map((slide,i)=>{
+  originalCount=slides.length;
+  const slideMarkup=slides.map((slide,i)=>{
    const src=slide.image||slide.url||slide.src;
    const alt=slide.alt||slide.title||"LAREL campaign";
    const safeSrc=String(src).replace(/&/g,"&amp;").replace(/"/g,"&quot;");
    const safeAlt=String(alt).replace(/&/g,"&amp;").replace(/"/g,"&quot;");
    return '<div class="hero-carousel-slide"><img src="'+safeSrc+'" alt="'+safeAlt+'" loading="'+(i?"lazy":"eager")+'"></div>';
   }).join("");
+  track.innerHTML=slideMarkup+(slides.length>1?slideMarkup.slice(0,slideMarkup.indexOf("</div>")+6):"");
+  // Rebuild only the first slide as a clone for a seamless last-to-first transition.
+  if(slides.length>1){
+   const first=track.querySelector(".hero-carousel-slide");
+   if(first)track.appendChild(first.cloneNode(true));
+  }
   dots.innerHTML=slides.length>1?slides.map((_,i)=>
    '<button type="button" class="hero-carousel-dot'+(!i?' active':'')+'" aria-label="Show banner '+(i+1)+'" data-index="'+i+'"></button>'
   ).join(""):"";
   dots.querySelectorAll("button").forEach(button=>
-   button.addEventListener("click",()=>go(Number(button.dataset.index),true))
+   button.addEventListener("click",()=>{
+    const target=Number(button.dataset.index);
+    active=target;
+    setActiveDot(active);
+    moveTo(target,true);
+    restartTimer();
+   })
   );
   active=0;
-  track.style.transform="translateX(0)";
-  if(slides.length>1)timer=setInterval(()=>go(active+1,false),4500);
+  moveTo(0,false);
+  if(slides.length>1)restartTimer();
  }
-
+ track?.addEventListener("transitionend",event=>{
+  if(event.target!==track||originalCount<2)return;
+  if(position===originalCount){
+   moveTo(0,false);
+  }
+ });
  try{
   const client=window.supabase.createClient("https://gghpenzosdqudtqhpekp.supabase.co","sb_publishable_LgOR6E51qGFLRcIecWqA3w_kHHoGtVa");
   const {data,error}=await client.from("site_content").select("content").eq("section_key","homepage_images").maybeSingle();
   if(error)throw error;
   const c=data?.content||{};
-  // Hero artwork is managed through homepage_images in Supabase; no image URLs are hardcoded here.
   render(c.heroSlides||c.hero_slides||c.hero||c.heroImages||c.banners||c.slides||[]);
   Object.entries(c.categories||{}).forEach(([key,value])=>{
    const image=document.querySelector('[data-home-image="cat-'+key+'"]');
@@ -1345,7 +1401,7 @@ function toggleMenu() {
   console.error("Homepage image sync:",error);
   render([]);
  }
-})();;
+})();;;
 </script><script>
 (async function(){try{const client=window.supabase.createClient("https://gghpenzosdqudtqhpekp.supabase.co","sb_publishable_LgOR6E51qGFLRcIecWqA3w_kHHoGtVa");const {data,error}=await client.from("site_content").select("content").eq("section_key","homepage_images").maybeSingle();if(error||!data?.content)return;const c=data.content;const set=(sel,url)=>{if(url){const el=document.querySelector(sel);if(el)el.src=url;}};set('[data-home-image="hero"]',c.hero);Object.entries(c.categories||{}).forEach(([k,v])=>set('[data-home-image="cat-'+k+'"]',v));set('.larel-wide-edit img',c.promoImage);document.querySelectorAll('.journal-card img').forEach((el,i)=>{if(c.editorial&&c.editorial[i])el.src=c.editorial[i];});const trending=c.trending||[];const track=document.querySelector(".horizontal-scroll");const existing=[...document.querySelectorAll("[data-home-trending]")];existing.forEach((img,i)=>{const card=img.closest(".scroll-card");if(card)card.style.display=i<trending.length?"":"none";if(trending[i])img.src=trending[i];});if(track){for(let i=existing.length;i<trending.length;i++){const card=document.createElement("a");card.className="scroll-card";card.href="https://larel2306.github.io/Larel/Shop.html";card.innerHTML='<img alt="LAREL Trending Drop"><div class="card-overlay"><h3>New Trending Drop</h3><span>Explore collection</span></div>';card.querySelector("img").src=trending[i];card.dataset.homeTrendingExtra=String(i);track.appendChild(card);}}}catch(e){console.error("Homepage image sync:",e);}})();</script>
 <script>
