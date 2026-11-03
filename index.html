@@ -1055,8 +1055,9 @@ body { background:#020b12; color:#fff; }
   position:relative;
   width:100%;
   max-width:none;
-  height:min(88svh,900px);
-  min-height:520px;
+  height:100vh;
+  height:100svh;
+  min-height:0;
   aspect-ratio:auto;
   margin:0;
   padding:0;
@@ -1085,16 +1086,20 @@ body { background:#020b12; color:#fff; }
   width:100%;
   height:100%;
   max-width:100%;
-  object-fit:contain;
-  object-position:center;
+  object-fit:cover;
+  object-position:center center;
   background:#020b12;
 }
 @media(max-width:760px){
   .hero.editorial-hero{
     width:100%;
-    height:min(72svh,620px);
-    min-height:320px;
+    height:100vh;
+    height:100svh;
+    min-height:0;
     aspect-ratio:auto;
+  }
+  .hero.editorial-hero .hero-carousel-slide img{
+    object-position:center center;
   }
   .hero.editorial-hero .hero-carousel-dots{bottom:10px;}
 }
