@@ -1331,7 +1331,7 @@ function toggleMenu() {
    const safeAlt=String(alt).replace(/&/g,"&amp;").replace(/"/g,"&quot;");
    return '<div class="hero-carousel-slide"><img src="'+safeSrc+'" alt="'+safeAlt+'" loading="'+(i?"lazy":"eager")+'"></div>';
   }).join("");
-  track.innerHTML=slideMarkup+(slides.length>1?slideMarkup.slice(0,slideMarkup.indexOf("</div>")+6):"");
+  track.innerHTML=slideMarkup;
   // Rebuild only the first slide as a clone for a seamless last-to-first transition.
   if(slides.length>1){
    const first=track.querySelector(".hero-carousel-slide");
