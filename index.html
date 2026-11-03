@@ -1303,7 +1303,7 @@ function toggleMenu() {
   if(error)throw error;
   const c=data?.content||{};
   // Hero artwork is managed through homepage_images in Supabase; no image URLs are hardcoded here.
-  render(c.hero||c.heroImages||c.banners||c.slides||[]);
+  render(c.heroSlides||c.hero_slides||c.hero||c.heroImages||c.banners||c.slides||[]);
   Object.entries(c.categories||{}).forEach(([key,value])=>{
    const image=document.querySelector('[data-home-image="cat-'+key+'"]');
    if(image&&value)image.src=value;
