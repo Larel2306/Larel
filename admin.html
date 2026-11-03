@@ -369,13 +369,21 @@ $("productForm").addEventListener("submit",async e=>{
  showMessage("productMessage","Product saved successfully.",false);await loadProducts();await loadDashboard();$("productForm").reset();$("productRowId").value="";$("pPrice").dataset.manualPrice="";$("pProfitPreview").value="₹0";setProductColorFields([]);
  }catch(error){showMessage("productMessage",error.message||"Could not save product.");}finally{saveButton.disabled=false;saveButton.textContent="Save product";}
 });
-function addHeroImageField(value="https://raw.githubusercontent.com/Larel2306/Larel/main/Streetwear%20Redefined_%20Bold%20Urban%20Style.png",alt="LAREL campaign image"){
- const wrap=document.createElement("div");wrap.className="hero-image-row";wrap.style.cssText="display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center;margin:10px 0;padding:10px;border:1px solid rgba(0,210,255,.18);border-radius:12px;background:rgba(0,210,255,.035)";
- const input=document.createElement("input");input.type="url";input.className="hero-image-url";input.placeholder="Hero image URL";input.value=value;input.required=true;
- const upload=makeUploadButton(input,"homepage/hero");
- const remove=document.createElement("button");remove.type="button";remove.className="btn danger tiny";remove.textContent="Remove";remove.onclick=()=>wrap.remove();
+function addHeroImageField(desktopValue="",mobileValue="",alt="LAREL campaign image"){
+ const wrap=document.createElement("div");wrap.className="hero-image-row";wrap.style.cssText="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;margin:10px 0;padding:12px;border:1px solid rgba(0,210,255,.18);border-radius:12px;background:rgba(0,210,255,.035)";
+ const makeHeroField=(labelText,className,value,folder,required=false)=>{
+  const group=document.createElement("div");group.style.cssText="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;min-width:0";
+  const input=document.createElement("input");input.type="url";input.className=className;input.placeholder=labelText+" image URL";input.value=value||"";input.required=required;input.setAttribute("aria-label",labelText+" image URL");
+  group.append(input,makeUploadButton(input,folder));return group;
+ };
+ const desktopBox=document.createElement("div"),mobileBox=document.createElement("div");desktopBox.style.minWidth="0";mobileBox.style.minWidth="0";
+ const desktopLabel=document.createElement("label");desktopLabel.textContent="Desktop / Laptop banner";desktopLabel.style.cssText="font-size:12px;color:#9fb4c8";
+ const mobileLabel=document.createElement("label");mobileLabel.textContent="Mobile banner (optional — desktop image used if empty)";mobileLabel.style.cssText="font-size:12px;color:#9fb4c8";
+ desktopBox.append(desktopLabel,makeHeroField("Desktop / Laptop","hero-image-desktop",desktopValue,"homepage/hero/desktop",true));
+ mobileBox.append(mobileLabel,makeHeroField("Mobile","hero-image-mobile",mobileValue,"homepage/hero/mobile",false));
  const altInput=document.createElement("input");altInput.type="text";altInput.className="hero-image-alt";altInput.placeholder="Image description (optional)";altInput.value=alt;altInput.style.gridColumn="1 / -1";
- wrap.append(input,upload,remove,altInput);$("homeHeroFields").appendChild(wrap);
+ const remove=document.createElement("button");remove.type="button";remove.className="btn danger tiny";remove.textContent="Remove slide";remove.style.gridColumn="1 / -1";remove.onclick=()=>wrap.remove();
+ wrap.append(desktopBox,mobileBox,altInput,remove);$("homeHeroFields").appendChild(wrap);
 }
 $("addHeroImage").onclick=()=>addHeroImageField("");
 ["homeCatTshirts","homeCatHoodies","homeCatBottomwear","homeCatSweatshirts","homeCatPolos"].forEach(id=>{const input=$(id);const upload=makeUploadButton(input,"homepage/categories");input.insertAdjacentElement("afterend",upload);});
@@ -396,7 +404,7 @@ async function loadContent(){
  if(error){$("homeImagesPreview").textContent=error.message;return;}
  const c=data?.content||{},slides=c.heroSlides||c.hero_slides||(c.hero?[{image:c.hero,alt:"LAREL campaign"}]:[]);
  $("homeHeroFields").innerHTML="";
- (slides.length?slides:[{image:"https://raw.githubusercontent.com/Larel2306/Larel/main/Streetwear%20Redefined_%20Bold%20Urban%20Style.png",alt:"LAREL campaign image"}]).forEach(s=>addHeroImageField(typeof s==="string"?s:(s.image||s.url||s.src||""),typeof s==="string"?"":(s.alt||s.title||"")));
+ (slides.length?slides:[{image:"https://raw.githubusercontent.com/Larel2306/Larel/main/Streetwear%20Redefined_%20Bold%20Urban%20Style.png",alt:"LAREL campaign image"}]).forEach(s=>{const v=typeof s==="string"?{image:s}:s;addHeroImageField(v.desktopImage||v.desktop_image||v.image||v.url||v.src||"",v.mobileImage||v.mobile_image||"",v.alt||v.title||"");});
  const cats=c.categories||{};["tshirts","hoodies","bottomwear","sweatshirts","polos"].forEach(k=>$("homeCat"+k[0].toUpperCase()+k.slice(1)).value=cats[k]||"");
  $("homeTrendingFields").innerHTML="";(c.trending||[]).forEach(item=>{const v=typeof item==="string"?{image:item}:item;addTrendingImageField(v.image||v.url||"",v.title||"",v.subtitle||"");});
  const editorial=c.editorial||[];["homeEditorial1","homeEditorial2","homeEditorial3"].forEach((id,i)=>$(id).value=editorial[i]||"");
@@ -405,8 +413,12 @@ async function loadContent(){
 }
 $("homeImagesForm").addEventListener("submit",async e=>{
  e.preventDefault();
- const heroSlides=[...document.querySelectorAll(".hero-image-row")].map(row=>({image:row.querySelector(".hero-image-url").value.trim(),alt:row.querySelector(".hero-image-alt").value.trim()||"LAREL campaign"})).filter(x=>x.image);
- if(!heroSlides.length){showMessage("homeImagesMessage","Please add at least one hero banner image.");return;}
+ const heroSlides=[...document.querySelectorAll("#homeHeroFields .hero-image-row")].map(row=>{
+  const desktopImage=row.querySelector(".hero-image-desktop")?.value.trim()||"";
+  const mobileImage=row.querySelector(".hero-image-mobile")?.value.trim()||"";
+  return {image:desktopImage,desktopImage,mobileImage,alt:row.querySelector(".hero-image-alt")?.value.trim()||"LAREL campaign"};
+ }).filter(x=>x.desktopImage);
+ if(!heroSlides.length){showMessage("homeImagesMessage","Please add at least one desktop / laptop hero banner image.");return;}
  const trending=[...document.querySelectorAll("#homeTrendingFields .hero-image-row")].map(row=>({image:row.querySelector(".trending-image-url").value.trim(),title:row.querySelector(".trending-image-title").value.trim(),subtitle:row.querySelector(".trending-image-subtitle").value.trim()})).filter(x=>x.image);
  const editorial=["homeEditorial1","homeEditorial2","homeEditorial3"].map(id=>$(id).value.trim());
  const content={heroSlides,categories:{tshirts:$("homeCatTshirts").value.trim(),hoodies:$("homeCatHoodies").value.trim(),bottomwear:$("homeCatBottomwear").value.trim(),sweatshirts:$("homeCatSweatshirts").value.trim(),polos:$("homeCatPolos").value.trim()},promoImage:$("homePromoImage").value.trim(),trending,editorial};
