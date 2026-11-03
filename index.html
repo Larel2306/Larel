@@ -1124,6 +1124,48 @@ body { background:#020b12; color:#fff; }
  .hero-carousel-slide img{object-fit:cover!important;object-position:center center!important;}
 }
 @media(prefers-reduced-motion:reduce){.hero-carousel-track{transition-duration:.01ms!important;}}
+
+/* Keep the complete campaign artwork visible; fill unused space with a soft blurred copy. */
+.hero.editorial-hero .hero-carousel-slide{
+  position:relative!important;
+  isolation:isolate;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  background:#020b12!important;
+}
+.hero.editorial-hero .hero-carousel-slide::before{
+  content:"";
+  position:absolute;
+  inset:-5%;
+  z-index:0;
+  background-image:var(--hero-slide-bg);
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  filter:blur(22px);
+  transform:scale(1.06);
+  opacity:.58;
+}
+.hero.editorial-hero .hero-carousel-slide img{
+  position:relative!important;
+  z-index:1!important;
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  max-width:100%!important;
+  max-height:100%!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+  background:transparent!important;
+}
+@media(max-width:760px){
+  .hero.editorial-hero .hero-carousel-slide img{
+    object-fit:contain!important;
+    object-position:center center!important;
+  }
+}
+
 </style>
 </head>
 
@@ -1337,6 +1379,17 @@ function toggleMenu() {
    const first=track.querySelector(".hero-carousel-slide");
    if(first)track.appendChild(first.cloneNode(true));
   }
+  // Use a soft, enlarged copy behind each banner so the full original image stays visible.
+  track.querySelectorAll(".hero-carousel-slide").forEach(slide=>{
+   const img=slide.querySelector("img");
+   if(!img)return;
+   const applyBackdrop=()=>{
+    const source=img.currentSrc||img.src;
+    if(source)slide.style.setProperty("--hero-slide-bg",'url("'+source.replace(/"/g,'%22')+'")');
+   };
+   if(img.complete)applyBackdrop();
+   else img.addEventListener("load",applyBackdrop,{once:true});
+  });
   dots.innerHTML=slides.length>1?slides.map((_,i)=>
    '<button type="button" class="hero-carousel-dot'+(!i?' active':'')+'" aria-label="Show banner '+(i+1)+'" data-index="'+i+'"></button>'
   ).join(""):"";
