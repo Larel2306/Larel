@@ -1358,6 +1358,15 @@ body { background:#020b12; color:#fff; }
   }
 </style>
 
+<style id="larel-hero-clean-frame-category-heading">
+  .hero.editorial-hero{width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;aspect-ratio:3/2!important;margin-top:var(--larel-header-height,72px)!important;padding:0!important;overflow:hidden!important;background:#020b12!important}
+  .hero.editorial-hero .hero-carousel,.hero.editorial-hero .hero-carousel-track,.hero.editorial-hero .hero-carousel-slide{width:100%!important;height:100%!important}
+  .hero.editorial-hero .hero-carousel-slide picture{display:block!important;width:100%!important;height:100%!important}
+  .hero.editorial-hero .hero-carousel-slide img{display:block!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center center!important}
+  .editorial-categories .section-title{min-height:82px!important;padding:14px 16px!important;background:linear-gradient(180deg,#061321,#020b12)!important;display:flex!important;justify-content:center!important;align-items:center!important}
+  .editorial-categories .section-title h2{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-height:42px!important;padding:10px 24px!important;border:1px solid rgba(0,210,255,.55)!important;border-radius:3px!important;background:rgba(0,210,255,.07)!important;box-shadow:0 0 22px rgba(0,210,255,.09),inset 0 0 14px rgba(0,210,255,.04)!important;color:#fff!important;font-size:clamp(14px,1.6vw,21px)!important;font-weight:850!important;letter-spacing:4px!important;line-height:1.2!important;text-align:center!important}
+  @media(max-width:760px){.hero.editorial-hero{aspect-ratio:3/2!important}.editorial-categories .section-title{min-height:66px!important}.editorial-categories .section-title h2{min-height:36px!important;padding:8px 17px!important;letter-spacing:2.5px!important}}
+</style>
 </head>
 
 <body>
@@ -1523,7 +1532,6 @@ function toggleMenu() {
  const DELAY=4000;
  const TRANSITION="transform .85s cubic-bezier(.22,.75,.18,1)";
  let isAnimating=false;
-
  function setActiveDot(index){
   if(!dots)return;
   dots.querySelectorAll("button").forEach((dot,i)=>dot.classList.toggle("active",i===index));
@@ -1533,26 +1541,23 @@ function toggleMenu() {
   track.style.transition=animate?TRANSITION:"none";
   position=index;
   track.style.transform="translate3d(-"+(position*100)+"%,0,0)";
-  if(!animate){
-   track.offsetHeight;
-   track.style.transition=TRANSITION;
-   isAnimating=false;
-  }else{
-   isAnimating=true;
-  }
+  isAnimating=!!animate;
+  if(!animate){track.offsetHeight;track.style.transition=TRANSITION;}
  }
  function scheduleNext(){
   clearTimeout(timer);
-  if(originalCount>1)timer=setTimeout(()=>goNext(),DELAY);
+  if(originalCount>1)timer=setTimeout(goNext,DELAY);
  }
  function goNext(){
   if(originalCount<2||isAnimating)return;
+  clearTimeout(timer);
   active=(active+1)%originalCount;
   setActiveDot(active);
   moveTo(position+1,true);
  }
  function goPrevious(){
   if(originalCount<2||isAnimating)return;
+  clearTimeout(timer);
   active=(active-1+originalCount)%originalCount;
   setActiveDot(active);
   moveTo(position-1,true);
@@ -1563,10 +1568,7 @@ function toggleMenu() {
    .filter(item=>item&&(item.image||item.url||item.src||item.desktopImage||item.desktop_image));
   clearTimeout(timer);
   if(!track||!dots)return;
-  originalCount=slides.length;
-  active=0;
-  position=0;
-  isAnimating=false;
+  originalCount=slides.length;active=0;position=0;isAnimating=false;
   const slideMarkup=slides.map((slide,i)=>{
    const desktopSrc=slide.desktopImage||slide.desktop_image||slide.image||slide.url||slide.src;
    const mobileSrc=slide.mobileImage||slide.mobile_image||desktopSrc;
@@ -1582,54 +1584,29 @@ function toggleMenu() {
    track.insertBefore(originals[originals.length-1].cloneNode(true),originals[0]);
    track.appendChild(originals[0].cloneNode(true));
   }
-  track.querySelectorAll(".hero-carousel-slide").forEach(slide=>{
-   const img=slide.querySelector("img");
-   if(!img)return;
-   const applyBackdrop=()=>{
-    const source=img.currentSrc||img.src;
-    if(source)slide.style.setProperty("--hero-slide-bg",'url("'+source.replace(/"/g,'%22')+'")');
-   };
-   if(img.complete)applyBackdrop();
-   else img.addEventListener("load",applyBackdrop,{once:true});
-  });
   dots.innerHTML=originalCount>1?slides.map((_,i)=>
    '<button type="button" class="hero-carousel-dot'+(!i?' active':'')+'" aria-label="Show banner '+(i+1)+'" data-index="'+i+'"></button>'
   ).join(""):"";
   dots.querySelectorAll("button").forEach(button=>
    button.addEventListener("click",()=>{
     if(isAnimating)return;
-    active=Number(button.dataset.index);
-    setActiveDot(active);
-    moveTo(active+1,true);
-    scheduleNext();
+    const target=Number(button.dataset.index)+1;
+    if(target===position){scheduleNext();return;}
+    clearTimeout(timer);active=Number(button.dataset.index);setActiveDot(active);moveTo(target,true);
    })
   );
   moveTo(originalCount>1?1:0,false);
   scheduleNext();
  }
  track?.addEventListener("transitionend",event=>{
-  if(event.target!==track||originalCount<2)return;
-  if(position===originalCount+1){
-   moveTo(1,false);
-  }else if(position===0){
-   moveTo(originalCount,false);
-  }
+  if(event.target!==track)return;
+  if(originalCount>1&&position===originalCount+1)moveTo(1,false);
+  else if(originalCount>1&&position===0)moveTo(originalCount,false);
+  isAnimating=false;
   scheduleNext();
  });
- const previousButton=carousel?.querySelector(".larel-hero-arrow--prev");
- const nextButton=carousel?.querySelector(".larel-hero-arrow--next");
- previousButton?.addEventListener("click",()=>{
-  if(isAnimating)return;
-  clearTimeout(timer);
-  goPrevious();
-  scheduleNext();
- });
- nextButton?.addEventListener("click",()=>{
-  if(isAnimating)return;
-  clearTimeout(timer);
-  goNext();
-  scheduleNext();
- });
+ carousel?.querySelector(".larel-hero-arrow--prev")?.addEventListener("click",goPrevious);
+ carousel?.querySelector(".larel-hero-arrow--next")?.addEventListener("click",goNext);
  try{
   const client=window.supabase.createClient("https://gghpenzosdqudtqhpekp.supabase.co","sb_publishable_LgOR6E51qGFLRcIecWqA3w_kHHoGtVa");
   const {data,error}=await client.from("site_content").select("content").eq("section_key","homepage_images").maybeSingle();
@@ -1652,26 +1629,15 @@ function toggleMenu() {
    for(let i=old.length;i<trending.length;i++){
     const item=typeof trending[i]==="string"?{image:trending[i]}:trending[i];
     const card=document.createElement("a");
-    card.className="scroll-card";
-    card.href="https://larel2306.github.io/Larel/Shop";
-    const img=document.createElement("img");
-    img.alt=item.title||"LAREL Trending Drop";
-    img.src=item.image||item.url||"";
-    const overlay=document.createElement("div");
-    overlay.className="card-overlay";
-    const heading=document.createElement("h3");
-    heading.textContent=item.title||"New Trending Drop";
-    const subtitle=document.createElement("span");
-    subtitle.textContent=item.subtitle||"Explore collection";
-    overlay.append(heading,subtitle);
-    card.append(img,overlay);
-    horizontalTrack.append(card);
+    card.className="scroll-card";card.href="https://larel2306.github.io/Larel/Shop";
+    const img=document.createElement("img");img.alt=item.title||"LAREL Trending Drop";img.src=item.image||item.url||"";
+    const overlay=document.createElement("div");overlay.className="card-overlay";
+    const heading=document.createElement("h3");heading.textContent=item.title||"New Trending Drop";
+    const subtitle=document.createElement("span");subtitle.textContent=item.subtitle||"Explore collection";
+    overlay.append(heading,subtitle);card.append(img,overlay);horizontalTrack.append(card);
    }
   }
- }catch(error){
-  console.error("Homepage image sync:",error);
-  render([]);
- }
+ }catch(error){console.error("Homepage image sync:",error);render([]);}
 })();;;
 </script><script>
 (async function(){try{const client=window.supabase.createClient("https://gghpenzosdqudtqhpekp.supabase.co","sb_publishable_LgOR6E51qGFLRcIecWqA3w_kHHoGtVa");const {data,error}=await client.from("site_content").select("content").eq("section_key","homepage_images").maybeSingle();if(error||!data?.content)return;const c=data.content;const set=(sel,url)=>{if(url){const el=document.querySelector(sel);if(el)el.src=url;}};set('[data-home-image="hero"]',c.hero);Object.entries(c.categories||{}).forEach(([k,v])=>set('[data-home-image="cat-'+k+'"]',v));set('.larel-wide-edit img',c.promoImage);document.querySelectorAll('.journal-card img').forEach((el,i)=>{if(c.editorial&&c.editorial[i])el.src=c.editorial[i];});const trending=c.trending||[];const track=document.querySelector(".horizontal-scroll");const existing=[...document.querySelectorAll("[data-home-trending]")];existing.forEach((img,i)=>{const card=img.closest(".scroll-card");if(card)card.style.display=i<trending.length?"":"none";if(trending[i])img.src=trending[i];});if(track){for(let i=existing.length;i<trending.length;i++){const card=document.createElement("a");card.className="scroll-card";card.href="https://larel2306.github.io/Larel/Shop.html";card.innerHTML='<img alt="LAREL Trending Drop"><div class="card-overlay"><h3>New Trending Drop</h3><span>Explore collection</span></div>';card.querySelector("img").src=trending[i];card.dataset.homeTrendingExtra=String(i);track.appendChild(card);}}}catch(e){console.error("Homepage image sync:",e);}})();</script>
