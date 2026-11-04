@@ -1288,6 +1288,76 @@ body { background:#020b12; color:#fff; }
   }
 </style>
 
+
+<style id="larel-hero-3x2-arrows-timing">
+  /* Match the uploaded 1536x1024 campaign artwork ratio and show it completely. */
+  .hero.editorial-hero {
+    width:100% !important;
+    height:auto !important;
+    min-height:0 !important;
+    max-height:none !important;
+    aspect-ratio:3 / 2 !important;
+    margin-top:var(--larel-header-height,72px) !important;
+    overflow:hidden !important;
+  }
+  .hero.editorial-hero .hero-carousel,
+  .hero.editorial-hero .hero-carousel-track,
+  .hero.editorial-hero .hero-carousel-slide {
+    height:100% !important;
+  }
+  .hero.editorial-hero .hero-carousel-slide img {
+    width:100% !important;
+    height:100% !important;
+    object-fit:contain !important;
+    object-position:center !important;
+  }
+  .hero.editorial-hero .hero-carousel-slide::before { display:none !important; }
+  .hero.editorial-hero .larel-hero-arrow {
+    position:absolute !important;
+    top:50% !important;
+    transform:translateY(-50%) !important;
+    z-index:20 !important;
+    display:flex !important;
+    align-items:center !important;
+    justify-content:center !important;
+    width:46px !important;
+    height:46px !important;
+    border:1px solid rgba(255,255,255,.55) !important;
+    border-radius:50% !important;
+    background:rgba(5,8,14,.78) !important;
+    color:#fff !important;
+    font-size:22px !important;
+    line-height:1 !important;
+    cursor:pointer !important;
+    transition:background .2s ease,transform .2s ease !important;
+  }
+  .hero.editorial-hero .larel-hero-arrow:hover {
+    background:#eab308 !important;
+    color:#050505 !important;
+  }
+  .hero.editorial-hero .larel-hero-arrow--prev { left:22px !important; }
+  .hero.editorial-hero .larel-hero-arrow--next { right:22px !important; }
+  .hero.editorial-hero .hero-carousel-dots { z-index:21 !important; }
+  @media(max-width:760px) {
+    .hero.editorial-hero {
+      height:auto !important;
+      min-height:0 !important;
+      aspect-ratio:3 / 2 !important;
+      margin-top:var(--larel-header-height,66px) !important;
+    }
+    .hero.editorial-hero .larel-hero-arrow {
+      width:34px !important;
+      height:34px !important;
+      font-size:17px !important;
+    }
+    .hero.editorial-hero .larel-hero-arrow--prev { left:9px !important; }
+    .hero.editorial-hero .larel-hero-arrow--next { right:9px !important; }
+  }
+  @media(prefers-reduced-motion:reduce) {
+    .hero-carousel-track { transition-duration:.01ms !important; }
+  }
+</style>
+
 </head>
 
 <body>
@@ -1338,7 +1408,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <h1>LAREL – Independent Print-on-Demand Streetwear</h1>
     <p>LAREL is a locally run independent clothing label offering print-on-demand streetwear, oversized T-shirts, hoodies, sweatshirts, polos and bottomwear. Browse the collection and shop online.</p>
   </div>
-  <div class="hero-carousel" id="larelHeroCarousel" aria-label="LAREL campaign banners"><div class="hero-carousel-track" id="larelHeroTrack"></div><div class="hero-carousel-dots" id="larelHeroDots" aria-label="Choose banner"></div></div>
+  <div class="hero-carousel" id="larelHeroCarousel" aria-label="LAREL campaign banners"><div class="hero-carousel-track" id="larelHeroTrack"></div><button type="button" class="larel-hero-arrow larel-hero-arrow--prev" aria-label="Previous banner">&#10094;</button><button type="button" class="larel-hero-arrow larel-hero-arrow--next" aria-label="Next banner">&#10095;</button><div class="hero-carousel-dots" id="larelHeroDots" aria-label="Choose banner"></div></div>
 </section>
 
 <!-- Apparel Categories -->
@@ -1446,10 +1516,12 @@ function toggleMenu() {
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="products.js"></script><script>
 (async function(){
- let active=0,position=1,timer=null,originalCount=0;
+ let active=0,position=0,timer=null,originalCount=0;
  const track=document.getElementById("larelHeroTrack");
  const dots=document.getElementById("larelHeroDots");
- const DELAY=6500;
+ const carousel=document.getElementById("larelHeroCarousel");
+ const DELAY=4000;
+ const TRANSITION="transform .85s cubic-bezier(.22,.75,.18,1)";
  let isAnimating=false;
 
  function setActiveDot(index){
@@ -1458,36 +1530,42 @@ function toggleMenu() {
  }
  function moveTo(index,animate=true){
   if(!track)return;
-  track.style.transition=animate?"transform 1.6s cubic-bezier(.22,.75,.18,1)":"none";
+  track.style.transition=animate?TRANSITION:"none";
   position=index;
   track.style.transform="translate3d(-"+(position*100)+"%,0,0)";
   if(!animate){
    track.offsetHeight;
-   track.style.transition="transform 1.6s cubic-bezier(.22,.75,.18,1)";
+   track.style.transition=TRANSITION;
    isAnimating=false;
   }else{
    isAnimating=true;
   }
  }
- function restartTimer(){
-  clearInterval(timer);
-  if(originalCount>1)timer=setInterval(()=>nextSlide(),DELAY);
+ function scheduleNext(){
+  clearTimeout(timer);
+  if(originalCount>1)timer=setTimeout(()=>goNext(),DELAY);
  }
- function nextSlide(){
+ function goNext(){
   if(originalCount<2||isAnimating)return;
   active=(active+1)%originalCount;
   setActiveDot(active);
   moveTo(position+1,true);
  }
+ function goPrevious(){
+  if(originalCount<2||isAnimating)return;
+  active=(active-1+originalCount)%originalCount;
+  setActiveDot(active);
+  moveTo(position-1,true);
+ }
  function render(raw){
   const arr=Array.isArray(raw)?raw:(raw?[raw]:[]);
   const slides=arr.map(item=>typeof item==="string"?{image:item}:item)
-   .filter(item=>item&&(item.image||item.url||item.src));
-  clearInterval(timer);
+   .filter(item=>item&&(item.image||item.url||item.src||item.desktopImage||item.desktop_image));
+  clearTimeout(timer);
   if(!track||!dots)return;
   originalCount=slides.length;
   active=0;
-  position=1;
+  position=0;
   isAnimating=false;
   const slideMarkup=slides.map((slide,i)=>{
    const desktopSrc=slide.desktopImage||slide.desktop_image||slide.image||slide.url||slide.src;
@@ -1500,7 +1578,6 @@ function toggleMenu() {
   }).join("");
   track.innerHTML=slideMarkup;
   const originals=[...track.querySelectorAll(".hero-carousel-slide")];
-  // Add one clone at each end. The carousel always advances forward through the loop.
   if(originalCount>1){
    track.insertBefore(originals[originals.length-1].cloneNode(true),originals[0]);
    track.appendChild(originals[0].cloneNode(true));
@@ -1521,22 +1598,37 @@ function toggleMenu() {
   dots.querySelectorAll("button").forEach(button=>
    button.addEventListener("click",()=>{
     if(isAnimating)return;
-    const target=Number(button.dataset.index);
-    active=target;
+    active=Number(button.dataset.index);
     setActiveDot(active);
-    moveTo(target+1,true);
-    restartTimer();
+    moveTo(active+1,true);
+    scheduleNext();
    })
   );
   moveTo(originalCount>1?1:0,false);
-  if(originalCount>1)restartTimer();
+  scheduleNext();
  }
  track?.addEventListener("transitionend",event=>{
   if(event.target!==track||originalCount<2)return;
-  // Snap invisibly from the trailing first-slide clone to the real first slide.
   if(position===originalCount+1){
    moveTo(1,false);
+  }else if(position===0){
+   moveTo(originalCount,false);
   }
+  scheduleNext();
+ });
+ const previousButton=carousel?.querySelector(".larel-hero-arrow--prev");
+ const nextButton=carousel?.querySelector(".larel-hero-arrow--next");
+ previousButton?.addEventListener("click",()=>{
+  if(isAnimating)return;
+  clearTimeout(timer);
+  goPrevious();
+  scheduleNext();
+ });
+ nextButton?.addEventListener("click",()=>{
+  if(isAnimating)return;
+  clearTimeout(timer);
+  goNext();
+  scheduleNext();
  });
  try{
   const client=window.supabase.createClient("https://gghpenzosdqudtqhpekp.supabase.co","sb_publishable_LgOR6E51qGFLRcIecWqA3w_kHHoGtVa");
@@ -1553,32 +1645,9 @@ function toggleMenu() {
   old.forEach((img,i)=>{
    const card=img.closest(".scroll-card");
    if(card)card.style.display=i<trending.length?"":"none";
-   if(trending[i])img.src=typeof trending[i]==="string"?trending[i]:(trending[i].image||trending[i].url||"");
   });
-  const horizontalTrack=document.querySelector(".horizontal-scroll");
-  if(horizontalTrack){
-   for(let i=old.length;i<trending.length;i++){
-    const item=typeof trending[i]==="string"?{image:trending[i]}:trending[i];
-    const card=document.createElement("a");
-    card.className="scroll-card";
-    card.href="https://larel2306.github.io/Larel/Shop";
-    const img=document.createElement("img");
-    img.alt=item.title||"LAREL Trending Drop";
-    img.src=item.image||item.url||"";
-    const overlay=document.createElement("div");
-    overlay.className="card-overlay";
-    const heading=document.createElement("h3");
-    heading.textContent=item.title||"New Trending Drop";
-    const subtitle=document.createElement("span");
-    subtitle.textContent=item.subtitle||"Explore collection";
-    overlay.append(heading,subtitle);
-    card.append(img,overlay);
-    horizontalTrack.append(card);
-   }
-  }
  }catch(error){
-  console.error("Homepage image sync:",error);
-  render([]);
+  console.error("LAREL homepage slider could not load:",error);
  }
 })();;;
 </script><script>
