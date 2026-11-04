@@ -1645,9 +1645,32 @@ function toggleMenu() {
   old.forEach((img,i)=>{
    const card=img.closest(".scroll-card");
    if(card)card.style.display=i<trending.length?"":"none";
+   if(trending[i])img.src=typeof trending[i]==="string"?trending[i]:(trending[i].image||trending[i].url||"");
   });
+  const horizontalTrack=document.querySelector(".horizontal-scroll");
+  if(horizontalTrack){
+   for(let i=old.length;i<trending.length;i++){
+    const item=typeof trending[i]==="string"?{image:trending[i]}:trending[i];
+    const card=document.createElement("a");
+    card.className="scroll-card";
+    card.href="https://larel2306.github.io/Larel/Shop";
+    const img=document.createElement("img");
+    img.alt=item.title||"LAREL Trending Drop";
+    img.src=item.image||item.url||"";
+    const overlay=document.createElement("div");
+    overlay.className="card-overlay";
+    const heading=document.createElement("h3");
+    heading.textContent=item.title||"New Trending Drop";
+    const subtitle=document.createElement("span");
+    subtitle.textContent=item.subtitle||"Explore collection";
+    overlay.append(heading,subtitle);
+    card.append(img,overlay);
+    horizontalTrack.append(card);
+   }
+  }
  }catch(error){
-  console.error("LAREL homepage slider could not load:",error);
+  console.error("Homepage image sync:",error);
+  render([]);
  }
 })();;;
 </script><script>
