@@ -1446,10 +1446,11 @@ function toggleMenu() {
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="products.js"></script><script>
 (async function(){
- let active=0,position=0,timer=null,originalCount=0;
+ let active=0,position=1,timer=null,originalCount=0;
  const track=document.getElementById("larelHeroTrack");
  const dots=document.getElementById("larelHeroDots");
  const DELAY=6500;
+ let isAnimating=false;
 
  function setActiveDot(index){
   if(!dots)return;
@@ -1457,13 +1458,15 @@ function toggleMenu() {
  }
  function moveTo(index,animate=true){
   if(!track)return;
-  if(!animate)track.style.transition="none";
-  else track.style.removeProperty("transition");
+  track.style.transition=animate?"transform 1.6s cubic-bezier(.22,.75,.18,1)":"none";
   position=index;
   track.style.transform="translate3d(-"+(position*100)+"%,0,0)";
   if(!animate){
    track.offsetHeight;
-   track.style.removeProperty("transition");
+   track.style.transition="transform 1.6s cubic-bezier(.22,.75,.18,1)";
+   isAnimating=false;
+  }else{
+   isAnimating=true;
   }
  }
  function restartTimer(){
@@ -1471,14 +1474,10 @@ function toggleMenu() {
   if(originalCount>1)timer=setInterval(()=>nextSlide(),DELAY);
  }
  function nextSlide(){
-  if(originalCount<2)return;
+  if(originalCount<2||isAnimating)return;
   active=(active+1)%originalCount;
   setActiveDot(active);
-  if(position===originalCount-1){
-   moveTo(originalCount,true); // move onto the first-slide clone
-  }else{
-   moveTo(position+1,true);
-  }
+  moveTo(position+1,true);
  }
  function render(raw){
   const arr=Array.isArray(raw)?raw:(raw?[raw]:[]);
@@ -1487,22 +1486,25 @@ function toggleMenu() {
   clearInterval(timer);
   if(!track||!dots)return;
   originalCount=slides.length;
+  active=0;
+  position=1;
+  isAnimating=false;
   const slideMarkup=slides.map((slide,i)=>{
    const desktopSrc=slide.desktopImage||slide.desktop_image||slide.image||slide.url||slide.src;
-    const mobileSrc=slide.mobileImage||slide.mobile_image||desktopSrc;
-    const alt=slide.alt||slide.title||"LAREL campaign";
-    const safeDesktop=String(desktopSrc).replace(/&/g,"&amp;").replace(/"/g,"&quot;");
-    const safeMobile=String(mobileSrc).replace(/&/g,"&amp;").replace(/"/g,"&quot;");
-    const safeAlt=String(alt).replace(/&/g,"&amp;").replace(/"/g,"&quot;");
-    return '<div class="hero-carousel-slide"><picture>'+(mobileSrc!==desktopSrc?'<source media="(max-width: 760px)" srcset="'+safeMobile+'">':'')+'<img src="'+safeDesktop+'" alt="'+safeAlt+'" loading="'+(i?"lazy":"eager")+'"></picture></div>';
-   }).join("");
+   const mobileSrc=slide.mobileImage||slide.mobile_image||desktopSrc;
+   const alt=slide.alt||slide.title||"LAREL campaign";
+   const safeDesktop=String(desktopSrc).replace(/&/g,"&amp;").replace(/"/g,"&quot;");
+   const safeMobile=String(mobileSrc).replace(/&/g,"&amp;").replace(/"/g,"&quot;");
+   const safeAlt=String(alt).replace(/&/g,"&amp;").replace(/"/g,"&quot;");
+   return '<div class="hero-carousel-slide"><picture>'+(mobileSrc!==desktopSrc?'<source media="(max-width: 760px)" srcset="'+safeMobile+'">':'')+'<img src="'+safeDesktop+'" alt="'+safeAlt+'" loading="'+(i?"lazy":"eager")+'"></picture></div>';
+  }).join("");
   track.innerHTML=slideMarkup;
-  // Rebuild only the first slide as a clone for a seamless last-to-first transition.
-  if(slides.length>1){
-   const first=track.querySelector(".hero-carousel-slide");
-   if(first)track.appendChild(first.cloneNode(true));
+  const originals=[...track.querySelectorAll(".hero-carousel-slide")];
+  // Add one clone at each end. The carousel always advances forward through the loop.
+  if(originalCount>1){
+   track.insertBefore(originals[originals.length-1].cloneNode(true),originals[0]);
+   track.appendChild(originals[0].cloneNode(true));
   }
-  // Use a soft, enlarged copy behind each banner so the full original image stays visible.
   track.querySelectorAll(".hero-carousel-slide").forEach(slide=>{
    const img=slide.querySelector("img");
    if(!img)return;
@@ -1513,26 +1515,27 @@ function toggleMenu() {
    if(img.complete)applyBackdrop();
    else img.addEventListener("load",applyBackdrop,{once:true});
   });
-  dots.innerHTML=slides.length>1?slides.map((_,i)=>
+  dots.innerHTML=originalCount>1?slides.map((_,i)=>
    '<button type="button" class="hero-carousel-dot'+(!i?' active':'')+'" aria-label="Show banner '+(i+1)+'" data-index="'+i+'"></button>'
   ).join(""):"";
   dots.querySelectorAll("button").forEach(button=>
    button.addEventListener("click",()=>{
+    if(isAnimating)return;
     const target=Number(button.dataset.index);
     active=target;
     setActiveDot(active);
-    moveTo(target,true);
+    moveTo(target+1,true);
     restartTimer();
    })
   );
-  active=0;
-  moveTo(0,false);
-  if(slides.length>1)restartTimer();
+  moveTo(originalCount>1?1:0,false);
+  if(originalCount>1)restartTimer();
  }
  track?.addEventListener("transitionend",event=>{
   if(event.target!==track||originalCount<2)return;
-  if(position===originalCount){
-   moveTo(0,false);
+  // Snap invisibly from the trailing first-slide clone to the real first slide.
+  if(position===originalCount+1){
+   moveTo(1,false);
   }
  });
  try{
