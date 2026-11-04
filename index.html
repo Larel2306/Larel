@@ -1205,6 +1205,89 @@ body { background:#020b12; color:#fff; }
   }
 }
 </style>
+
+<style id="larel-opaque-header-hero-offset">
+  /* Keep the fixed navigation fully opaque and reserve its space above the hero. */
+  :root { --larel-header-height: 72px; }
+  html, body { scroll-padding-top: var(--larel-header-height); }
+  .header {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    height: var(--larel-header-height) !important;
+    min-height: var(--larel-header-height) !important;
+    box-sizing: border-box !important;
+    background: #070a14 !important;
+    background-color: #070a14 !important;
+    opacity: 1 !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    z-index: 10000 !important;
+  }
+  .hero.editorial-hero {
+    position: relative !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    height: calc(100svh - var(--larel-header-height)) !important;
+    min-height: 420px !important;
+    max-height: none !important;
+    margin: var(--larel-header-height) 0 0 !important;
+    padding: 0 !important;
+    aspect-ratio: auto !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+    background: #020b12 !important;
+  }
+  .hero.editorial-hero .hero-carousel,
+  .hero.editorial-hero .hero-carousel-track,
+  .hero.editorial-hero .hero-carousel-slide {
+    width: 100% !important;
+    height: 100% !important;
+  }
+  .hero.editorial-hero .hero-carousel {
+    position: absolute !important;
+    inset: 0 !important;
+  }
+  .hero.editorial-hero .hero-carousel-slide {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+    background: #020b12 !important;
+  }
+  .hero.editorial-hero .hero-carousel-slide img {
+    position: relative !important;
+    z-index: 1 !important;
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    object-fit: contain !important;
+    object-position: center center !important;
+    background: transparent !important;
+  }
+  @media (max-width: 760px) {
+    :root { --larel-header-height: 66px; }
+    .header {
+      padding-top: 8px !important;
+      padding-bottom: 8px !important;
+    }
+    .hero.editorial-hero {
+      height: calc(100svh - var(--larel-header-height)) !important;
+      min-height: 320px !important;
+      margin-top: var(--larel-header-height) !important;
+    }
+  }
+  @media (max-height: 560px) and (min-width: 761px) {
+    .hero.editorial-hero { min-height: 360px !important; }
+  }
+</style>
+
 </head>
 
 <body>
